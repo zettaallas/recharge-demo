@@ -1,6 +1,6 @@
 # Step 7: My Recharge Profile and You said / We did
 
-**Commit:** not committed yet
+**Commit:** `93a3139`
 
 ## What changed
 

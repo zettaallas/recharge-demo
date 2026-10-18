@@ -1,4 +1,5 @@
 import { SLOT_DEFS } from '@/data/vocab';
+import { syncNotePosts } from './posts';
 import { syncProfile } from './profile';
 import { raiseFlag } from './safeguarding';
 import { avg, uid } from './util';
@@ -79,7 +80,10 @@ export function hasNote(n: Note | undefined): boolean {
 export function saveCheckIn(db: Db, pupilId: string, date: string, ratings: CheckIn['ratings'], notes: CheckIn['notes'], existingId?: string): boolean {
   const id = existingId ?? uid('ci');
   db.checkins = db.checkins.filter((c) => c.id !== id);
-  db.checkins.push({ id, pupilId, date, ratings, notes, at: Date.now() });
+  const checkin: CheckIn = { id, pupilId, date, ratings, notes, at: Date.now() };
+  db.checkins.push(checkin);
+  // each note also appears in the pupil's "My posts" list
+  syncNotePosts(db, checkin, (sid) => slotLabel(db, pupilId, sid));
   let flagged = false;
   for (const [sid, n] of Object.entries(notes))
     if (raiseFlag(db, pupilId, 'Check-in note: ' + slotLabel(db, pupilId, sid), [n.text, n.help.text].filter(Boolean).join(' '))) flagged = true;

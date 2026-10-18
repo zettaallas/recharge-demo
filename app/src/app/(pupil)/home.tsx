@@ -2,7 +2,7 @@ import { useRouter, type Href } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/Icon';
 import type { IconName } from '@/components/icons';
-import { Button, Checkbox, H1, Muted, Row, Screen } from '@/components/ui';
+import { Button, H1, Muted, Row, Screen } from '@/components/ui';
 import { Zip } from '@/components/Zip';
 import { lastCharge } from '@/domain/checkins';
 import type { TextKey } from '@/i18n';
@@ -17,17 +17,15 @@ const TILES: TileDef[] = [
   { key: 'profile', icon: 'user', title: 'profile', sub: 'profileSub', href: '/profile' },
   { key: 'feed', icon: 'megaphone', title: 'feed', sub: 'feedSub', href: '/feed' },
   { key: 'zip', icon: 'star', title: 'buddy', sub: 'buddySub', href: '/zip' },
+  { key: 'posts', icon: 'message', title: 'myPosts', sub: 'myPostsSub', href: '/posts' },
+  { key: 'settings', icon: 'sliders', title: 'settings', sub: 'settingsSub', href: '/settings' },
 ];
 
 export default function Home() {
-  const { t, colors, db, me, update, sharedDevice, logOut } = useApp();
+  const { t, colors, db, me, logOut } = useApp();
   const router = useRouter();
   if (!me) return null;
   const ch = lastCharge(db, me.id);
-  const setPinOnReopen = (v: boolean) =>
-    update((d) => {
-      d.pupils.find((p) => p.id === me.id)!.settings.pinOnReopen = v;
-    });
 
   return (
     <Screen belowBar>
@@ -61,10 +59,6 @@ export default function Home() {
         ))}
       </View>
 
-      {/* Own device only: the pupil chooses whether to lock the app with their PIN. Moves to Settings in Step 8. */}
-      {!sharedDevice && (
-        <Checkbox label={t('pinOnReopen')} hint={t('pinOnReopenHint')} checked={!!me.settings.pinOnReopen} onChange={setPinOnReopen} />
-      )}
       <Row>
         <Button label={t('logout')} onPress={() => logOut()} />
       </Row>

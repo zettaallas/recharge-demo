@@ -145,7 +145,14 @@ export interface Moment {
   id: string;
   pupilId: string;
   kind: 'break' | 'symbol';
+  /** Older single-symbol moments (seed data). */
   symbol?: SymbolKey;
+  /** Symbol board: one or more symbols saved together. */
+  symbols?: SymbolKey[];
+  /** Optional: the class or place it was about. */
+  where?: SlotId;
+  /** Optional: the pupil's own details. */
+  text?: string;
   at: number;
   seen: boolean;
 }

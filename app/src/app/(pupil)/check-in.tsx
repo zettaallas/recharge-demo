@@ -102,6 +102,7 @@ export default function CheckIn() {
           <H1>{t('checkIn')}</H1>
           <Text style={{ color: colors.ink }}>{charge == null ? t('zipEmpty') : t('zipCharge', { p: Math.round(charge * 100) })}</Text>
           <Muted small>{t('today') + ': ' + date + ' · ' + t('howCharged')}</Muted>
+          <Text style={{ color: colors.ink, fontWeight: '700' }}>{t('rateOneOrMore')}</Text>
         </View>
       </View>
       {base.map((s) => slotCard(s))}

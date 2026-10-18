@@ -35,8 +35,8 @@ app/
       profile.tsx
       feed.tsx              You said / We did
       zip.tsx               Zip editor
-      posts/index.tsx       earlier posts (new)
-      posts/[id].tsx        one post: status, read state, "was this helpful?" (new)
+      posts.tsx             earlier posts (new)
+      post/[id].tsx         one post: status, read state, "was this helpful?" (new)
       settings.tsx          read indicator on/off, PIN on reopen (new)
   src/
     types/                  domain types (see below)
@@ -78,10 +78,10 @@ app/
 
 | Item | Where | Notes |
 |---|---|---|
-| Post statuses **Sent / Read / Follow-up** | `posts/index`, `posts/[id]`, badge on home | `type PostStatus = 'sent' \| 'read' \| 'followUp'`. Staff set Read and Follow-up later. For now, seed data and a dev toggle simulate them. |
+| Post statuses **Sent / Read / Follow-up** | `posts`, `post/[id]` | `type PostStatus = 'sent' \| 'read' \| 'followUp'`. Staff set Read and Follow-up later. For now, seed data and a dev toggle simulate them. |
 | Read indicator the pupil can switch off | `settings.tsx` | `settings.showReadReceipts: boolean`. When off, the pupil sees only "Sent". Staff behaviour doesn't change. |
 | "Was this helpful?" | on a You said / We did item and on a Follow-up post | `type Helpful = 'yes' \| 'notReally' \| 'skip'`, stored per item, optional, one tap. |
-| Earlier posts | `posts/index` | Lists the pupil's own past check-in notes, symbols, breaks and walk pins with their status. The pupil can share, unshare or keep each one private (journal). |
+| Earlier posts | `posts` | Lists the pupil's own past check-in notes, symbols, breaks and walk pins with their status. The pupil can share, unshare or keep each one private (journal). |
 | Optional personalisation at registration | `(auth)/register` after first PIN login | Preferred name, Zip colour and hat, "is this a shared device?", and optional "things that help me" chips. Every field is skippable and editable later in settings. |
 | Skippable walkthrough | `walkthrough.tsx` | 3–4 cards: battery, symbols, who sees what (incl. the safeguarding exception), statuses. "Skip" on every card. It's shown once after registration and can be replayed from settings. |
 
