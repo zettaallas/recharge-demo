@@ -12,8 +12,8 @@ import { useApp } from '@/state/AppContext';
 type TileDef = { key: string; icon: IconName; title: TextKey; sub: TextKey; href?: Href; soon?: string };
 const TILES: TileDef[] = [
   { key: 'checkin', icon: 'battery', title: 'checkIn', sub: 'checkInSub', href: '/check-in' },
-  { key: 'symbols', icon: 'grid', title: 'symbols', sub: 'symbolsSub', soon: 'Step 6' },
-  { key: 'walk', icon: 'camera', title: 'walk', sub: 'walkSub', soon: 'Step 6' },
+  { key: 'symbols', icon: 'grid', title: 'symbols', sub: 'symbolsSub', href: '/symbols' },
+  { key: 'walk', icon: 'camera', title: 'walk', sub: 'walkSub', href: '/walk' },
   { key: 'profile', icon: 'user', title: 'profile', sub: 'profileSub', soon: 'Step 7' },
   { key: 'feed', icon: 'megaphone', title: 'feed', sub: 'feedSub', soon: 'Step 7' },
   { key: 'zip', icon: 'star', title: 'buddy', sub: 'buddySub', href: '/zip' },

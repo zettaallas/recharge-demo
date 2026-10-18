@@ -8,6 +8,7 @@ One file per step of the Recharge → Expo migration (see [../../MIGRATION_PLAN.
 | [2](step-2.md) | Expo SDK 57 + Expo Router scaffold | `6f2ae2d` |
 | [3](step-3.md) | Types, demo data, logic, strings, theme, storage | `2a8ab55` |
 | [4](step-4.md) | Pupil login, shared devices, PIN on reopen | `f505ae7` |
-| [5](step-5.md) | Pupil home, Zip, battery check-in | not committed yet |
+| [5](step-5.md) | Pupil home, Zip, battery check-in | `e7d0f6a` |
+| [6](step-6.md) | Symbol board, "I need a break", Recharge Walk, photos | not committed yet |
 
 All data in the app is fictional.

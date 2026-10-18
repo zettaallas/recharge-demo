@@ -131,7 +131,11 @@ export const en = {
   "pinOnReopen": "Ask for my PIN when I reopen the app",
   "pinOnReopenHint": "Keeps your page private if someone else picks up your phone.",
   "welcomeBack": "Welcome back. Enter your PIN to continue.",
-  "notYou": "Not you?"
+  "notYou": "Not you?",
+  "useCamera": "Take a photo",
+  "useLibrary": "Choose a photo",
+  "photoDenied": "Recharge needs permission to use photos. You can allow it in your phone's settings.",
+  "drawVoiceLater": "Drawing and voice notes are coming in a later step."
 };
 
 export type Strings = typeof en;

@@ -4,11 +4,12 @@ import { HELP_CHIPS, SYMBOLS } from '@/data/vocab';
 import { useApp } from '@/state/AppContext';
 import type { Note, SymbolKey } from '@/types';
 import { Icon } from './Icon';
+import { PhotoPicker } from './PhotoPicker';
 import type { IconName } from './icons';
 
 // "Add more" for one place in the check-in: symbols, typed words and "What would help?".
-// Typing is always optional. Photo, drawing and voice notes are added in a later step.
-type Tab = 'symbols' | 'type' | 'help';
+// Typing is always optional. Drawing and voice notes are added in a later step.
+type Tab = 'photo' | 'symbols' | 'type' | 'help';
 
 export function NotePanel({ value, onChange }: { value: Note; onChange: (n: Note) => void }) {
   const { t, colors } = useApp();
@@ -17,6 +18,7 @@ export function NotePanel({ value, onChange }: { value: Note; onChange: (n: Note
   const toggle = <T,>(list: T[], x: T) => (list.includes(x) ? list.filter((y) => y !== x) : [...list, x]);
 
   const tabs: [Tab, IconName, string][] = [
+    ['photo', 'camera', t('photo')],
     ['symbols', 'grid', t('symbols')],
     ['type', 'keyboard', t('type')],
     ['help', 'bulb', t('whatHelp')],
@@ -42,6 +44,8 @@ export function NotePanel({ value, onChange }: { value: Note; onChange: (n: Note
           );
         })}
       </View>
+
+      {tab === 'photo' && <PhotoPicker value={value.photo} onChange={(photo) => set({ photo })} />}
 
       {tab === 'symbols' && (
         <View style={styles.symGrid}>
@@ -105,7 +109,7 @@ export function NotePanel({ value, onChange }: { value: Note; onChange: (n: Note
         </View>
       )}
 
-      <Text style={{ color: colors.ink2, fontSize: 13 }}>Photo, drawing and voice notes are coming in a later step.</Text>
+      <Text style={{ color: colors.ink2, fontSize: 13 }}>{t('drawVoiceLater')}</Text>
     </View>
   );
 }

@@ -31,8 +31,7 @@ app/
       home.tsx
       check-in.tsx
       symbols.tsx
-      walk/index.tsx
-      walk/new.tsx
+      walk.tsx              list of places + "Add a place" form on one screen
       profile.tsx
       feed.tsx              You said / We did
       zip.tsx               Zip editor
@@ -65,7 +64,7 @@ app/
 | Login (class code → name → PIN) | `PupilLogin`, `CodeEntry`, `PinEntry`, PBKDF2 helpers | `(auth)/class-code`, `pick-name`, `pin` | `domain/auth.ts`, `types/Pupil` |
 | Battery check-in (rate places and moments, 5-segment battery, notes: photo/draw/symbols/voice/type, "What would help?") | `CheckIn`, `Battery`, `NotePanel`, `PhotoPicker`, `VoicePicker`, `DrawPad`, `HELP_CHIPS` | `(pupil)/check-in` | `domain/checkins.ts`, `components/Battery`, `NotePanel`, `DrawPad`, `types/CheckIn`, `types/Note` |
 | Symbol board (6 tiles, one tap) | `SymbolBoard`, `SYMBOLS` | `(pupil)/symbols` | `types/Symbol`, `domain/posts.ts` (each tap becomes a post) |
-| Recharge Walk (photo + drains/recharges tag + caption → personal places) | `RechargeWalk`, `pins` | `(pupil)/walk`, `walk/new` | `types/Pin`, `domain/checkins.ts` (pins become slots) |
+| Recharge Walk (photo + drains/recharges tag + caption → personal places) | `RechargeWalk`, `pins` | `(pupil)/walk` | `types/Pin`, `domain/checkins.ts` (pins become slots) |
 | My Recharge Profile (auto-built, pupil hides/edits/approves, PDF) | `MyProfile`, `syncProfile`, `approveProfile`, `savePdf` | `(pupil)/profile` | `domain/profile.ts`, `types/Profile`; PDF via `expo-print` (later) |
 | You said / We did feed | `Feed`, staff `YswdTab` | `(pupil)/feed` | `types/Yswd`, `domain/themes.ts` |
 | Zip (colour and hat, charge only, no face) | `Zip`, `Hat`, `BuddyEditor`, `ZIP_COLOURS`, `HATS` | `(pupil)/zip`, shown on `home` | `components/Zip`, `types/Buddy` |

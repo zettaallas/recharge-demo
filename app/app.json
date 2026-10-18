@@ -23,7 +23,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Recharge uses your photos only when you add one to a place or a note.",
+          "cameraPermission": "Recharge uses the camera only when you take a photo of a place."
+        }
+      ]
     ],
     "scheme": "recharge",
     "experiments": {

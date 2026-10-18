@@ -1,6 +1,6 @@
 # Step 5: Pupil home, Zip and the battery check-in
 
-**Commit:** not committed yet
+**Commit:** `e7d0f6a`
 
 ## What changed
 
