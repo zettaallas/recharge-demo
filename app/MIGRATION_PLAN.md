@@ -17,7 +17,7 @@ Draft for review. Nothing here replaces `index.html` or the GitHub Pages site. T
 
 ```
 app/
-  app/                      Expo Router routes
+  src/app/                  Expo Router routes (SDK 58 default location)
     _layout.tsx             root: providers (session, i18n, theme)
     index.tsx               entry: Pupil / Staff / Family note
     (auth)/
