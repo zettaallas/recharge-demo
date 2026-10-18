@@ -14,8 +14,8 @@ const TILES: TileDef[] = [
   { key: 'checkin', icon: 'battery', title: 'checkIn', sub: 'checkInSub', href: '/check-in' },
   { key: 'symbols', icon: 'grid', title: 'symbols', sub: 'symbolsSub', href: '/symbols' },
   { key: 'walk', icon: 'camera', title: 'walk', sub: 'walkSub', href: '/walk' },
-  { key: 'profile', icon: 'user', title: 'profile', sub: 'profileSub', soon: 'Step 7' },
-  { key: 'feed', icon: 'megaphone', title: 'feed', sub: 'feedSub', soon: 'Step 7' },
+  { key: 'profile', icon: 'user', title: 'profile', sub: 'profileSub', href: '/profile' },
+  { key: 'feed', icon: 'megaphone', title: 'feed', sub: 'feedSub', href: '/feed' },
   { key: 'zip', icon: 'star', title: 'buddy', sub: 'buddySub', href: '/zip' },
 ];
 

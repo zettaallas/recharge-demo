@@ -135,7 +135,14 @@ export const en = {
   "useCamera": "Take a photo",
   "useLibrary": "Choose a photo",
   "photoDenied": "Recharge needs permission to use photos. You can allow it in your phone's settings.",
-  "drawVoiceLater": "Drawing and voice notes are coming in a later step."
+  "drawVoiceLater": "Drawing and voice notes are coming in a later step.",
+  "youSaid": "You said",
+  "weDid": "We did",
+  "wasHelpful": "Was this helpful?",
+  "helpfulYes": "Yes",
+  "helpfulNo": "Not really",
+  "helpfulThanks": "Thanks for telling us. You can change your answer.",
+  "pdfLater": "Saving as a PDF for your next school is coming in a later step."
 };
 
 export type Strings = typeof en;

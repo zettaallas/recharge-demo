@@ -1,6 +1,6 @@
 # Step 6: Symbol board, "I need a break" and Recharge Walk
 
-**Commit:** not committed yet
+**Commit:** `01daa36`
 
 ## What changed
 

@@ -1,3 +1,5 @@
+import type { Db, Helpful } from '@/types';
+
 // Groups pupils' "What would help?" answers into themes for staff.
 export const THEMES = [
   { id: 'route', label: 'Calmer routes between lessons', kw: ['stairs', 'corridor', 'route', 'walk on', 'other way'] },
@@ -15,4 +17,12 @@ export function themeOf(text: string): ThemeId {
   const t = ' ' + text.toLowerCase() + ' ';
   for (const th of THEMES) if (th.kw.some((k) => t.includes(k))) return th.id;
   return 'other';
+}
+
+/** Records one pupil's optional answer to "Was this helpful?" on a You said / We did item. Tapping the same answer again clears it. */
+export function setHelpful(db: Db, feedId: string, pupilId: string, answer: Helpful): void {
+  const item = db.feed.find((f) => f.id === feedId);
+  if (!item) return;
+  if (item.helpful[pupilId] === answer) delete item.helpful[pupilId];
+  else item.helpful[pupilId] = answer;
 }

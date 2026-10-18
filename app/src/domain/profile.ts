@@ -65,3 +65,21 @@ export function approveProfile(db: Db, pid: string): void {
   prof.approvedSnapshot = prof.items.filter((i) => !i.hidden).map((i) => ({ section: i.section, text: i.text }));
   prof.dirty = false;
 }
+
+/** Hide or show one item. Any change after approval means the pupil must approve again before staff see it. */
+export function toggleProfileItem(db: Db, pid: string, itemId: string): void {
+  const prof = db.profiles[pid];
+  const it = prof?.items.find((i) => i.id === itemId);
+  if (!prof || !it) return;
+  it.hidden = !it.hidden;
+  if (prof.approvedSnapshot) prof.dirty = true;
+}
+
+/** Adds the pupil's own words to "In my words". */
+export function addOwnWords(db: Db, pid: string, text: string): void {
+  syncProfile(db, pid);
+  const prof = db.profiles[pid];
+  if (!prof) return;
+  prof.items.push({ id: uid('it'), section: 'words', text: '"' + text + '"', src: 'own', hidden: false });
+  if (prof.approvedSnapshot) prof.dirty = true;
+}
