@@ -1,10 +1,10 @@
 import type { AvatarColour, Hat, Slot, StaffRole, SymbolKey, ZipColour } from '@/types';
 
 export const SLOT_DEFS: Slot[] = [
-  { id: 'maths', name: 'Maths', place: 'Classroom 6B', icon: 'calc', time: '9:00' },
+  { id: 'maths', name: 'Maths', place: 'Classroom 8B', icon: 'calc', time: '9:00' },
   { id: 'chg1', name: 'Changeover', place: 'Main corridor', icon: 'door', time: '10:00' },
   { id: 'break', name: 'Break', place: 'Playground', icon: 'tree', time: '10:45' },
-  { id: 'english', name: 'English', place: 'Classroom 6B', icon: 'book', time: '11:05' },
+  { id: 'english', name: 'English', place: 'Classroom 8B', icon: 'book', time: '11:05' },
   { id: 'lunch', name: 'Lunch', place: 'Lunch hall', icon: 'utensils', time: '12:15' },
   { id: 'chg2', name: 'Changeover', place: 'Main corridor', icon: 'door', time: '13:10' },
   { id: 'science', name: 'Science', place: 'Science lab', icon: 'flask', time: '13:15' },

@@ -10,7 +10,7 @@ import { avg, clamp, lastSchoolDays, mulberry32, uid } from '@/domain/util';
 import type { AvatarColour, CheckIn, Db, Note, Pupil, Rating, Staff } from '@/types';
 import { HATS, SLOT_DEFS, ZIP_COLOURS } from './vocab';
 
-export const DEMO = { classCode: '6B-K4P', pupilPin: '1234', staffPassword: 'demo1234' };
+export const DEMO = { classCode: '8B-K4P', pupilPin: '1234', staffPassword: 'demo1234' };
 
 const DAY = 864e5;
 
@@ -43,12 +43,12 @@ export async function buildSeed(): Promise<Db> {
     const id = 'p_' + name.split(' ')[0].toLowerCase();
     baseOf[id] = base;
     pupils.push({
-      id, classId: 'c6b', name, avatar, keyAdultId, attendance,
+      id, classId: 'c8b', name, avatar, keyAdultId, attendance,
       salt: sec.salt, pinHash: sec.hash, failed: 0, locked: false,
       buddy: { colour: ZIP_COLOURS[pupils.length % 5], hat: HATS[(pupils.length * 2) % 6] },
       parentShare: false,
       // Demo pupils count as already registered so the walkthrough can be tried from settings.
-      settings: { language: 'en', showReadReceipts: true, helps: [], registered: true, walkthroughDone: true },
+      settings: { showReadReceipts: true, helps: [], pinOnReopen: false, registered: true, walkthroughDone: true },
     });
   }
 
@@ -131,18 +131,18 @@ export async function buildSeed(): Promise<Db> {
   ];
 
   const db: Db = {
-    version: 2,
+    version: 3,
     seededAt: now,
     staff,
     pupils,
     checkins,
     pins,
-    classes: [{ id: 'c6b', name: '6B', code: DEMO.classCode, teacherId: 't1' }],
-    slots: { c6b: SLOT_DEFS.map((s) => ({ ...s })) },
+    classes: [{ id: 'c8b', name: '8B', code: DEMO.classCode, teacherId: 't1' }],
+    slots: { c8b: SLOT_DEFS.map((s) => ({ ...s })) },
     profiles: {},
     feed: [
-      { id: 'f1', classId: 'c6b', said: 'The lunch hall is too loud.', did: 'A quiet table by the window is open on Tuesdays and Thursdays, with ear defenders in a basket.', by: 'Ms Rivera', at: now - DAY * 9, helpful: {} },
-      { id: 'f2', classId: 'c6b', said: 'The corridor is crowded after Maths.', did: 'Year 6 can now leave Maths two minutes early and use the side stairs.', by: 'Mr Adeyemi', at: now - DAY * 4, helpful: {} },
+      { id: 'f1', classId: 'c8b', said: 'The lunch hall is too loud.', did: 'A quiet table by the window is open on Tuesdays and Thursdays, with ear defenders in a basket.', by: 'Ms Rivera', at: now - DAY * 9, helpful: {} },
+      { id: 'f2', classId: 'c8b', said: 'The corridor is crowded after Maths.', did: 'Year 8 can now leave Maths two minutes early and use the side stairs.', by: 'Mr Adeyemi', at: now - DAY * 4, helpful: {} },
     ],
     moments,
     posts,

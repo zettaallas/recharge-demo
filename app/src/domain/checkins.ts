@@ -25,7 +25,7 @@ export function slotLabel(db: Db, pupilId: string, sid: SlotId): string {
     return p ? p.emoji + ' ' + p.caption : 'Personal place';
   }
   const pupil = db.pupils.find((p) => p.id === pupilId);
-  const s = (db.slots[pupil ? pupil.classId : 'c6b'] || SLOT_DEFS).find((x) => x.id === sid);
+  const s = (db.slots[pupil ? pupil.classId : 'c8b'] || SLOT_DEFS).find((x) => x.id === sid);
   return s ? s.name + ' (' + s.place + ')' : sid;
 }
 

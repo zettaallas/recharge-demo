@@ -3,7 +3,7 @@
 
 export const AI_AVAILABLE = false;
 
-/** Web prototype: aiTranslate(sample, text, language). Here it returns the text unchanged. */
+/** Web prototype: aiTranslate(sample, text, language), used to translate a pupil's note for staff. Returns the text unchanged. */
 export async function aiTranslate(text: string, _language: string): Promise<{ text: string; stub: true }> {
   return { text, stub: true };
 }

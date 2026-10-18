@@ -1,7 +1,6 @@
 // Domain types for Recharge. Shapes follow the web prototype's data (index.html, buildSeed)
 // plus the new pupil items from MIGRATION_PLAN.md (posts, statuses, settings).
 
-export type Lang = 'en' | 'pl' | 'es';
 export type Rating = 1 | 2 | 3 | 4 | 5;
 export type Band = 'hi' | 'mid' | 'lo' | 'none';
 
@@ -29,12 +28,13 @@ export interface Buddy {
 
 /** Pupil-controlled settings. Everything here is optional to set and can be changed later. */
 export interface PupilSettings {
-  language: Lang;
   /** When off, the pupil only ever sees "Sent", never "Read". */
   showReadReceipts: boolean;
   preferredName?: string;
   /** Optional "things that help me" picked at registration. */
   helps: string[];
+  /** Own devices only: ask for the PIN again whenever the app is reopened. Off by default. */
+  pinOnReopen: boolean;
   registered: boolean;
   walkthroughDone: boolean;
 }
@@ -190,7 +190,7 @@ export interface Flag {
 
 /** The whole local database. Supabase replaces the storage behind it later, not this shape. */
 export interface Db {
-  version: 2;
+  version: 3;
   seededAt: number;
   staff: Staff[];
   pupils: Pupil[];

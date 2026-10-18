@@ -7,11 +7,11 @@ Draft for review. Nothing here replaces `index.html` or the GitHub Pages site. T
 - **Stack:** Expo (SDK current at setup), TypeScript (strict), Expo Router (file-based routes).
 - **Location:** this `/app` subfolder on `ekin's-branch`. `index.html`, `main` and Pages stay untouched.
 - **Order:** pupil side first. Staff side later.
-- **Login:** same as now. Class code, then tap your name, then a 4-digit PIN. PINs are hashed, the account pauses after 5 wrong tries, and auto-logout happens on shared devices.
+- **Login:** same as now. Class code, then tap your name, then a 4-digit PIN. PINs are hashed, the account pauses after 5 wrong tries. The 20-minute auto-logout applies only when the device is marked as shared (asked at login, once per device; off by default, since secondary pupils mostly use their own phones).
 - **AI:** no Claude API. Every AI feature calls a stub in `src/stubs/ai.ts` that returns a fixed or empty answer.
 - **Storage:** on-device only for now, behind a `src/storage` interface so Supabase can replace it later without touching screens.
 - **Data:** fictional seed data only, ported from `buildSeed()` in `index.html`.
-- **Open question:** `index.html` and README say ages 9–12, but the project scope says Years 7–9 (11–14). Copy and examples should follow whichever we pick.
+- **Age range:** secondary, Years 7–9 (11–14). The demo class is 8B (code 8B-K4P). Pupils mostly use their own phones.
 
 ## Folder layout
 
@@ -38,7 +38,7 @@ app/
       zip.tsx               Zip editor
       posts/index.tsx       earlier posts (new)
       posts/[id].tsx        one post: status, read state, "was this helpful?" (new)
-      settings.tsx          read indicator on/off, language (new)
+      settings.tsx          read indicator on/off, PIN on reopen (new)
   src/
     types/                  domain types (see below)
     data/seed.ts            fictional data (ported from buildSeed)
@@ -53,7 +53,7 @@ app/
       posts.ts              statuses, read receipts, helpful feedback (new)
     components/             Battery, Zip, Hat, Icon, Sparkline, NotePanel, DrawPad,
                             PhotoPicker, VoicePicker, Dialog, TopBar, Why
-    i18n/                   en / pl / es strings (ported from the T table)
+    i18n/                   English strings in one file (other languages can be added back later)
     stubs/ai.ts             aiTranslate etc. return stub results
     theme/                  colour tokens incl. --zip-* and dark mode
 ```
@@ -83,7 +83,7 @@ app/
 | Read indicator the pupil can switch off | `settings.tsx` | `settings.showReadReceipts: boolean`. When off, the pupil sees only "Sent". Staff behaviour doesn't change. |
 | "Was this helpful?" | on a You said / We did item and on a Follow-up post | `type Helpful = 'yes' \| 'notReally' \| 'skip'`, stored per item, optional, one tap. |
 | Earlier posts | `posts/index` | Lists the pupil's own past check-in notes, symbols, breaks and walk pins with their status. The pupil can share, unshare or keep each one private (journal). |
-| Optional personalisation at registration | `(auth)/register` after first PIN login | Preferred name, Zip colour and hat, language, and optional "things that help me" chips. Every field is skippable and editable later in settings. |
+| Optional personalisation at registration | `(auth)/register` after first PIN login | Preferred name, Zip colour and hat, "is this a shared device?", and optional "things that help me" chips. Every field is skippable and editable later in settings. |
 | Skippable walkthrough | `walkthrough.tsx` | 3–4 cards: battery, symbols, who sees what (incl. the safeguarding exception), statuses. "Skip" on every card. It's shown once after registration and can be replayed from settings. |
 
 ## Core types (sketch)

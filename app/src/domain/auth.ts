@@ -27,9 +27,11 @@ export async function makeSecret(secret: string): Promise<{ salt: string; hash: 
   return { salt, hash: await hashSecret(secret, salt) };
 }
 
+/** Finds a class by code, ignoring case, spaces and the hyphen ("8bk4p" matches "8B-K4P"). */
 export function findClass(db: Db, code: string): SchoolClass | undefined {
-  const c = code.trim().toUpperCase().replace(/\s+/g, '');
-  return db.classes.find((x) => x.code === c);
+  const norm = (s: string) => s.toUpperCase().replace(/[\s-]/g, '');
+  const c = norm(code);
+  return db.classes.find((x) => norm(x.code) === c);
 }
 
 export type PinResult = { ok: true } | { ok: false; locked: boolean; triesLeft: number };

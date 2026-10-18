@@ -12,7 +12,7 @@ export interface Store {
   clear(): Promise<void>;
 }
 
-const KEY = 'recharge.db.v2';
+const KEY = 'recharge.db.v3';
 
 /** On-device only. Nothing leaves the phone or browser. */
 export const localStore: Store = {
@@ -35,7 +35,7 @@ export const localStore: Store = {
 /** Loads saved data, or builds and saves the fictional demo data on first run. */
 export async function loadOrSeed(store: Store = localStore): Promise<Db> {
   const saved = await store.load();
-  if (saved && saved.version === 2) return saved;
+  if (saved && saved.version === 3) return saved;
   const db = await buildSeed();
   await store.save(db);
   return db;
