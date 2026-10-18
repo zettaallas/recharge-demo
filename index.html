@@ -1,0 +1,2006 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Recharge">
+<meta name="description" content="Recharge: a SENDtech prototype. Pupils rate the places and moments of the school day on a battery. Fictional demo data only.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Recharge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Lexend:wght@400;600&display=swap">
+<style>
+/* Layout: one calm column (max 1040px) under a sticky tool bar; pupil screens use big tiles, staff screens use cards and tables. */
+:root{
+  --bg:#EDF2F0; --surface:#FFFFFF; --surface-2:#E2EBE8; --ink:#16302D; --ink-2:#4B635F; --line:#C9D8D4;
+  --accent:#2B6964; --accent-ink:#FFFFFF; --accent-soft:#D3E8E4; --focus:#1D4ED8;
+  --break:#6E4A99; --break-ink:#FFFFFF; --break-soft:#ECE4F5;
+  --hi:#3B9781; --mid:#D99A2B; --lo:#D0644B; --hi-bg:#CBE9DE; --mid-bg:#F6E2B3; --lo-bg:#F4C7BA; --none-bg:#EEF1F0;
+  --warn-bg:#FBEDE9; --warn-ink:#8A2E1B; --ok-bg:#E1F2EC; --ok-ink:#1F5E4F;
+  --zip-teal:#7CC7B8; --zip-lilac:#B9A6E3; --zip-sky:#8EC3EA; --zip-sun:#F2CF6B; --zip-coral:#F0A58F;
+  --zip-well:#F4F7F6; --zip-bolt:rgba(255,255,255,.88); --hat:#5A4B8A; --hat-2:#E8B93E; --zip-line:#16302D;
+  --av-teal:#BFE3DA; --av-sky:#C7DFF3; --av-lilac:#DCD2F2; --av-sun:#F7E4A6; --av-coral:#F6CDBF; --av-leaf:#D3E6B8; --av-rose:#F3CFE0; --av-slate:#D5DDE3;
+  --shadow:0 1px 2px rgba(22,48,45,.06), 0 6px 18px rgba(22,48,45,.07);
+  --font-display:"Bricolage Grotesque", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius:20px; --radius-sm:12px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111718; --surface:#192122; --surface-2:#222C2D; --ink:#DCE6E3; --ink-2:#9FB2AE; --line:#2F3B3C;
+  --accent:#86C5BB; --accent-ink:#0D1A18; --accent-soft:#1F3533; --focus:#93B4FF;
+  --break:#B99BD9; --break-ink:#1A1225; --break-soft:#2B2338;
+  --hi:#62B49E; --mid:#CFA257; --lo:#D98973; --hi-bg:#1E3A33; --mid-bg:#3B3221; --lo-bg:#42271F; --none-bg:#1C2425;
+  --warn-bg:#3A2420; --warn-ink:#F2B6A6; --ok-bg:#1C3530; --ok-ink:#A6DCCB;
+  --zip-teal:#5FA597; --zip-lilac:#9686C2; --zip-sky:#6FA2C8; --zip-sun:#C9AA55; --zip-coral:#C98875;
+  --zip-well:#0F1516; --zip-bolt:rgba(255,255,255,.7); --hat:#8C7CC4; --hat-2:#C9AA55; --zip-line:#0B1112;
+  --av-teal:#23423C; --av-sky:#22374A; --av-lilac:#352F4C; --av-sun:#463D20; --av-coral:#4A2E26; --av-leaf:#33402A; --av-rose:#46293A; --av-slate:#2C353C;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111718; --surface:#192122; --surface-2:#222C2D; --ink:#DCE6E3; --ink-2:#9FB2AE; --line:#2F3B3C;
+  --accent:#86C5BB; --accent-ink:#0D1A18; --accent-soft:#1F3533; --focus:#93B4FF;
+  --break:#B99BD9; --break-ink:#1A1225; --break-soft:#2B2338;
+  --hi:#62B49E; --mid:#CFA257; --lo:#D98973; --hi-bg:#1E3A33; --mid-bg:#3B3221; --lo-bg:#42271F; --none-bg:#1C2425;
+  --warn-bg:#3A2420; --warn-ink:#F2B6A6; --ok-bg:#1C3530; --ok-ink:#A6DCCB;
+  --zip-teal:#5FA597; --zip-lilac:#9686C2; --zip-sky:#6FA2C8; --zip-sun:#C9AA55; --zip-coral:#C98875;
+  --zip-well:#0F1516; --zip-bolt:rgba(255,255,255,.7); --hat:#8C7CC4; --hat-2:#C9AA55; --zip-line:#0B1112;
+  --av-teal:#23423C; --av-sky:#22374A; --av-lilac:#352F4C; --av-sun:#463D20; --av-coral:#4A2E26; --av-leaf:#33402A; --av-rose:#46293A; --av-slate:#2C353C;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;
+}
+html{font-size:17px}
+html[data-size="lg"]{font-size:20px}
+html[data-font="easy"]{--font-body:"Lexend", "Atkinson Hyperlegible", system-ui, sans-serif}
+html[data-font="easy"] body{letter-spacing:.02em; word-spacing:.1em; line-height:1.7}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:1rem; line-height:1.5; -webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+*{transition:none!important; animation:none!important}
+html[data-motion="on"] .anim{transition:height .4s ease, y .4s ease, background-color .2s ease, transform .2s ease!important}
+@media (prefers-reduced-motion: reduce){ html[data-motion="on"] .anim{transition:none!important} }
+h1,h2,h3{font-family:var(--font-display); line-height:1.15; text-wrap:balance; margin:0}
+h1{font-size:2rem; font-weight:700}
+h2{font-size:1.45rem; font-weight:700}
+h3{font-size:1.1rem; font-weight:700}
+p{margin:0}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--focus); outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.icon{flex:none}
+
+.wrap{max-width:1040px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.topbar{position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; background:var(--bg); border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex; align-items:center; gap:10px; padding-block:8px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:700; font-size:1.25rem; margin-right:auto; color:var(--ink)}
+.tools{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+.tool{min-height:48px; min-width:48px; padding:4px 10px; border-radius:14px; border:1px solid var(--line); background:var(--surface); display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; cursor:pointer; font-size:.72rem; color:var(--ink-2)}
+.tool .icon{color:var(--ink)}
+.tool[aria-pressed="true"]{background:var(--accent-soft); border-color:var(--accent)}
+.tool select{border:0; background:transparent; font-size:.72rem; color:var(--ink-2); padding:0; min-height:0}
+.break-btn{min-height:52px; padding:6px 16px; border-radius:16px; border:0; background:var(--break); color:var(--break-ink); font-weight:700; display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:1rem}
+main{padding-block:22px 64px}
+.stack{display:flex; flex-direction:column; gap:16px}
+.row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+.spread{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+.muted{color:var(--ink-2)}
+.small{font-size:.86rem}
+.eyebrow{font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2); font-weight:700}
+
+.btn{min-height:48px; padding:10px 18px; border-radius:14px; border:1px solid var(--line); background:var(--surface); display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-weight:700; text-decoration:none; color:var(--ink)}
+.btn:hover{border-color:var(--accent)}
+.btn-primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.btn-quiet{background:transparent; border-color:transparent; color:var(--accent)}
+.btn-danger{background:var(--warn-bg); color:var(--warn-ink); border-color:transparent}
+.btn-lg{min-height:60px; font-size:1.1rem; padding:12px 24px; border-radius:18px}
+.btn[disabled]{opacity:.5; cursor:not-allowed}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); min-width:0}
+.card-flat{background:var(--surface-2); border-radius:var(--radius); padding:16px; min-width:0}
+.banner{border-radius:14px; padding:12px 16px; display:flex; gap:10px; align-items:flex-start}
+.banner-ok{background:var(--ok-bg); color:var(--ok-ink)}
+.banner-warn{background:var(--warn-bg); color:var(--warn-ink)}
+.banner-info{background:var(--accent-soft); color:var(--ink)}
+
+.tiles{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap:14px}
+.tile{min-height:120px; border-radius:var(--radius); border:1px solid var(--line); background:var(--surface); padding:18px; display:flex; flex-direction:column; align-items:flex-start; gap:8px; cursor:pointer; text-align:left; box-shadow:var(--shadow)}
+.tile:hover{border-color:var(--accent)}
+.tile .tile-ic{width:52px; height:52px; border-radius:16px; background:var(--accent-soft); color:var(--accent); display:grid; place-items:center}
+.tile b{font-family:var(--font-display); font-size:1.2rem}
+.tile span{color:var(--ink-2); font-size:.92rem}
+
+.hero{display:flex; gap:20px; align-items:center; flex-wrap:wrap}
+.hero .copy{flex:1 1 280px; min-width:0; display:flex; flex-direction:column; gap:8px}
+
+.avatar{border-radius:50%; display:grid; place-items:center; font-family:var(--font-display); font-weight:700; color:var(--ink); flex:none}
+.name-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap:12px}
+.name-tile{min-height:132px; border-radius:var(--radius); border:2px solid var(--line); background:var(--surface); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; cursor:pointer; font-weight:700; font-size:1.1rem; padding:12px}
+.name-tile:hover{border-color:var(--accent)}
+
+.code-boxes{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.code-box{width:52px; height:64px; border-radius:14px; border:2px solid var(--line); background:var(--surface); display:grid; place-items:center; font-family:var(--font-display); font-size:1.7rem; font-weight:700}
+.code-box.on{border-color:var(--accent)}
+.keyboard{display:grid; grid-template-columns:repeat(auto-fill, minmax(52px, 1fr)); gap:6px; max-width:640px}
+.key{min-height:52px; border-radius:12px; border:1px solid var(--line); background:var(--surface); font-weight:700; font-size:1.15rem; cursor:pointer; display:grid; place-items:center}
+.key:active{background:var(--accent-soft)}
+.pinpad{display:grid; grid-template-columns:repeat(3, 84px); gap:12px; justify-content:center}
+.pinpad .key{min-height:76px; font-size:1.7rem; border-radius:20px}
+.dots{display:flex; gap:16px; justify-content:center; padding-block:10px}
+.dot{width:22px; height:22px; border-radius:50%; border:3px solid var(--accent)}
+.dot.on{background:var(--accent)}
+
+.toggle{display:inline-flex; align-items:center; gap:10px; min-height:48px; padding:8px 14px; border-radius:14px; border:1px solid var(--line); background:var(--surface); cursor:pointer; font-weight:700}
+.toggle .box{width:26px; height:26px; border-radius:8px; border:2px solid var(--accent); display:grid; place-items:center; color:var(--accent-ink)}
+.toggle[aria-pressed="true"] .box, .toggle[aria-checked="true"] .box{background:var(--accent)}
+
+.battery{display:inline-flex; align-items:center; gap:4px; padding:5px; border:3px solid var(--ink); border-radius:12px; position:relative; margin-right:8px}
+.battery::after{content:""; position:absolute; right:-9px; top:50%; width:6px; height:40%; transform:translateY(-50%); background:var(--ink); border-radius:0 4px 4px 0}
+.seg{width:46px; height:48px; border-radius:7px; border:0; background:var(--none-bg); cursor:pointer; display:grid; place-items:center; font-weight:700; color:var(--ink-2); font-size:.8rem}
+.battery.sm{border-width:2px; border-radius:7px; padding:2px; gap:2px}
+.battery.sm::after{right:-6px; width:4px}
+.battery.sm .seg{width:12px; height:16px; border-radius:3px; cursor:default}
+.seg.f-lo{background:var(--lo)} .seg.f-mid{background:var(--mid)} .seg.f-hi{background:var(--hi)}
+.seg.f-lo, .seg.f-mid, .seg.f-hi{color:var(--surface)}
+
+.slot{display:flex; flex-direction:column; gap:12px}
+.slot-head{display:flex; gap:12px; align-items:center}
+.slot-ic{width:48px; height:48px; border-radius:14px; background:var(--surface-2); display:grid; place-items:center; flex:none; font-size:1.5rem}
+.slot-head .t{min-width:0}
+.chip{display:inline-flex; align-items:center; gap:6px; min-height:40px; padding:6px 12px; border-radius:999px; background:var(--surface-2); border:1px solid transparent; font-size:.9rem; font-weight:700}
+button.chip{cursor:pointer; min-height:48px}
+button.chip[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+.pill{display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:999px; font-size:.78rem; font-weight:700}
+.pill-lo{background:var(--lo-bg); color:var(--ink)} .pill-hi{background:var(--hi-bg); color:var(--ink)} .pill-mid{background:var(--mid-bg); color:var(--ink)}
+.pill-plain{background:var(--surface-2); color:var(--ink-2)}
+.tabs{display:flex; gap:6px; overflow-x:auto; padding-bottom:4px}
+.tab{min-height:48px; padding:8px 14px; border-radius:14px; border:1px solid var(--line); background:var(--surface); display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.note-tabs .tab{min-height:56px}
+
+.sym-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap:12px}
+.sym{min-height:150px; border-radius:var(--radius); border:2px solid var(--line); background:var(--surface); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; cursor:pointer; font-weight:700; font-size:1.1rem; text-align:center; padding:12px}
+.sym .sym-ic{width:64px; height:64px; border-radius:20px; display:grid; place-items:center; background:var(--surface-2); color:var(--ink)}
+.sym[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft)}
+.sym.sm{min-height:104px; font-size:.95rem}
+.sym.sm .sym-ic{width:44px; height:44px; border-radius:14px}
+
+.photo-thumb{width:100%; max-width:260px; border-radius:14px; border:1px solid var(--line); display:block}
+.draw-wrap{border:2px dashed var(--line); border-radius:16px; overflow:hidden; touch-action:none; background:var(--zip-well); max-width:100%}
+.draw-wrap canvas{display:block; width:100%; height:260px; touch-action:none}
+.swatch{width:48px; height:48px; border-radius:50%; border:3px solid var(--surface); box-shadow:0 0 0 2px var(--line); cursor:pointer}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 3px var(--accent)}
+textarea, input[type=text], input[type=email], input[type=password], select.field{width:100%; min-height:48px; padding:10px 14px; border-radius:14px; border:1px solid var(--line); background:var(--surface)}
+textarea{min-height:96px; resize:vertical}
+label.lbl{font-weight:700; display:block; margin-bottom:6px}
+.file-btn{position:relative; overflow:hidden}
+.file-btn input{position:absolute; inset:0; opacity:0; cursor:pointer; font-size:0}
+
+.pins{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap:14px}
+.pin-card{display:flex; flex-direction:column; gap:10px; padding:14px}
+.pin-media{aspect-ratio:4/3; max-width:100%; border-radius:14px; background:var(--surface-2); display:grid; place-items:center; font-size:3.2rem; overflow:hidden}
+.pin-media img{width:100%; height:100%; object-fit:cover}
+.emoji-grid{display:flex; flex-wrap:wrap; gap:8px}
+.emoji-btn{width:56px; height:56px; border-radius:14px; border:2px solid var(--line); background:var(--surface); font-size:1.7rem; cursor:pointer}
+.emoji-btn[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft)}
+
+.prof-sec{display:flex; flex-direction:column; gap:8px}
+.prof-item{display:flex; gap:10px; align-items:center; padding:10px 12px; border-radius:14px; background:var(--surface-2)}
+.prof-item .txt{flex:1; min-width:0}
+.prof-item.is-hidden .txt{opacity:.5; text-decoration:line-through}
+
+.feed-post{display:grid; grid-template-columns:1fr; gap:8px}
+.said{border-left:0; background:var(--surface-2); border-radius:14px; padding:12px 14px}
+.did{background:var(--ok-bg); color:var(--ok-ink); border-radius:14px; padding:12px 14px}
+
+.overlay{position:fixed; inset:0; z-index:50; background:rgba(10,20,20,.55); display:grid; place-items:center; padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+.dialog{background:var(--surface); color:var(--ink); border-radius:24px; padding:24px; width:min(640px, 100%); max-height:88vh; overflow:auto; display:flex; flex-direction:column; gap:16px}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); z-index:60; background:var(--ink); color:var(--bg); padding:12px 18px; border-radius:14px; max-width:calc(100% - 32px); font-weight:700}
+.popover{position:absolute; right:0; top:calc(100% + 6px); z-index:30; background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow); width:min(300px, calc(100vw - 32px)); display:flex; flex-direction:column; gap:8px}
+
+/* staff */
+.stats{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap:12px}
+.stat{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 16px; display:flex; flex-direction:column; gap:2px}
+.stat .n{font-family:var(--font-display); font-size:1.8rem; font-weight:700; font-variant-numeric:tabular-nums}
+.stat.alert{border-color:var(--lo)}
+.table-scroll{overflow-x:auto; max-width:100%}
+table.heat{border-collapse:separate; border-spacing:4px; min-width:560px; width:100%}
+table.heat th{font-size:.8rem; color:var(--ink-2); font-weight:700; text-align:left; padding:4px 6px; white-space:nowrap}
+table.heat td.c{height:46px; border-radius:10px; text-align:center; font-weight:700; font-variant-numeric:tabular-nums; font-size:.92rem; color:var(--ink)}
+td.c.b-hi{background:var(--hi-bg)} td.c.b-mid{background:var(--mid-bg)} td.c.b-lo{background:var(--lo-bg); box-shadow:inset 0 0 0 2px var(--lo)} td.c.b-none{background:var(--none-bg); color:var(--ink-2)}
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:.85rem; color:var(--ink-2)}
+.legend i{display:inline-block; width:16px; height:16px; border-radius:5px; vertical-align:-3px; margin-right:6px}
+table.list{border-collapse:collapse; width:100%; min-width:640px}
+table.list th, table.list td{padding:10px 8px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle}
+table.list th{font-size:.8rem; color:var(--ink-2); text-transform:uppercase; letter-spacing:.06em}
+.drift{display:grid; grid-template-columns:minmax(0, 1fr); gap:12px; border-left:6px solid var(--lo)}
+.theme-bar{height:14px; border-radius:7px; background:var(--accent)}
+.theme-track{background:var(--surface-2); border-radius:7px; flex:1; min-width:80px}
+.note{display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:14px; background:var(--surface-2)}
+.pin-cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap:10px}
+.pin-cardp{border:2px dashed var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; gap:4px}
+.pin-cardp .big{font-family:var(--font-display); font-size:1.8rem; letter-spacing:.2em; font-variant-numeric:tabular-nums}
+.check-item{display:flex; gap:12px; align-items:center; min-height:48px; padding:6px 10px; border-radius:12px; background:var(--surface-2); cursor:pointer; border:0; text-align:left; width:100%}
+.check-item .box{width:28px; height:28px; border-radius:8px; border:2px solid var(--accent); display:grid; place-items:center; flex:none; color:var(--accent-ink)}
+.check-item[aria-checked="true"] .box{background:var(--accent)}
+.grid-2{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap:16px; align-items:start}
+.demo-box{border:2px dashed var(--line); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column; gap:10px}
+code, .mono{font-family:ui-monospace, "SF Mono", Menlo, monospace; font-size:.92em}
+.kbd{font-family:var(--font-display); font-weight:700; letter-spacing:.06em; background:var(--surface-2); padding:2px 8px; border-radius:8px}
+.why{font-size:.84rem; color:var(--ink-2); max-width:62em; background:var(--surface-2); border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; line-height:1.55; text-align:left}
+.why p{margin:0}
+.why b{color:var(--ink)}
+.why-head{display:flex; align-items:center; gap:6px; font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color:var(--ink-2)}
+.why-reading{display:flex; flex-direction:column; gap:3px; padding-left:10px; border-left:3px solid var(--line)}
+.why-ref{font-weight:700; color:var(--ink)}
+.why-cite{font-size:.76rem}
+.zip-stage{display:flex; gap:18px; align-items:center; flex-wrap:wrap}
+.relative{position:relative}
+@media (max-width:620px){
+  h1{font-size:1.6rem}
+  .seg{width:40px; height:48px}
+  .tool span.lab{display:none}
+  .pinpad{grid-template-columns:repeat(3, 76px)}
+}
+</style>
+
+<div id="root"></div>
+<noscript>Recharge needs JavaScript turned on.</noscript>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+const { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext, useId } = React;
+const html = htm.bind(React.createElement);
+
+/* ---------- small helpers ---------- */
+const uid = (p) => p + '_' + Math.random().toString(36).slice(2, 10);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const avg = (a) => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+const clone = (o) => (typeof structuredClone === 'function' ? structuredClone(o) : JSON.parse(JSON.stringify(o)));
+function localISO(d){ const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000); return z.toISOString().slice(0, 10); }
+const todayISO = () => localISO(new Date());
+function fmtDay(iso){ return new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }); }
+function fmtTime(ts){ const d = new Date(ts); return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }) + ', ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }); }
+function lastSchoolDays(n){ const out = []; const d = new Date(); d.setHours(12, 0, 0, 0); while (out.length < n) { d.setDate(d.getDate() - 1); const w = d.getDay(); if (w !== 0 && w !== 6) out.unshift(localISO(d)); } return out; }
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const band = (v) => v == null ? 'none' : v >= 3.5 ? 'hi' : v >= 2.5 ? 'mid' : 'lo';
+const BAND_LABEL = { hi:'Recharges', mid:'Some drain', lo:'High drain', none:'No data' };
+const ls = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k, v){ try { localStorage.setItem(k, v); return true; } catch(e){ return false; } },
+  del(k){ try { localStorage.removeItem(k); } catch(e){} }
+};
+
+/* ---------- PIN + password hashing (PBKDF2-SHA256, per-user salt; never stored in plain text) ---------- */
+const toB64 = (buf) => btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(buf))));
+const fromB64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+function newSalt(){ const a = new Uint8Array(16); crypto.getRandomValues(a); return toB64(a); }
+async function hashSecret(secret, salt){
+  if (crypto && crypto.subtle) {
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name:'PBKDF2', salt:fromB64(salt), iterations:60000, hash:'SHA-256' }, key, 256);
+    return 'pbkdf2$' + toB64(bits);
+  }
+  let h = 2166136261; const s = salt + ':' + secret;
+  for (let r = 0; r < 5000; r++) for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i) + r; h = Math.imul(h, 16777619); }
+  return 'fnv$' + (h >>> 0).toString(16);
+}
+async function makeSecret(secret){ const salt = newSalt(); return { salt, hash: await hashSecret(secret, salt) }; }
+const randomPin = () => { const a = new Uint32Array(1); crypto.getRandomValues(a); return String(a[0] % 10000).padStart(4, '0'); };
+function newClassCode(name){
+  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const head = (name.replace(/[^A-Za-z0-9]/g, '').toUpperCase() + 'XX').slice(0, 2);
+  let tail = ''; const r = new Uint32Array(3); crypto.getRandomValues(r);
+  for (const x of r) tail += A[x % A.length];
+  return head + '-' + tail;
+}
+
+/* ---------- safeguarding word scan (prompts a human, never decides) ---------- */
+const CONCERN_WORDS = ['self-harm','self harm','hurt myself','hurting myself','hurt me','hurts me','hurt','unsafe','not safe','kill','die','dead','suicide','cut myself','cutting','hit me','hits me','kick me','abuse','scared to go home','touches me','touched me','nobody cares','want to disappear','hate myself','bullied','bully'];
+function scanConcern(text){
+  if (!text) return [];
+  const t = ' ' + text.toLowerCase().replace(/[^a-z\s'-]/g, ' ') + ' ';
+  return CONCERN_WORDS.filter(w => t.includes(' ' + w + ' ') || t.includes(' ' + w + 's ') || t.includes(' ' + w + 'ing '));
+}
+function raiseFlag(d, pupilId, source, text, at){
+  const words = scanConcern(text);
+  if (!words.length) return false;
+  if (d.flags.some(f => f.pupilId === pupilId && f.text === text)) return true;
+  d.flags.unshift({ id:uid('fl'), pupilId, source, text, words, at:at || Date.now(), status:'open', checklist:{} });
+  return true;
+}
+
+/* ---------- vocab ---------- */
+const SLOT_DEFS = [
+  { id:'maths', name:'Maths', place:'Classroom 6B', icon:'calc', time:'9:00' },
+  { id:'chg1', name:'Changeover', place:'Main corridor', icon:'door', time:'10:00' },
+  { id:'break', name:'Break', place:'Playground', icon:'tree', time:'10:45' },
+  { id:'english', name:'English', place:'Classroom 6B', icon:'book', time:'11:05' },
+  { id:'lunch', name:'Lunch', place:'Lunch hall', icon:'utensils', time:'12:15' },
+  { id:'chg2', name:'Changeover', place:'Main corridor', icon:'door', time:'13:10' },
+  { id:'science', name:'Science', place:'Science lab', icon:'flask', time:'13:15' },
+  { id:'pe', name:'PE', place:'Sports hall', icon:'run', time:'14:20' }
+];
+const SYMBOLS = [
+  { key:'tooLoud', icon:'ear' }, { key:'tooBright', icon:'sun' }, { key:'tooCrowded', icon:'users' },
+  { key:'needBreakSym', icon:'coffee' }, { key:'feelsSafe', icon:'heart' }, { key:'talkAdult', icon:'message' }
+];
+const HELP_CHIPS = ['Quieter place','Headphones','Leave early','Break space','Adult to talk to','Sit somewhere else'];
+const EMOJIS = ['📚','🔊','🌳','🛋️','🎧','🍽️','🚪','🏃','🎨','💡','🧱','🌈'];
+const ZIP_COLOURS = ['teal','lilac','sky','sun','coral'];
+const HATS = ['none','beanie','cap','crown','headphones','flower'];
+const AV_COLOURS = ['teal','sky','lilac','sun','coral','leaf','rose','slate'];
+const ROLE_LABEL = { class_teacher:'Class teacher', senco:'SENCO', key_adult:'Key adult', dsl:'Safeguarding lead (DSL)' };
+const THEMES = [
+  { id:'route', label:'Calmer routes between lessons', kw:['stairs','corridor','route','walk on','other way'] },
+  { id:'timing', label:'Leaving early to miss the rush', kw:['early','before the bell','leave','rush','first'] },
+  { id:'noise', label:'Less noise: headphones or ear defenders', kw:['headphone','ear defender','loud','noise','noisy'] },
+  { id:'adult', label:'A trusted adult to talk to', kw:['talk','adult','someone to'] },
+  { id:'seat', label:'Choosing where to sit', kw:['sit ','sit near','seat','somewhere else'] },
+  { id:'break', label:'A place and time for a break', kw:['break','rest','outside','time out','move'] },
+  { id:'quiet', label:'Quieter places to eat or work', kw:['quiet','calm','library','peace','smaller room','alone'] }
+];
+function themeOf(text){ const t = ' ' + text.toLowerCase() + ' '; for (const th of THEMES) if (th.kw.some(k => t.includes(k))) return th.id; return 'other'; }
+
+/* ---------- interface language ---------- */
+const I18N = {
+  en: {
+    tagline:'Show which places and moments drain you, and which recharge you.', who:'Who is using Recharge?', iAmPupil:"I'm a pupil", iAmStaff:"I'm staff", familyNote:'Note from home',
+    enterCode:'Type your class code', codeHint:'Your teacher has it. It looks like 6B-K4P.', remember:'Remember this class on this device', next:'Next', back:'Back', useDemo:'Use demo class 6B',
+    codeWrong:"We couldn't find that class. Check the code with your teacher.", tapName:'Tap your name', changeClass:'Change class', enterPin:'Enter your PIN',
+    pinWrong:"That PIN didn't match. {n} tries left.", locked:'Your account is paused. Ask your teacher to reset your PIN.', hello:'Hi {name}',
+    checkIn:'Pulse check-in', checkInSub:"Rate today's places and moments", symbols:'Symbol board', symbolsSub:'Tap to tell us without words', walk:'Recharge Walk', walkSub:'Photo the places that drain or recharge you',
+    profile:'My Recharge Profile', profileSub:'What drains me and what helps', feed:'You said, we did', feedSub:'Changes school has made', buddy:'My Zip', buddySub:"Change Zip's colour and hat",
+    needBreak:'I need a break', logout:'Log out', zipCharge:'Zip is {p}% charged', zipEmpty:'Tap a battery to charge Zip', howCharged:'How charged were you here?', batteryLevel:'{n} of 5', notRated:'Not rated yet',
+    addMore:'Add more', close:'Close', photo:'Photo', draw:'Draw', voice:'Voice note', type:'Type', whatHelp:'What would help?', save:'Save check-in', done:'Done', saved:'Saved. Thank you!', home:'Home',
+    yourPlaces:'Your places', today:'Today',
+    tooLoud:'Too loud', tooBright:'Too bright', tooCrowded:'Too crowded', needBreakSym:'Need a break', feelsSafe:'Feels safe', talkAdult:'Talk to an adult',
+    symSent:'Sent. {adult} will see it.', symLogged:'Saved. Thank you for telling us.', breakSent:'Your break is logged. {adult} has been told. You can go to your calm place.', ok:'OK',
+    drains:'Drains me', recharges:'Recharges me', helpsMe:'Helps me', inMyWords:'In my words', addPlace:'Add a place', takePhoto:'Take or choose a photo', changePhoto:'Change photo', pickEmoji:'Pick an emoji', caption:'Caption', savePlace:'Save place',
+    approve:'Approve so staff can see it', approved:'Approved. Staff can see this.', changed:'You changed things. Approve again so staff see the new version.', notApproved:'Only you can see this until you approve it.',
+    hide:'Hide', show:'Show', exportPdf:'Save as PDF', translateTo:'Translate for my family', translate:'Translate', colours:'Colour', hats:'Hat', nothing:'Nothing here yet.',
+    timeout:'You were logged out after 20 minutes so nobody else sees your page.', display:'Display', dark:'Low-sensory dark', light:'Light', system:'Match device', easyFont:'Easy-read font', motion:'Animations', bigText:'Bigger text', readAloud:'Read aloud', stop:'Stop', language:'Language',
+    clear:'Clear', record:'Record or choose a sound', typeHere:'Type here (you can skip this)', remove:'Remove', attached:'Added', shareHome:'Let school see notes from home', thanksSafe:'Thank you for telling us. A safe adult will check in with you.',
+    captionChips:["It's quiet","It's loud",'Too many people','I can be on my own','Bright lights','Soft and cosy','It echoes','Strong smells'],
+    helpChips:['Quieter place','Headphones','Leave early','Break space','Adult to talk to','Sit somewhere else'],
+    walkIntro:'Once a term, take photos of places around school. Say if each one drains you or recharges you. They become your own places in check-ins.',
+    voiceNote:'Your voice note is kept as sound. Your words are what matter.', drawHint:'Draw with your finger or mouse.', addOwn:'Add in my words', add:'Add',
+    remembered:'This device remembers class {c}.', pupilsOnly:'Only you and your trusted adults see your check-ins.'
+  },
+  pl: {
+    tagline:'Pokaż, które miejsca i chwile Cię męczą, a które ładują.', who:'Kto korzysta z Recharge?', iAmPupil:'Jestem uczniem', iAmStaff:'Pracuję w szkole', familyNote:'Wiadomość z domu',
+    enterCode:'Wpisz kod klasy', codeHint:'Ma go nauczyciel. Wygląda tak: 6B-K4P.', remember:'Zapamiętaj tę klasę na tym urządzeniu', next:'Dalej', back:'Wstecz', useDemo:'Użyj klasy demo 6B',
+    codeWrong:'Nie znaleźliśmy tej klasy. Sprawdź kod z nauczycielem.', tapName:'Dotknij swojego imienia', changeClass:'Zmień klasę', enterPin:'Wpisz swój PIN',
+    pinWrong:'PIN się nie zgadza. Pozostało prób: {n}.', locked:'Twoje konto jest wstrzymane. Poproś nauczyciela o nowy PIN.', hello:'Cześć, {name}',
+    checkIn:'Szybkie sprawdzenie', checkInSub:'Oceń dzisiejsze miejsca i chwile', symbols:'Tablica symboli', symbolsSub:'Dotknij, aby powiedzieć bez słów', walk:'Spacer Recharge', walkSub:'Sfotografuj miejsca, które męczą lub ładują',
+    profile:'Mój profil Recharge', profileSub:'Co mnie męczy, a co pomaga', feed:'Powiedzieliście, zrobiliśmy', feedSub:'Zmiany wprowadzone przez szkołę', buddy:'Mój Zip', buddySub:'Zmień kolor i czapkę Zipa',
+    needBreak:'Potrzebuję przerwy', logout:'Wyloguj', zipCharge:'Zip jest naładowany w {p}%', zipEmpty:'Dotknij baterii, aby naładować Zipa', howCharged:'Jak bardzo naładowany byłeś tutaj?', batteryLevel:'{n} z 5', notRated:'Jeszcze bez oceny',
+    addMore:'Dodaj więcej', close:'Zamknij', photo:'Zdjęcie', draw:'Rysunek', voice:'Nagranie', type:'Pisz', whatHelp:'Co by pomogło?', save:'Zapisz', done:'Gotowe', saved:'Zapisane. Dziękujemy!', home:'Start',
+    yourPlaces:'Twoje miejsca', today:'Dzisiaj',
+    tooLoud:'Za głośno', tooBright:'Za jasno', tooCrowded:'Za tłoczno', needBreakSym:'Potrzebuję przerwy', feelsSafe:'Czuję się bezpiecznie', talkAdult:'Rozmowa z dorosłym',
+    symSent:'Wysłane. {adult} to zobaczy.', symLogged:'Zapisane. Dziękujemy, że nam mówisz.', breakSent:'Twoja przerwa jest zapisana. {adult} już wie. Możesz iść do swojego spokojnego miejsca.', ok:'OK',
+    drains:'Męczy mnie', recharges:'Ładuje mnie', helpsMe:'Pomaga mi', inMyWords:'Moimi słowami', addPlace:'Dodaj miejsce', takePhoto:'Zrób lub wybierz zdjęcie', changePhoto:'Zmień zdjęcie', pickEmoji:'Wybierz emoji', caption:'Podpis', savePlace:'Zapisz miejsce',
+    approve:'Zatwierdź, aby nauczyciele widzieli', approved:'Zatwierdzone. Nauczyciele to widzą.', changed:'Coś zmieniłeś. Zatwierdź ponownie.', notApproved:'Tylko Ty to widzisz, dopóki nie zatwierdzisz.',
+    hide:'Ukryj', show:'Pokaż', exportPdf:'Zapisz jako PDF', translateTo:'Przetłumacz dla rodziny', translate:'Przetłumacz', colours:'Kolor', hats:'Czapka', nothing:'Na razie nic tu nie ma.',
+    timeout:'Wylogowano po 20 minutach, aby nikt inny nie zobaczył Twojej strony.', display:'Wygląd', dark:'Ciemny, spokojny', light:'Jasny', system:'Jak urządzenie', easyFont:'Łatwa czcionka', motion:'Animacje', bigText:'Większy tekst', readAloud:'Czytaj na głos', stop:'Stop', language:'Język',
+    clear:'Wyczyść', record:'Nagraj lub wybierz dźwięk', typeHere:'Napisz tutaj (możesz pominąć)', remove:'Usuń', attached:'Dodano', shareHome:'Szkoła może widzieć wiadomości z domu', thanksSafe:'Dziękujemy, że nam mówisz. Zaufany dorosły z Tobą porozmawia.',
+    captionChips:['Jest cicho','Jest głośno','Za dużo ludzi','Mogę być sam','Jasne światło','Miękko i przytulnie','Jest echo','Mocne zapachy'],
+    helpChips:['Cichsze miejsce','Słuchawki','Wyjść wcześniej','Miejsce na przerwę','Dorosły do rozmowy','Usiąść gdzie indziej'],
+    walkIntro:'Raz w semestrze zrób zdjęcia miejsc w szkole. Powiedz, czy każde Cię męczy, czy ładuje. Staną się Twoimi miejscami w sprawdzeniach.',
+    voiceNote:'Twoje nagranie zostaje jako dźwięk. Liczą się Twoje słowa.', drawHint:'Rysuj palcem lub myszką.', addOwn:'Dodaj moimi słowami', add:'Dodaj',
+    remembered:'To urządzenie pamięta klasę {c}.', pupilsOnly:'Twoje sprawdzenia widzisz tylko Ty i zaufani dorośli.'
+  },
+  es: {
+    tagline:'Muestra qué lugares y momentos te cansan y cuáles te recargan.', who:'¿Quién usa Recharge?', iAmPupil:'Soy alumno', iAmStaff:'Trabajo en el colegio', familyNote:'Nota de casa',
+    enterCode:'Escribe el código de tu clase', codeHint:'Lo tiene tu profe. Es así: 6B-K4P.', remember:'Recordar esta clase en este dispositivo', next:'Siguiente', back:'Atrás', useDemo:'Usar la clase de prueba 6B',
+    codeWrong:'No encontramos esa clase. Revisa el código con tu profe.', tapName:'Toca tu nombre', changeClass:'Cambiar de clase', enterPin:'Escribe tu PIN',
+    pinWrong:'Ese PIN no coincide. Te quedan {n} intentos.', locked:'Tu cuenta está en pausa. Pide a tu profe que cambie tu PIN.', hello:'Hola, {name}',
+    checkIn:'Revisión rápida', checkInSub:'Puntúa los lugares y momentos de hoy', symbols:'Tablero de símbolos', symbolsSub:'Toca para decirlo sin palabras', walk:'Paseo Recharge', walkSub:'Fotografía los lugares que te cansan o recargan',
+    profile:'Mi perfil Recharge', profileSub:'Lo que me cansa y lo que me ayuda', feed:'Dijisteis, hicimos', feedSub:'Cambios que ha hecho el colegio', buddy:'Mi Zip', buddySub:'Cambia el color y el gorro de Zip',
+    needBreak:'Necesito un descanso', logout:'Salir', zipCharge:'Zip tiene un {p}% de carga', zipEmpty:'Toca una batería para cargar a Zip', howCharged:'¿Cuánta carga tenías aquí?', batteryLevel:'{n} de 5', notRated:'Sin puntuar',
+    addMore:'Añadir más', close:'Cerrar', photo:'Foto', draw:'Dibujo', voice:'Nota de voz', type:'Escribir', whatHelp:'¿Qué te ayudaría?', save:'Guardar', done:'Listo', saved:'Guardado. ¡Gracias!', home:'Inicio',
+    yourPlaces:'Tus lugares', today:'Hoy',
+    tooLoud:'Mucho ruido', tooBright:'Mucha luz', tooCrowded:'Mucha gente', needBreakSym:'Necesito un descanso', feelsSafe:'Me siento seguro', talkAdult:'Hablar con un adulto',
+    symSent:'Enviado. {adult} lo verá.', symLogged:'Guardado. Gracias por contárnoslo.', breakSent:'Tu descanso está registrado. {adult} ya lo sabe. Puedes ir a tu lugar tranquilo.', ok:'Vale',
+    drains:'Me cansa', recharges:'Me recarga', helpsMe:'Me ayuda', inMyWords:'Con mis palabras', addPlace:'Añadir un lugar', takePhoto:'Haz o elige una foto', changePhoto:'Cambiar foto', pickEmoji:'Elige un emoji', caption:'Pie de foto', savePlace:'Guardar lugar',
+    approve:'Aprobar para que el personal lo vea', approved:'Aprobado. El personal puede verlo.', changed:'Has cambiado cosas. Vuelve a aprobar.', notApproved:'Solo tú lo ves hasta que lo apruebes.',
+    hide:'Ocultar', show:'Mostrar', exportPdf:'Guardar como PDF', translateTo:'Traducir para mi familia', translate:'Traducir', colours:'Color', hats:'Gorro', nothing:'Aún no hay nada.',
+    timeout:'Se cerró la sesión tras 20 minutos para que nadie más vea tu página.', display:'Pantalla', dark:'Oscuro y tranquilo', light:'Claro', system:'Como el dispositivo', easyFont:'Letra fácil', motion:'Animaciones', bigText:'Texto más grande', readAloud:'Leer en voz alta', stop:'Parar', language:'Idioma',
+    clear:'Borrar', record:'Graba o elige un sonido', typeHere:'Escribe aquí (puedes saltarlo)', remove:'Quitar', attached:'Añadido', shareHome:'El colegio puede ver las notas de casa', thanksSafe:'Gracias por contárnoslo. Un adulto de confianza hablará contigo.',
+    captionChips:['Hay silencio','Hay mucho ruido','Demasiada gente','Puedo estar solo','Luces fuertes','Blandito y cómodo','Hay eco','Olores fuertes'],
+    helpChips:['Lugar más tranquilo','Auriculares','Salir antes','Sitio para descansar','Un adulto con quien hablar','Sentarme en otro sitio'],
+    walkIntro:'Una vez por trimestre, haz fotos de lugares del colegio. Di si cada uno te cansa o te recarga. Serán tus lugares en las revisiones.',
+    voiceNote:'Tu nota de voz se guarda como sonido. Lo que importa son tus palabras.', drawHint:'Dibuja con el dedo o el ratón.', addOwn:'Añadir con mis palabras', add:'Añadir',
+    remembered:'Este dispositivo recuerda la clase {c}.', pupilsOnly:'Solo tú y tus adultos de confianza veis tus revisiones.'
+  }
+};
+const SLOT_I18N = {
+  pl: { Maths:'Matematyka', Changeover:'Przejście', Break:'Przerwa', English:'Angielski', Lunch:'Obiad', Science:'Przyroda', PE:'WF', 'Classroom 6B':'Klasa 6B', 'Main corridor':'Główny korytarz', Playground:'Boisko', 'Lunch hall':'Stołówka', 'Science lab':'Pracownia', 'Sports hall':'Sala gimnastyczna' },
+  es: { Maths:'Matemáticas', Changeover:'Cambio de clase', Break:'Recreo', English:'Inglés', Lunch:'Comida', Science:'Ciencias', PE:'Educación física', 'Classroom 6B':'Aula 6B', 'Main corridor':'Pasillo principal', Playground:'Patio', 'Lunch hall':'Comedor', 'Science lab':'Laboratorio', 'Sports hall':'Polideportivo' }
+};
+const LANGS = [['en','English','en-GB'],['pl','Polski','pl-PL'],['es','Español','es-ES']];
+
+/* ---------- icons (24px line icons) ---------- */
+const ICONS = {
+  home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+  pause:'<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>',
+  camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
+  pencil:'<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>',
+  keyboard:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/>',
+  bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  megaphone:'<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  star:'<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',
+  speaker:'<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+  moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+  globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  sliders:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  chart:'<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
+  alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  back:'<path d="m12 19-7-7 7-7M19 12H5"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+  sparkles:'<path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/>',
+  ear:'<path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/>',
+  message:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  coffee:'<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  door:'<path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17M3 21h18M15 12h.01"/>',
+  utensils:'<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  book:'<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
+  tree:'<path d="M12 22v-7"/><path d="M7 15h10l-5-12z"/>',
+  flask:'<path d="M9 2v7.5L4 20a1 1 0 0 0 1 1.5h14a1 1 0 0 0 1-1.5l-5-10.5V2M8 2h8"/>',
+  calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>',
+  run:'<circle cx="13" cy="4" r="2"/><path d="m7 21 3-6 3 2v5M5 12l3-4 4 1 3 3 3 1"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  eye:'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  eyeOff:'<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20"/>',
+  del:'<path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="m18 9-6 6M12 9l6 6"/>',
+  calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/>',
+  refresh:'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  zap:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+  key:'<circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/>',
+  type:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+  home2:'<path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/>',
+  book:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  battery:'<rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2"/>'
+};
+function Icon({ name, size = 22, label }){
+  return html`<svg className="icon" width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden=${label ? undefined : 'true'} role=${label ? 'img' : undefined} aria-label=${label} focusable="false" dangerouslySetInnerHTML=${{ __html: ICONS[name] || '' }}></svg>`;
+}
+
+/* ---------- Zip, the battery buddy (energy only: no face, no emotions) ---------- */
+function Hat({ hat }){
+  switch (hat) {
+    case 'beanie': return html`<g><path d="M37 26 A23 19 0 0 1 83 26 Z" fill="var(--hat)"/><rect x="34" y="21" width="52" height="8" rx="4" fill="var(--hat-2)"/><circle cx="60" cy="6" r="5.5" fill="var(--hat-2)"/></g>`;
+    case 'cap': return html`<g><path d="M39 26 A21 17 0 0 1 81 26 Z" fill="var(--hat)"/><path d="M78 22 h22 a3 3 0 0 1 0 6 h-22 z" fill="var(--hat)"/><circle cx="60" cy="10" r="3" fill="var(--hat-2)"/></g>`;
+    case 'crown': return html`<polygon points="40,28 40,8 50,18 60,3 70,18 80,8 80,28" fill="var(--hat-2)" stroke="var(--zip-line)" strokeWidth="1.5" strokeLinejoin="round"/>`;
+    case 'headphones': return html`<g><path d="M26 60 A34 36 0 0 1 94 60" fill="none" stroke="var(--hat)" strokeWidth="7" strokeLinecap="round"/><rect x="14" y="52" width="14" height="26" rx="6" fill="var(--hat)"/><rect x="92" y="52" width="14" height="26" rx="6" fill="var(--hat)"/></g>`;
+    case 'flower': return html`<g>${[0,72,144,216,288].map(a => html`<circle key=${a} cx=${86 + 8 * Math.cos(a * Math.PI / 180)} cy=${22 + 8 * Math.sin(a * Math.PI / 180)} r="6" fill="var(--hat-2)"/>`)}<circle cx="86" cy="22" r="5" fill="var(--hat)"/></g>`;
+    default: return null;
+  }
+}
+function Zip({ charge, colour = 'teal', hat = 'none', size = 120, label }){
+  const id = useId().replace(/:/g, '');
+  const c = charge == null ? 0 : clamp(charge, 0, 1);
+  const pct = Math.round(c * 100);
+  const fill = c >= 0.7 ? 'var(--hi)' : c >= 0.4 ? 'var(--mid)' : 'var(--lo)';
+  const shell = 'var(--zip-' + colour + ')';
+  return html`<svg viewBox="0 0 120 150" width=${size} height=${size * 1.25} role="img" aria-label=${label || ('Zip the battery buddy, ' + pct + '% charged')} style=${{ flex:'none', maxWidth:'100%' }}>
+    <defs><clipPath id=${'well' + id}><rect x="32" y="40" width="56" height="78" rx="11"/></clipPath></defs>
+    <path d="M24 82 q-14 6 -14 22" fill="none" stroke=${shell} strokeWidth="7" strokeLinecap="round"/>
+    <path d="M96 82 q14 6 14 22" fill="none" stroke=${shell} strokeWidth="7" strokeLinecap="round"/>
+    <rect x="36" y="124" width="18" height="12" rx="6" fill=${shell}/>
+    <rect x="66" y="124" width="18" height="12" rx="6" fill=${shell}/>
+    <rect x="47" y="22" width="26" height="12" rx="4" fill=${shell}/>
+    <rect x="24" y="30" width="72" height="98" rx="20" fill=${shell}/>
+    <rect x="32" y="40" width="56" height="78" rx="11" fill="var(--zip-well)"/>
+    <g clipPath=${'url(#well' + id + ')'}><rect className="anim" x="32" y=${40 + 78 * (1 - c)} width="56" height=${78 * c} fill=${fill}/></g>
+    <path d="M64 50 L46 82 H58 L54 108 L74 72 H62 Z" fill="var(--zip-bolt)" stroke="var(--zip-line)" strokeWidth="1.2" strokeLinejoin="round" opacity=".9"/>
+    <${Hat} hat=${hat}/>
+  </svg>`;
+}
+
+/* ---------- battery (5 segments) ---------- */
+function Battery({ value, onChange, label, small }){
+  const t = useApp().t;
+  const f = value ? (value <= 2 ? 'f-lo' : value === 3 ? 'f-mid' : 'f-hi') : '';
+  if (small) return html`<span className="battery sm" role="img" aria-label=${(label ? label + ': ' : '') + (value ? (Math.round(value * 10) / 10) + ' of 5' : 'no data')}>
+    ${[1,2,3,4,5].map(n => html`<span key=${n} className=${'seg ' + (value && n <= Math.round(value) ? (value < 2.5 ? 'f-lo' : value < 3.5 ? 'f-mid' : 'f-hi') : '')}></span>`)}</span>`;
+  return html`<div className="row" style=${{ gap:'14px' }}>
+    <div className="battery" role="group" aria-label=${label}>
+      ${[1,2,3,4,5].map(n => html`<button key=${n} type="button" className=${'seg ' + (value && n <= value ? f : '')} aria-pressed=${value === n} aria-label=${label + ': ' + t('batteryLevel', { n })} onClick=${() => onChange(value === n ? null : n)}>${n}</button>`)}
+    </div>
+    <span className="muted small">${value ? t('batteryLevel', { n:value }) : t('notRated')}</span>
+  </div>`;
+}
+
+function Avatar({ pupil, size = 56 }){
+  return html`<span className="avatar" aria-hidden="true" style=${{ width:size, height:size, background:'var(--av-' + pupil.avatar + ')', fontSize:size * 0.42 }}>${pupil.name[0]}</span>`;
+}
+
+function Sparkline({ values, w = 140, h = 40, label }){
+  const pts = values.filter(v => v != null);
+  if (pts.length < 2) return null;
+  const x = (i) => 4 + i * (w - 8) / (pts.length - 1);
+  const y = (v) => 4 + (5 - v) * (h - 8) / 4;
+  const line = pts.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join(' ');
+  const area = line + ' L' + x(pts.length - 1).toFixed(1) + ' ' + (h - 4) + ' L' + x(0).toFixed(1) + ' ' + (h - 4) + ' Z';
+  const last = pts[pts.length - 1];
+  return html`<svg width=${w} height=${h} viewBox=${'0 0 ' + w + ' ' + h} role="img" aria-label=${label || ('Battery trend: ' + pts.map(v => v.toFixed(1)).join(', '))} style=${{ maxWidth:'100%', flex:'none' }}>
+    <line x1="4" x2=${w - 4} y1=${y(2.5)} y2=${y(2.5)} stroke="var(--line)" strokeDasharray="3 3"/>
+    <path d=${area} fill="var(--accent-soft)"/>
+    <path d=${line} fill="none" stroke="var(--accent)" strokeWidth="2.2" strokeLinejoin="round"/>
+    <circle cx=${x(pts.length - 1)} cy=${y(last)} r="4" fill=${'var(--' + band(last) + ')'} stroke="var(--surface)" strokeWidth="1.5"/>
+  </svg>`;
+}
+
+/* ---------- seed data (fictional pupils only) ---------- */
+async function buildSeed(){
+  const rnd = mulberry32(61);
+  const days = lastSchoolDays(6);
+  const pw = await makeSecret('demo1234');
+  const staff = [
+    { id:'t1', name:'Ms Rivera', email:'demo@recharge.test', role:'class_teacher' },
+    { id:'t2', name:'Mr Adeyemi', email:'senco@recharge.test', role:'senco' },
+    { id:'t3', name:'Mrs Hughes', email:'keyadult@recharge.test', role:'key_adult' },
+    { id:'t4', name:'Ms Shah', email:'dsl@recharge.test', role:'dsl' }
+  ];
+  for (const s of staff) { const sec = await makeSecret('demo1234'); s.salt = sec.salt; s.pwHash = sec.hash; }
+  void pw;
+  const P = [
+    ['Amara O.','sun','t3',3.9,96], ['Ben T.','sky','t1',4.0,98], ['Chloe W.','rose','t1',3.8,95], ['Dev P.','leaf','t3',3.7,93],
+    ['Elif K.','lilac','t1',3.9,97], ['Finn R.','coral','t1',4.1,99], ['Grace L.','teal','t1',3.8,96], ['Hamza A.','slate','t3',4.0,97],
+    ['Isla M.','lilac','t1',0,97], ['Jayden B.','sky','t1',3.6,94], ['Kofi N.','sun','t3',3.9,98], ['Lena S.','leaf','t1',4.0,96]
+  ];
+  const pupils = [];
+  for (const [name, avatar, keyAdultId, base, attendance] of P) {
+    const sec = await makeSecret('1234');
+    pupils.push({ id:'p_' + name.split(' ')[0].toLowerCase(), classId:'c6b', name, avatar, keyAdultId, base, attendance, salt:sec.salt, pinHash:sec.hash, failed:0, locked:false, buddy:{ colour:ZIP_COLOURS[pupils.length % 5], hat:HATS[(pupils.length * 2) % 6] }, parentShare:false });
+  }
+  const EFFECT = { maths:-0.2, chg1:-1.8, break:-0.5, english:0.1, lunch:-1.7, chg2:-1.8, science:0.3, pe:-0.4 };
+  const DRIFT = [4.4, 4.1, 3.6, 3.0, 2.4, 1.9];
+  const checkins = [];
+  const dayAvg = (r) => avg(Object.values(r));
+  for (const p of pupils) {
+    const isDrift = p.id === 'p_isla';
+    const series = [];
+    days.forEach((date, i) => {
+      const b = isDrift ? DRIFT[i] : p.base + (rnd() - 0.5) * 0.5;
+      const ratings = {};
+      for (const s of SLOT_DEFS) {
+        const eff = EFFECT[s.id] * (isDrift ? (0.6 + i * 0.12) : 1);
+        ratings[s.id] = clamp(Math.round(b + eff + (rnd() - 0.5) * (isDrift ? 0.4 : 1.1)), 1, 5);
+      }
+      series.push({ id:uid('ci'), pupilId:p.id, date, ratings, notes:{}, at:new Date(date + 'T15:10:00').getTime() });
+    });
+    if (!isDrift) {
+      for (let guard = 0; guard < 4 && driftInfo(series.map(c => dayAvg(c.ratings))); guard++) {
+        const last = series[series.length - 1];
+        for (const k of Object.keys(last.ratings)) last.ratings[k] = clamp(last.ratings[k] + 1, 1, 5);
+      }
+    }
+    checkins.push(...series);
+  }
+  const ci = (pid, i) => checkins.filter(c => c.pupilId === pid)[i];
+  const note = (pid, i, slot, n) => { ci(pid, i).notes[slot] = Object.assign({ symbols:[], help:{ chips:[], text:'' } }, n); };
+  note('p_isla', 3, 'lunch', { symbols:['tooLoud','tooCrowded'] });
+  note('p_isla', 4, 'chg1', { text:"Everyone pushes and it is so loud I can't think", help:{ chips:['Leave early'], text:'' } });
+  note('p_isla', 4, 'lunch', { symbols:['tooLoud'], help:{ chips:[], text:'eat somewhere quieter' } });
+  note('p_isla', 5, 'lunch', { text:'I sat in the toilets at lunch because the hall was too much', help:{ chips:['Quieter place'], text:'' } });
+  note('p_isla', 5, 'chg2', { symbols:['tooCrowded','needBreakSym'] });
+  note('p_jayden', 5, 'chg1', { text:'Some boys push me on the stairs and I feel unsafe', help:{ chips:['Adult to talk to'], text:'' } });
+  note('p_elif', 5, 'lunch', { text:'Na stołówce jest za głośno i potem boli mnie głowa', help:{ chips:['Leave early'], text:'go before the bell' } });
+  note('p_amara', 5, 'lunch', { help:{ chips:['Headphones'], text:'headphones at lunch' } });
+  note('p_ben', 4, 'break', { help:{ chips:['Break space'], text:'a quiet room at break' } });
+  note('p_chloe', 5, 'english', { help:{ chips:['Sit somewhere else'], text:'sit near the door' } });
+  note('p_dev', 5, 'lunch', { help:{ chips:['Quieter place'], text:'eat in the library' } });
+  note('p_dev', 3, 'lunch', { symbols:['tooLoud'], help:{ chips:['Quieter place'], text:'' } });
+  note('p_finn', 4, 'maths', { help:{ chips:['Break space'], text:'more time outside' } });
+  note('p_grace', 5, 'maths', { help:{ chips:['Quieter place'], text:'a calm corner in class' } });
+  note('p_hamza', 5, 'pe', { help:{ chips:['Adult to talk to'], text:'talk to Mrs Hughes before PE' } });
+  note('p_kofi', 5, 'lunch', { help:{ chips:['Quieter place'], text:'lunch with my friends in a smaller room' } });
+  note('p_lena', 4, 'chg2', { help:{ chips:[], text:'walk on the quiet stairs' } });
+  note('p_lena', 5, 'lunch', { symbols:['tooLoud'], help:{ chips:['Headphones'], text:'' } });
+  const pins = [
+    { id:'pin_lib', pupilId:'p_isla', photo:null, tag:'recharges', emoji:'📚', caption:'The library at break. Quiet, and the beanbags are soft.', at:Date.now() - 864e5 * 20 },
+    { id:'pin_hall', pupilId:'p_isla', photo:null, tag:'drains', emoji:'🔊', caption:'Lunch hall. It echoes and the smells are strong.', at:Date.now() - 864e5 * 20 }
+  ];
+  ci('p_isla', 4).ratings['pin_pin_lib'] = 5; ci('p_isla', 4).ratings['pin_pin_hall'] = 1;
+  ci('p_isla', 5).ratings['pin_pin_lib'] = 5; ci('p_isla', 5).ratings['pin_pin_hall'] = 1;
+  pupils.find(p => p.id === 'p_dev').parentShare = true;
+  const d = {
+    version:1, seededAt:Date.now(), staff, pupils, checkins, pins,
+    classes:[{ id:'c6b', name:'6B', code:'6B-K4P', teacherId:'t1' }],
+    slots:{ c6b:SLOT_DEFS.map(s => Object.assign({}, s)) },
+    profiles:{},
+    feed:[
+      { id:'f1', classId:'c6b', said:'The lunch hall is too loud.', did:'A quiet table by the window is open on Tuesdays and Thursdays, with ear defenders in a basket.', by:'Ms Rivera', at:Date.now() - 864e5 * 9 },
+      { id:'f2', classId:'c6b', said:'The corridor is crowded after Maths.', did:'Year 6 can now leave Maths two minutes early and use the side stairs.', by:'Mr Adeyemi', at:Date.now() - 864e5 * 4 }
+    ],
+    moments:[
+      { id:uid('m'), pupilId:'p_isla', kind:'break', at:new Date(days[5] + 'T12:25:00').getTime(), seen:false },
+      { id:uid('m'), pupilId:'p_isla', kind:'symbol', symbol:'tooLoud', at:new Date(days[5] + 'T12:20:00').getTime(), seen:false },
+      { id:uid('m'), pupilId:'p_amara', kind:'symbol', symbol:'feelsSafe', at:new Date(days[4] + 'T10:50:00').getTime(), seen:true }
+    ],
+    plans:[],
+    parentNotes:[
+      { id:'pn1', pupilId:'p_dev', text:'Dev came home exhausted on Tuesday and said changing for PE in a busy room was hard.', at:Date.now() - 864e5 * 3 },
+      { id:'pn2', pupilId:'p_isla', text:'Isla has been very quiet at home this week and is not finishing packed lunch.', at:Date.now() - 864e5 * 2 }
+    ],
+    flags:[]
+  };
+  for (const c of d.checkins) for (const [sid, n] of Object.entries(c.notes)) raiseFlag(d, c.pupilId, 'Check-in note: ' + slotLabel(d, c.pupilId, sid), [n.text, n.help && n.help.text].filter(Boolean).join(' '), c.at);
+  syncProfile(d, 'p_isla');
+  approveProfile(d, 'p_isla');
+  return d;
+}
+
+/* ---------- derived data ---------- */
+function slotsFor(d, pupil){
+  const base = d.slots[pupil.classId] || [];
+  const pins = d.pins.filter(p => p.pupilId === pupil.id).map(p => ({ id:'pin_' + p.id, name:p.caption, place:p.tag === 'drains' ? 'drains' : 'recharges', emoji:p.emoji, pin:p }));
+  return { base, pins };
+}
+function slotLabel(d, pupilId, sid){
+  if (sid.startsWith('pin_')) { const p = d.pins.find(x => 'pin_' + x.id === sid); return p ? p.emoji + ' ' + p.caption : 'Personal place'; }
+  const pupil = d.pupils.find(p => p.id === pupilId);
+  const s = (d.slots[pupil ? pupil.classId : 'c6b'] || SLOT_DEFS).find(x => x.id === sid);
+  return s ? s.name + ' (' + s.place + ')' : sid;
+}
+function pupilSeries(d, pid){ return d.checkins.filter(c => c.pupilId === pid).sort((a, b) => a.date < b.date ? -1 : 1).map(c => ({ date:c.date, avg:avg(Object.values(c.ratings)), c })); }
+function driftInfo(avgs){
+  const a = avgs.filter(v => v != null);
+  if (a.length < 5) return null;
+  // smooth each check-in with the one before, so one partial check-in can't hide a slide
+  const sm = a.slice(1).map((v, i) => (v + a[i]) / 2);
+  let drops = 0, start = sm.length - 1;
+  for (let i = sm.length - 1; i > 0; i--) {
+    const diff = sm[i] - sm[i - 1];
+    if (diff < -0.05) { drops++; start = i - 1; } else if (Math.abs(diff) <= 0.1) { start = i - 1; } else break;
+  }
+  if (drops < 3) return null;
+  const from = a[start], to = a[a.length - 1];
+  if (from - to < 0.6) return null;
+  return { drops, from, to };
+}
+function noteList(d, pid, limit){
+  const out = [];
+  pupilSeries(d, pid).slice().reverse().forEach(({ c }) => {
+    for (const [sid, n] of Object.entries(c.notes || {})) out.push({ pupilId:pid, date:c.date, sid, label:slotLabel(d, pid, sid), n, rating:c.ratings[sid] });
+  });
+  return limit ? out.slice(0, limit) : out;
+}
+function helpAnswers(d, pupilIds){
+  const out = [];
+  for (const c of d.checkins) {
+    if (!pupilIds.has(c.pupilId)) continue;
+    for (const [sid, n] of Object.entries(c.notes || {})) {
+      const h = n.help || {}; const parts = [].concat(h.chips || [], h.text ? [h.text] : []);
+      if (!parts.length) continue;
+      const text = h.text || (h.chips || []).join(', ');
+      out.push({ pupilId:c.pupilId, date:c.date, text, all:parts.join(' '), slot:slotLabel(d, c.pupilId, sid) });
+    }
+  }
+  return out;
+}
+
+/* Profile: auto-built from the pupil's own ratings, symbols, pins and words. The pupil hides, edits and approves it. */
+const SYM_DRAIN = { tooLoud:'Places that are too loud', tooBright:'Bright lights', tooCrowded:'Crowded places', needBreakSym:'Going a long time without a break' };
+function syncProfile(d, pid){
+  const pupil = d.pupils.find(p => p.id === pid);
+  const prof = d.profiles[pid] || { items:[], approvedAt:null, approvedSnapshot:null, dirty:false };
+  const cs = d.checkins.filter(c => c.pupilId === pid);
+  const bySlot = {};
+  for (const c of cs) for (const [sid, v] of Object.entries(c.ratings)) (bySlot[sid] = bySlot[sid] || []).push(v);
+  const want = [];
+  const slots = d.slots[pupil.classId] || [];
+  const seenPlace = new Set();
+  for (const s of slots) {
+    const a = avg(bySlot[s.id] || []); if (a == null) continue;
+    const key = s.place + '|' + (a <= 2.5 ? 'd' : a >= 4 ? 'h' : '');
+    if (seenPlace.has(key)) continue; seenPlace.add(key);
+    if (a <= 2.5) want.push({ section:'drains', text:s.place + (s.name === 'Changeover' ? ' at changeover' : ' at ' + s.name.toLowerCase()), src:'ratings' });
+    else if (a >= 4.2) want.push({ section:'helps', text:s.name + ' in ' + s.place, src:'ratings' });
+  }
+  const symCount = {};
+  for (const c of cs) for (const n of Object.values(c.notes || {})) for (const s of (n.symbols || [])) symCount[s] = (symCount[s] || 0) + 1;
+  for (const [s, n] of Object.entries(symCount)) {
+    if (s === 'feelsSafe') want.push({ section:'helps', text:'Places that feel safe', src:'symbols' });
+    else if (SYM_DRAIN[s]) want.push({ section:'drains', text:SYM_DRAIN[s], src:'symbols' });
+  }
+  for (const p of d.pins.filter(x => x.pupilId === pid)) want.push({ section:p.tag === 'drains' ? 'drains' : 'helps', text:p.emoji + ' ' + p.caption, src:'walk' });
+  const helps = new Set();
+  for (const c of cs) for (const n of Object.values(c.notes || {})) { const h = n.help || {}; (h.chips || []).forEach(x => helps.add(x)); if (h.text) helps.add(h.text); }
+  helps.forEach(h => want.push({ section:'helps', text:h.charAt(0).toUpperCase() + h.slice(1), src:'help' }));
+  for (const c of cs) for (const n of Object.values(c.notes || {})) if (n.text) want.push({ section:'words', text:'"' + n.text + '"', src:'typed' });
+  let added = false;
+  for (const w of want) {
+    if (!prof.items.some(i => i.section === w.section && i.text === w.text)) { prof.items.push(Object.assign({ id:uid('it'), hidden:false }, w)); added = true; }
+  }
+  if (added && prof.approvedSnapshot) prof.dirty = true;
+  d.profiles[pid] = prof;
+}
+function approveProfile(d, pid){
+  const prof = d.profiles[pid]; if (!prof) return;
+  prof.approvedAt = Date.now();
+  prof.approvedSnapshot = prof.items.filter(i => !i.hidden).map(i => ({ section:i.section, text:i.text }));
+  prof.dirty = false;
+}
+
+/* ---------- access rules: mirrors the Supabase row-level security policies ---------- */
+const Access = {
+  visiblePupils(d, staff, classId){
+    let ps = d.pupils.filter(p => !classId || p.classId === classId);
+    if (staff.role === 'key_adult') ps = ps.filter(p => p.keyAdultId === staff.id);
+    return ps;
+  },
+  canSeeDrift: (staff, p) => staff.role === 'senco' || p.keyAdultId === staff.id,
+  canSeeMoments: (staff, p) => staff.role === 'senco' || p.keyAdultId === staff.id,
+  canManage: (staff) => staff.role === 'class_teacher' || staff.role === 'senco',
+  canSeeSafeguarding: (staff) => staff.role === 'dsl',
+  profile: (d, p) => (d.profiles[p.id] && d.profiles[p.id].approvedSnapshot) || null,
+  parentNotes: (d, p) => p.parentShare ? d.parentNotes.filter(n => n.pupilId === p.id) : null
+};
+
+/* ---------- optional AI and file saving, through the Claude viewer ---------- */
+const capCache = {};
+// on an ordinary website (outside the Claude viewer) files are saved with a normal browser download
+const plainDownloads = {
+  save({ filename, data }){
+    const blob = data instanceof Blob ? data : new Blob([data]);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+    return Promise.resolve({ status:'saved' });
+  }
+};
+function useCap(name){
+  const [cap, setCap] = useState(undefined);
+  useEffect(() => {
+    let live = true;
+    if (!capCache[name]) capCache[name] = (window.claude && window.claude.use ? window.claude.use(name) : Promise.resolve(name === 'downloads' ? plainDownloads : null)).catch(() => null);
+    capCache[name].then(v => { if (live) setCap(v || null); });
+    return () => { live = false; };
+  }, [name]);
+  return cap;
+}
+const AI_RULES = 'You are helping school staff read short notes from pupils aged 9-12. Never diagnose, never label or guess emotions, never interpret images or drawings, and never add meaning that is not in the words. The pupil\'s own words are the meaning.';
+async function aiTranslate(sample, text, language){
+  const r = await sample(AI_RULES + '\n\nTranslate the text between the markers into ' + language + '. Translate only. Keep it simple and child-friendly. Reply with only the translation.\n\n<<<\n' + text + '\n>>>', { modelTier:'quick' });
+  return r.text.trim();
+}
+function aiErr(e){ const c = e && e.code; if (c === 'not_granted') return 'AI was not allowed in this view.'; if (c === 'rate_limited') return 'Too many AI requests. Try again in a minute.'; return 'AI could not answer just now.'; }
+
+async function savePdf(downloads, filename, build){
+  const J = window.jspdf && window.jspdf.jsPDF;
+  if (!J) throw new Error('PDF library did not load.');
+  if (!downloads) throw new Error('Saving files is not available in this view.');
+  const doc = new J({ unit:'mm', format:'a4' });
+  build(doc);
+  await downloads.save({ filename, data:doc.output('blob') });
+}
+function pdfText(doc, text, x, y, w, lh){ const lines = doc.splitTextToSize(String(text).replace(/[^\x20-\x7E -ÿ]/g, ''), w); doc.text(lines, x, y); return y + lines.length * lh; }
+
+
+/* ---------- evidence notes: for each feature, what each reading found, how Recharge uses it, and why it is logged ---------- */
+const R = {
+  hull:{ short:'Hull et al. (2017)',
+    cite:'Hull, L., Petrides, K.V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C. & Mandy, W. (2017) "Putting on my best normal": social camouflaging in adults with autism spectrum conditions. Journal of Autism and Developmental Disorders, 47, 2519–2534.',
+    finding:'Autistic adults described camouflaging: hiding autistic traits and copying others so they could fit in and connect. They said it took constant effort, left them exhausted afterwards, and harmed their mental health and sense of who they are. Because camouflaging works, the people around them often did not notice they were struggling.' },
+  halsall:{ short:'Halsall, Clarke & Crane (2021)',
+    cite:'Halsall, J., Clarke, C. & Crane, L. (2021) "Camouflaging" by adolescent autistic girls who attend both mainstream and specialist resource classes. Autism, 25(7).',
+    finding:'Autistic girls described hiding their difficulties to fit in with peers, especially in mainstream classes. Girls, mothers and educators agreed this was tiring, and the effects were often seen at home rather than in school, so school staff could underestimate how hard the day had been.' },
+  raymaker:{ short:'Raymaker et al. (2020)',
+    cite:'Raymaker, D.M. et al. (2020) "Having all of your internal resources exhausted beyond measure and being left with no clean-up crew": defining autistic burnout. Autism in Adulthood, 2(2).',
+    finding:'Autistic people defined autistic burnout as long-term exhaustion, loss of skills and lower tolerance of sensory input. It builds up from everyday demands that outweigh a person\'s resources, and masking adds to it. Participants described it as running out of internal resources, which is an energy idea, not a mood.' },
+  kinnaird:{ short:'Kinnaird, Stewart & Tchanturia (2019)',
+    cite:'Kinnaird, E., Stewart, C. & Tchanturia, K. (2019) Investigating alexithymia in autism: a systematic review and meta-analysis. European Psychiatry, 55, 80–89.',
+    finding:'Pooling many studies, the review found that around half of autistic people have alexithymia (difficulty identifying and describing their own emotions), compared with about 1 in 20 people in comparison groups. Tools that ask autistic young people to name or pick their feelings can therefore give unreliable answers.' },
+  uncrc1213:{ short:'UNCRC Articles 12 & 13 (1989)',
+    cite:'United Nations (1989) Convention on the Rights of the Child, Articles 12 and 13.',
+    finding:'Article 12 gives every child the right to express their views on matters that affect them, and to have those views given due weight. Article 13 says children can express themselves "in the form of art, or through any other media of the child\'s choice", not only in speech or writing.' },
+  mosaic:{ short:'Clark & Moss (2011)',
+    cite:'Clark, A. & Moss, P. (2011) Listening to Young Children: The Mosaic Approach (2nd ed.). London: National Children\'s Bureau.',
+    finding:'The Mosaic approach treats children as experts in their own lives. It combines several ways of listening, including children\'s own photographs, child-led tours of their setting, map-making and talk, and pieces them together. No single method is relied on, and children explain what their own images mean.' },
+  talkingmats:{ short:'Murphy & Cameron (2008)',
+    cite:'Murphy, J. & Cameron, L. (2008) The effectiveness of Talking Mats with people with intellectual disability. British Journal of Learning Disabilities, 36(4), 232–241.',
+    finding:'People with intellectual disabilities communicated their views more effectively with Talking Mats, a symbol-based tool, than in their usual conversations: they understood more, stayed engaged for longer and gave clearer answers. Picture symbols lower the language demand of saying what you think.' },
+  photovoice:{ short:'Wang & Burris (1997)',
+    cite:'Wang, C. & Burris, M.A. (1997) Photovoice: concept, methodology, and use for participatory needs assessment. Health Education & Behavior, 24(3), 369–387.',
+    finding:'Photovoice gives people cameras to record the strengths and problems of their own community, then uses their photos and their own explanations to start discussion and reach decision-makers. The people who take the photos decide what the images mean.' },
+  bomber:{ short:'Bombèr (2007)',
+    cite:'Bombèr, L.M. (2007) Inside I\'m Hurting: Practical strategies for supporting children with attachment difficulties in schools. London: Worth Publishing.',
+    finding:'Bombèr recommends that a vulnerable child has a named key adult in school who acts as a secure base: someone who checks in regularly, notices early signs of stress, and is available when the child needs a break. Children settle better when they know exactly who to go to.' },
+  sendcop:{ short:'SEND Code of Practice (2015)',
+    cite:'Department for Education & Department of Health (2015) Special educational needs and disability code of practice: 0 to 25 years. Chapter 1 (Principles) and Chapter 6 (Schools).',
+    finding:'The Code says those supporting children with SEND must have regard to the child\'s views, wishes and feelings, and to the importance of the child taking part in decisions. Schools are expected to involve pupils in planning and reviewing their support, and to share useful information when pupils move between settings.' },
+  lundy:{ short:'Lundy (2007)',
+    cite:'Lundy, L. (2007) "Voice" is not enough: conceptualising Article 12 of the United Nations Convention on the Rights of the Child. British Educational Research Journal, 33(6), 927–942.',
+    finding:'Lundy argues that letting children speak is not enough. Article 12 needs four things: Space (a safe chance to give views), Voice (help to express them), Audience (someone with power listens) and Influence (views are acted on, and children are told what happened and why).' },
+  sdt:{ short:'Ryan & Deci (2000)',
+    cite:'Ryan, R.M. & Deci, E.L. (2000) Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. American Psychologist, 55(1), 68–78.',
+    finding:'People stay motivated when three needs are met: autonomy (real choice), competence (feeling able) and relatedness (feeling connected). Activities people choose and own are kept up for longer than ones they feel pushed into.' },
+  ashburner:{ short:'Ashburner, Ziviani & Rodger (2008)',
+    cite:'Ashburner, J., Ziviani, J. & Rodger, S. (2008) Sensory processing and classroom emotional, behavioral, and educational outcomes in children with autism spectrum disorder. American Journal of Occupational Therapy, 62(5), 564–573.',
+    finding:'Autistic children in mainstream classes showed more sensory processing differences than their classmates, especially difficulty filtering out background noise. These differences were linked to emotional and behavioural difficulties and lower academic results, which points to the sensory environment as part of the problem.' },
+  totsika:{ short:'Totsika et al. (2020)',
+    cite:'Totsika, V. et al. (2020) Types and correlates of school non-attendance in students with autism spectrum disorders. Autism, 24(7).',
+    finding:'In a UK survey of parents, non-attendance was common among autistic pupils and took several forms: school refusal linked to distress, truancy, exclusion and parents withdrawing their child. Each type had different causes, so the absence figure alone does not tell staff what is going wrong or how early it started.' },
+  dfeattend:{ short:'DfE (2024) Working together to improve school attendance',
+    cite:'Department for Education (2024) Working together to improve school attendance: statutory guidance for maintained schools, academies, independent schools and local authorities.',
+    finding:'The guidance asks schools to spot early signs that a pupil may be at risk of poor attendance and to act before absence becomes entrenched. It expects a supportive approach for pupils with SEND or mental health needs, worked out with the pupil and their family.' },
+  braun:{ short:'Braun & Clarke (2006)',
+    cite:'Braun, V. & Clarke, V. (2006) Using thematic analysis in psychology. Qualitative Research in Psychology, 3(2), 77–101.',
+    finding:'Thematic analysis is a step-by-step way to find patterns in open answers: become familiar with the data, code it, gather codes into themes, review and name the themes, then report them with real quotes. Themes should stay close to what people actually said.' },
+  kcsie:{ short:'Keeping Children Safe in Education (DfE)',
+    cite:'Department for Education, Keeping Children Safe in Education: statutory guidance for schools and colleges (current edition), Part one.',
+    finding:'All staff must know what to do if a child shares something worrying: act straight away, never promise to keep it secret, record it, and pass it to the Designated Safeguarding Lead (DSL). The DSL leads on deciding next steps, including referrals.' },
+  ico:{ short:'ICO Age Appropriate Design Code (2020)',
+    cite:'Information Commissioner\'s Office (2020) Age appropriate design: a code of practice for online services.',
+    finding:'Online services likely to be used by children must put the child\'s best interests first. The 15 standards include collecting and keeping only the data that is needed, setting high privacy by default, and explaining clearly to children what happens to their information.' },
+  uncrc16:{ short:'UNCRC Article 16 (1989)',
+    cite:'United Nations (1989) Convention on the Rights of the Child, Article 16.',
+    finding:'Children have the right to privacy. No one should arbitrarily interfere with their private life, family, home or correspondence.' },
+  wcag:{ short:'WCAG 2.2 (W3C, 2023)',
+    cite:'W3C (2023) Web Content Accessibility Guidelines (WCAG) 2.2. World Wide Web Consortium Recommendation.',
+    finding:'The AA standard requires text contrast of at least 4.5 to 1, full keyboard use, visible focus, labels for screen readers, and, new in 2.2, touch targets of at least 24 by 24 pixels and log-ins that do not rely only on memory tests.' },
+  bda:{ short:'British Dyslexia Association Style Guide',
+    cite:'British Dyslexia Association, Dyslexia Style Guide.',
+    finding:'Readers with dyslexia are helped by plain sans-serif fonts, generous line spacing (around 1.5), left-aligned text, off-white or soft backgrounds, and avoiding italics, underlining and blocks of capital letters.' },
+  dfeai:{ short:'DfE (2025) Generative AI: product safety expectations',
+    cite:'Department for Education (2025) Generative AI: product safety expectations.',
+    finding:'The DfE sets out what AI products used in schools should do, including filtering harmful content, protecting pupils\' data, being transparent about how they work, and keeping people accountable for decisions about pupils.' }
+};
+const EVIDENCE = {
+  masking:{ readings:['hull','halsall'],
+    use:'Recharge never asks a pupil to show or admit distress. It asks how much energy each place and moment took, which a pupil who masks can answer quietly on a tablet without anyone watching.',
+    logged:'Each rating is saved with the place and time, so staff can see a drain that masking would otherwise hide in class.' },
+  checkin:{ readings:['raymaker','kinnaird'],
+    use:'The check-in rates places and moments on a 5-part battery instead of asking "How do you feel?". Energy is easier to judge than an emotion word, and the battery matches how autistic people describe running out of resources.',
+    logged:'One battery rating per slot per day. Averages over time show which places drain the pupil, and a falling average is the early warning used by drift alerts.' },
+  notes:{ readings:['uncrc1213','mosaic'],
+    use:'Every slot has Photo, Draw, Symbols, Voice and Type, plus "What would help?". Typing is always optional. Images are shown to staff exactly as the pupil made them, and no AI interprets them.',
+    logged:'Notes are attached to the slot and day they describe. "What would help?" answers feed the "Most asked for" themes, so pupils\' ideas reach planning.' },
+  symbols:{ readings:['talkingmats'],
+    use:'Six large symbol tiles (Too loud, Too bright, Too crowded, Need a break, Feels safe, Talk to an adult) let a pupil say something in one tap, even when they have lost words.',
+    logged:'Each tap is saved with a time. "Need a break" and "Talk to an adult" go to the key adult. All taps add to the profile, so repeated "Too loud" moments become visible as a pattern.' },
+  walk:{ readings:['photovoice','mosaic'],
+    use:'Once a term, pupils photograph places around school, tag each as draining or recharging, and add an emoji and their own caption. These become personal places in the daily check-in.',
+    logged:'Photos and captions are saved as personal pins. The caption is the meaning: staff and AI never guess what a photo shows. Pins appear in the profile under Drains me or Helps me.' },
+  break:{ readings:['bomber'],
+    use:'The "I need a break" button is on every pupil screen. One tap tells the pupil\'s named key adult, with no explanation needed in the moment.',
+    logged:'Break requests are saved privately with a time and shown only to the key adult and SENCO. Frequency and timing help plan breaks before the pupil reaches overload.' },
+  profile:{ readings:['sendcop'],
+    use:'The profile is built from the pupil\'s own ratings, symbols, places and words. The pupil can hide items and add their own, and must tap Approve before staff can see it. It saves as a one-page PDF for the next school.',
+    logged:'Staff see only the approved version. If the pupil changes it, staff keep seeing the last approved version until the pupil approves again.' },
+  feed:{ readings:['lundy'],
+    use:'Staff post "You said … We did …" updates that appear in every pupil\'s feed. This gives pupils an audience and shows their views had influence.',
+    logged:'Each post records the change, who made it and when, so pupils and staff can see a record of what has been done in response.' },
+  buddy:{ readings:['sdt','kinnaird'],
+    use:'Pupils choose Zip\'s colour and hat, which gives them a small, real choice and some ownership. Zip shows charge only, with no face, so pupils never have to read or match facial emotions.',
+    logged:'Buddy choices are saved for the pupil only and are never shown to staff.' },
+  heatmap:{ readings:['ashburner'],
+    use:'The heatmap shows places and slots against the last 6 check-ins. Colour and an outline mark high drain, and every cell shows its number, so colour is never the only signal.',
+    logged:'Class averages per place and time point staff to environmental changes, such as the corridor or lunch hall, instead of focusing on one child\'s behaviour.' },
+  drift:{ readings:['totsika','dfeattend'],
+    use:'A drift alert appears when a pupil\'s average battery has fallen across 3 or more check-ins, even if their attendance looks normal. It shows a trend line, their latest notes and a "Plan a check-in" button.',
+    logged:'Alerts are worked out from saved ratings and shown only to the pupil\'s key adult and the SENCO. Planned check-ins are saved, so staff can see what action followed.' },
+  themes:{ readings:['braun'],
+    use:'"What would help?" answers are grouped into themes by keywords, with real quotes under each theme. An optional AI summary must copy pupils\' exact words and sits alongside the keyword groups, not in place of them.',
+    logged:'Answers stay linked to the place and day they came from, so staff can see where a request applies and pick a "You said" theme from them.' },
+  safe:{ readings:['kcsie'],
+    use:'If a note contains concerning words such as hurt, unsafe or self-harm, it goes straight to the DSL\'s view with an escalation checklist. Recharge does not judge risk; it makes sure a person sees the note.',
+    logged:'Each flag records the exact note, the matched words, the time and each checklist step. A flag can only be closed once every step is ticked, which leaves a record of the response.' },
+  security:{ readings:['ico'],
+    use:'Pupils log in with a class code, their name and a 4-digit PIN. PINs are stored only as scrambled hashes, the account pauses after 5 wrong tries until a teacher resets it, and sessions end after 20 minutes of inactivity on shared iPads.',
+    logged:'Only what the features need is stored: a first name and initial, an avatar colour and check-in data. No photos of the pupil\'s face or real surname are needed.' },
+  parent:{ readings:['uncrc16','ico'],
+    use:'Parents and carers can leave an after-school note using their child\'s PIN. The pupil decides in their profile whether school can read notes from home.',
+    logged:'Notes from home are saved, but staff can only see them while the pupil has agreed. If the pupil turns sharing off, staff see that notes are hidden, not what they say.' },
+  access:{ readings:['wcag','bda'],
+    use:'Touch targets are at least 48 pixels, text has strong contrast, every control works by keyboard or switch, and icons sit next to words. There is a read-aloud button, an easy-read font, bigger text and a low-sensory dark mode, with no sound or motion unless turned on.',
+    logged:'Display choices are saved on this device only, so a shared iPad does not carry one pupil\'s settings into another pupil\'s account.' },
+  ai:{ readings:['dfeai'],
+    use:'AI is optional. It only translates notes or the profile and groups "What would help?" answers. It never interprets photos or drawings, diagnoses, or labels emotions, and staff always see the original words next to any AI output.',
+    logged:'AI output is not saved as fact. Translations and summaries are marked as machine-made, and every decision stays with staff.' }
+};
+function Why({ k }){
+  const { prefs } = useApp();
+  const e = EVIDENCE[k];
+  if (!e || prefs.evidence === false) return null;
+  return html`<aside className="why" aria-label="Evidence for this feature">
+    <p className="why-head"><${Icon} name="book" size=${16}/>Evidence for this feature</p>
+    ${e.readings.map(id => { const r = R[id]; return html`<div key=${id} className="why-reading">
+      <p className="why-ref">${r.short}</p>
+      <p>${r.finding}</p>
+      <p className="why-cite">${r.cite}</p>
+    </div>`; })}
+    <p><b>How Recharge uses it:</b> ${e.use}</p>
+    <p><b>What is logged and why:</b> ${e.logged}</p>
+  </aside>`;
+}
+
+/* ---------- app context ---------- */
+const AppCtx = createContext(null);
+const useApp = () => useContext(AppCtx);
+const DB_KEY = 'recharge.demo.db.v1', PREF_KEY = 'recharge.prefs', SESSION_KEY = 'recharge.session', REMEMBER_KEY = 'recharge.rememberClass';
+const TIMEOUT_MS = 20 * 60 * 1000;
+const hostTheme = document.documentElement.getAttribute('data-theme');
+
+function readJSON(k, fallback){ try { const v = ls.get(k); return v ? JSON.parse(v) : fallback; } catch(e){ return fallback; } }
+
+function App(){
+  const [db, setDb] = useState(null);
+  const dbRef = useRef(null);
+  const [prefs, setPrefsState] = useState(() => Object.assign({ lang:'en', theme:'system', font:'default', motion:false, size:'md', evidence:true }, readJSON(PREF_KEY, {})));
+  const [session, setSessionState] = useState(() => { const s = readJSON(SESSION_KEY, null); return s && Date.now() - s.last < TIMEOUT_MS ? s : null; });
+  const [toast, setToast] = useState(null);
+  const [breakOpen, setBreakOpen] = useState(false);
+  const toastTimer = useRef(null);
+
+  const showToast = useCallback((msg) => { setToast(msg); clearTimeout(toastTimer.current); toastTimer.current = setTimeout(() => setToast(null), 4200); }, []);
+  const setPrefs = (patch) => setPrefsState(p => { const n = Object.assign({}, p, patch); ls.set(PREF_KEY, JSON.stringify(n)); return n; });
+  const setSession = (s) => { const v = s ? Object.assign({ last:Date.now() }, s) : null; setSessionState(v); if (v) ls.set(SESSION_KEY, JSON.stringify(v)); else ls.del(SESSION_KEY); };
+
+  useEffect(() => { (async () => { let d = readJSON(DB_KEY, null); if (!d || d.version !== 1) { d = await buildSeed(); ls.set(DB_KEY, JSON.stringify(d)); } dbRef.current = d; setDb(d); })(); }, []);
+
+  const update = useCallback((fn) => {
+    const next = clone(dbRef.current);
+    const r = fn(next);
+    dbRef.current = next; setDb(next);
+    if (!ls.set(DB_KEY, JSON.stringify(next))) showToast('This device is out of storage space. Try a smaller photo, or reset the demo.');
+    return r;
+  }, [showToast]);
+
+  const resetDemo = async () => {
+    ls.del(DB_KEY); ls.del(REMEMBER_KEY); setSession(null);
+    const d = await buildSeed(); ls.set(DB_KEY, JSON.stringify(d)); dbRef.current = d; setDb(d);
+    showToast('Demo reset. Fresh fictional data loaded.');
+  };
+
+  useEffect(() => {
+    const r = document.documentElement;
+    if (prefs.theme === 'system') { if (hostTheme) r.setAttribute('data-theme', hostTheme); else r.removeAttribute('data-theme'); }
+    else r.setAttribute('data-theme', prefs.theme);
+    r.setAttribute('data-font', prefs.font); r.setAttribute('data-motion', prefs.motion ? 'on' : 'off'); r.setAttribute('data-size', prefs.size);
+    r.setAttribute('lang', (LANGS.find(l => l[0] === prefs.lang) || LANGS[0])[2]);
+  }, [prefs]);
+
+  // inactivity timeout (shared iPads)
+  useEffect(() => {
+    if (!session) return;
+    let last = Date.now();
+    const bump = () => { last = Date.now(); if (Date.now() - (readJSON(SESSION_KEY, {}).last || 0) > 30000) ls.set(SESSION_KEY, JSON.stringify(Object.assign({}, session, { last }))); };
+    const evs = ['pointerdown','keydown','scroll','touchstart'];
+    evs.forEach(e => window.addEventListener(e, bump, { passive:true }));
+    const iv = setInterval(() => { if (Date.now() - last > TIMEOUT_MS) { setSession(null); showToast(I18N[prefs.lang].timeout); } }, 15000);
+    return () => { evs.forEach(e => window.removeEventListener(e, bump)); clearInterval(iv); };
+  }, [session && session.id]);
+
+  const t = useCallback((k, vars) => {
+    let s = (I18N[prefs.lang] && I18N[prefs.lang][k]) != null ? I18N[prefs.lang][k] : (I18N.en[k] != null ? I18N.en[k] : k);
+    if (typeof s === 'string' && vars) s = s.replace(/\{(\w+)\}/g, (m, key) => vars[key] != null ? vars[key] : m);
+    return s;
+  }, [prefs.lang]);
+  const tr = useCallback((s) => (SLOT_I18N[prefs.lang] && SLOT_I18N[prefs.lang][s]) || s, [prefs.lang]);
+
+  if (!db) return html`<div className="wrap" style=${{ paddingBlock:'48px' }}><p className="muted">Loading Recharge…</p></div>`;
+
+  const me = session && session.kind === 'pupil' ? db.pupils.find(p => p.id === session.id) : null;
+  const staff = session && session.kind === 'staff' ? db.staff.find(s => s.id === session.id) : null;
+  const ctx = { db, update, prefs, setPrefs, t, tr, session, setSession, showToast, resetDemo, me, staff };
+
+  const logBreak = () => {
+    update(d => { d.moments.unshift({ id:uid('m'), pupilId:me.id, kind:'break', at:Date.now(), seen:false }); });
+    setBreakOpen(true);
+  };
+
+  return html`<${AppCtx.Provider} value=${ctx}>
+    <${TopBar} onBreak=${me ? logBreak : null}/>
+    <main id="main" className="wrap">
+      ${me ? html`<${PupilApp}/>` : staff ? html`<${StaffApp}/>` : html`<${Entry}/>`}
+    </main>
+    ${breakOpen && me && html`<${Dialog} onClose=${() => setBreakOpen(false)} label=${t('needBreak')}>
+      <div className="zip-stage"><${Zip} charge=${0.2} colour=${me.buddy.colour} hat=${me.buddy.hat} size=${90}/><div className="stack" style=${{ flex:'1 1 220px' }}>
+        <h2>${t('needBreak')}</h2>
+        <p style=${{ fontSize:'1.15rem' }}>${t('breakSent', { adult:(db.staff.find(s => s.id === me.keyAdultId) || {}).name || 'Your key adult' })}</p>
+        <${Why} k="break"/>
+      </div></div>
+      <button className="btn btn-primary btn-lg" onClick=${() => setBreakOpen(false)}><${Icon} name="check"/>${t('ok')}</button>
+    <//>`}
+    <div aria-live="polite" className="sr-only">${toast || ''}</div>
+    ${toast && html`<div className="toast" role="status">${toast}</div>`}
+  <//>`;
+}
+
+function Dialog({ children, onClose, label }){
+  const ref = useRef(null);
+  useEffect(() => {
+    const prev = document.activeElement;
+    const el = ref.current; const f = el && el.querySelector('button, [href], input, select, textarea');
+    if (f) f.focus();
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => { window.removeEventListener('keydown', onKey); if (prev && prev.focus) prev.focus(); };
+  }, []);
+  return html`<div className="overlay" onClick=${(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="dialog" role="dialog" aria-modal="true" aria-label=${label} ref=${ref}>${children}</div>
+  </div>`;
+}
+
+/* ---------- top bar: read aloud, display, language, break, log out ---------- */
+function TopBar({ onBreak }){
+  const { t, prefs, setPrefs, session, setSession, me, staff } = useApp();
+  const [open, setOpen] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const canSpeak = typeof window.speechSynthesis !== 'undefined';
+  const speak = () => {
+    if (!canSpeak) return;
+    if (speaking) { speechSynthesis.cancel(); setSpeaking(false); return; }
+    const el = document.getElementById('main');
+    const u = new SpeechSynthesisUtterance((el ? el.innerText : '').replace(/\s+/g, ' ').slice(0, 3000));
+    u.lang = (LANGS.find(l => l[0] === prefs.lang) || LANGS[0])[2]; u.rate = 0.92;
+    u.onend = () => setSpeaking(false); u.onerror = () => setSpeaking(false);
+    speechSynthesis.cancel(); speechSynthesis.speak(u); setSpeaking(true);
+  };
+  const opt = (k, v, label, icon) => html`<button type="button" className="toggle" aria-pressed=${prefs[k] === v} onClick=${() => setPrefs({ [k]:v })}><span className="box">${prefs[k] === v && html`<${Icon} name="check" size=${18}/>`}</span><${Icon} name=${icon}/>${label}</button>`;
+  return html`<header className="topbar"><div className="wrap">
+    <div className="brand"><svg width="26" height="30" viewBox="0 0 120 150" aria-hidden="true"><rect x="47" y="10" width="26" height="14" rx="4" fill="var(--accent)"/><rect x="20" y="22" width="80" height="120" rx="22" fill="var(--accent)"/><path d="M66 42 L44 84 H58 L53 120 L78 74 H63 Z" fill="var(--accent-ink)"/></svg>Recharge</div>
+    <div className="tools">
+      ${canSpeak && html`<button type="button" className="tool" aria-pressed=${speaking} onClick=${speak}><${Icon} name="speaker"/><span className="lab">${speaking ? t('stop') : t('readAloud')}</span></button>`}
+      <label className="tool"><${Icon} name="globe"/><span className="sr-only">${t('language')}</span>
+        <select value=${prefs.lang} onChange=${(e) => setPrefs({ lang:e.target.value })} aria-label=${t('language')}>${LANGS.map(l => html`<option key=${l[0]} value=${l[0]}>${l[1]}</option>`)}</select></label>
+      <div className="relative">
+        <button type="button" className="tool" aria-expanded=${open} onClick=${() => setOpen(!open)}><${Icon} name="sliders"/><span className="lab">${t('display')}</span></button>
+        ${open && html`<div className="popover" role="group" aria-label=${t('display')}>
+          ${opt('theme', 'system', t('system'), 'refresh')}
+          ${opt('theme', 'light', t('light'), 'sun')}
+          ${opt('theme', 'dark', t('dark'), 'moon')}
+          <button type="button" className="toggle" aria-pressed=${prefs.font === 'easy'} onClick=${() => setPrefs({ font:prefs.font === 'easy' ? 'default' : 'easy' })}><span className="box">${prefs.font === 'easy' && html`<${Icon} name="check" size=${18}/>`}</span><${Icon} name="type"/>${t('easyFont')}</button>
+          <button type="button" className="toggle" aria-pressed=${prefs.size === 'lg'} onClick=${() => setPrefs({ size:prefs.size === 'lg' ? 'md' : 'lg' })}><span className="box">${prefs.size === 'lg' && html`<${Icon} name="check" size=${18}/>`}</span><${Icon} name="plus"/>${t('bigText')}</button>
+          <button type="button" className="toggle" aria-pressed=${prefs.motion} onClick=${() => setPrefs({ motion:!prefs.motion })}><span className="box">${prefs.motion && html`<${Icon} name="check" size=${18}/>`}</span><${Icon} name="sparkles"/>${t('motion')}</button>
+          <button type="button" className="toggle" aria-pressed=${prefs.evidence !== false} onClick=${() => setPrefs({ evidence:prefs.evidence === false })}><span className="box">${prefs.evidence !== false && html`<${Icon} name="check" size=${18}/>`}</span><${Icon} name="book"/>Evidence notes</button>
+          <${Why} k="access"/>
+          <button type="button" className="btn btn-quiet" onClick=${() => setOpen(false)}><${Icon} name="x"/>${t('close')}</button>
+        </div>`}
+      </div>
+      ${onBreak && html`<button type="button" className="break-btn" onClick=${onBreak}><${Icon} name="pause"/>${t('needBreak')}</button>`}
+      ${session && html`<button type="button" className="btn" onClick=${() => setSession(null)} style=${{ minHeight:'52px' }}><${Icon} name="logout"/>${t('logout')}</button>`}
+    </div>
+  </div></header>`;
+}
+
+/* ---------- entry: choose who you are ---------- */
+function Entry(){
+  const { t, db, resetDemo } = useApp();
+  const [mode, setMode] = useState(() => ls.get(REMEMBER_KEY) && db.classes.some(c => c.id === ls.get(REMEMBER_KEY)) ? 'pupil' : null);
+  const [confirmReset, setConfirmReset] = useState(false);
+  if (mode === 'pupil' || mode === 'parent') return html`<${PupilLogin} mode=${mode} onExit=${() => setMode(null)}/>`;
+  if (mode === 'staff') return html`<${StaffLogin} onExit=${() => setMode(null)}/>`;
+  return html`<div className="stack" style=${{ gap:'28px' }}>
+    <section className="hero">
+      <${Zip} charge=${0.8} colour="teal" hat="beanie" size=${110} label="Zip the battery buddy"/>
+      <div className="copy"><h1>${t('who')}</h1><p className="muted" style=${{ fontSize:'1.1rem', maxWidth:'34em' }}>${t('tagline')}</p><${Why} k="masking"/></div>
+    </section>
+    <div className="tiles">
+      <button type="button" className="tile" onClick=${() => setMode('pupil')}><span className="tile-ic"><${Icon} name="user" size=${28}/></span><b>${t('iAmPupil')}</b><span>${t('enterCode')}</span></button>
+      <button type="button" className="tile" onClick=${() => setMode('staff')}><span className="tile-ic"><${Icon} name="users" size=${28}/></span><b>${t('iAmStaff')}</b><span>Email and password</span></button>
+      <button type="button" className="tile" onClick=${() => setMode('parent')}><span className="tile-ic"><${Icon} name="home2" size=${28}/></span><b>${t('familyNote')}</b><span>For parents and carers, with your child's PIN</span></button>
+    </div>
+    <aside className="demo-box" aria-label="Demo details">
+      <div className="eyebrow">Demo · fictional data only</div>
+      <p>Pupils: class code <span className="kbd">6B-K4P</span>, any name, PIN <span className="kbd">1234</span>. Isla M. shows a falling battery with normal attendance.</p>
+      <p>Staff: <span className="mono">demo@recharge.test</span> / <span className="mono">demo1234</span> (class teacher). Also <span className="mono">senco@</span>, <span className="mono">keyadult@</span> and <span className="mono">dsl@recharge.test</span>, same password.</p>
+      <p className="muted small">Everything is saved only in this browser. PINs and passwords are stored hashed.</p>
+      <div className="row">
+        ${confirmReset
+          ? html`<span>Clear all changes and reload the demo data?</span><button className="btn btn-danger" onClick=${() => { setConfirmReset(false); resetDemo(); }}><${Icon} name="refresh"/>Yes, reset</button><button className="btn" onClick=${() => setConfirmReset(false)}>Cancel</button>`
+          : html`<button className="btn" onClick=${() => setConfirmReset(true)}><${Icon} name="refresh"/>Reset demo</button>`}
+      </div>
+    </aside>
+  </div>`;
+}
+
+/* ---------- pupil login: class code, then name, then PIN ---------- */
+function PupilLogin({ mode, onExit }){
+  const { t, db, update, setSession } = useApp();
+  const remembered = ls.get(REMEMBER_KEY);
+  const [classId, setClassId] = useState(remembered && db.classes.some(c => c.id === remembered) ? remembered : null);
+  const [pupilId, setPupilId] = useState(null);
+  const [done, setDone] = useState(false);
+  const cls = db.classes.find(c => c.id === classId);
+  const pupil = db.pupils.find(p => p.id === pupilId);
+  if (done && pupil) return html`<${ParentNote} pupil=${pupil} onExit=${onExit}/>`;
+  if (!cls) return html`<${CodeEntry} onBack=${onExit} onFound=${(id, remember) => { if (remember) ls.set(REMEMBER_KEY, id); setClassId(id); }}/>`;
+  if (!pupil) return html`<div className="stack">
+    <div className="spread"><h1>${t('tapName')}</h1>
+      <div className="row">
+        <span className="pill pill-plain"><${Icon} name="users" size=${16}/>${cls.name}</span>
+        <button className="btn" onClick=${() => { ls.del(REMEMBER_KEY); setClassId(null); }}><${Icon} name="refresh"/>${t('changeClass')}</button>
+      </div></div>
+    ${remembered === cls.id && html`<p className="muted">${t('remembered', { c:cls.name })}</p>`}
+    <div className="name-grid">${db.pupils.filter(p => p.classId === cls.id).sort((a, b) => a.name.localeCompare(b.name)).map(p => html`
+      <button key=${p.id} type="button" className="name-tile" onClick=${() => setPupilId(p.id)}><${Avatar} pupil=${p} size=${64}/>${p.name}${p.locked && html`<span className="pill pill-lo"><${Icon} name="lock" size=${14}/>Paused</span>`}</button>`)}
+    </div>
+    <div><button className="btn" onClick=${onExit}><${Icon} name="back"/>${t('back')}</button></div>
+  </div>`;
+  return html`<${PinEntry} pupil=${pupil} onBack=${() => setPupilId(null)} onOk=${() => { if (mode === 'parent') setDone(true); else setSession({ kind:'pupil', id:pupil.id }); }}/>`;
+}
+
+function CodeEntry({ onBack, onFound }){
+  const { t, db } = useApp();
+  const [val, setVal] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [err, setErr] = useState('');
+  const KEYS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const press = (k) => { setErr(''); setVal(v => (v + k).slice(0, 5)); };
+  const del = () => setVal(v => v.slice(0, -1));
+  const submit = (v) => {
+    const c = db.classes.find(x => x.code.replace('-', '') === (v || val));
+    if (c) onFound(c.id, remember); else setErr(t('codeWrong'));
+  };
+  useEffect(() => {
+    const h = (e) => {
+      if (e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+      if (e.key === 'Backspace') { del(); e.preventDefault(); }
+      else if (e.key === 'Enter') submit();
+      else if (/^[a-z0-9]$/i.test(e.key)) press(e.key.toUpperCase());
+    };
+    window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h);
+  });
+  const shown = val.padEnd(5, ' ').split('');
+  return html`<div className="stack">
+    <h1>${t('enterCode')}</h1>
+    <p className="muted">${t('codeHint')}</p>
+    <div className="code-boxes" aria-live="polite" aria-label=${'Class code so far: ' + (val || 'empty')}>
+      ${shown.slice(0, 2).map((ch, i) => html`<span key=${i} className=${'code-box ' + (i === val.length ? 'on' : '')}>${ch}</span>`)}
+      <span style=${{ fontSize:'1.6rem', fontWeight:700 }} aria-hidden="true">-</span>
+      ${shown.slice(2).map((ch, i) => html`<span key=${i + 2} className=${'code-box ' + (i + 2 === val.length ? 'on' : '')}>${ch}</span>`)}
+    </div>
+    <div className="keyboard" role="group" aria-label="Letters and numbers">
+      ${KEYS.map(k => html`<button key=${k} type="button" className="key" onClick=${() => press(k)}>${k}</button>`)}
+      <button type="button" className="key" onClick=${del} aria-label="Delete"><${Icon} name="del"/></button>
+    </div>
+    ${err && html`<div className="banner banner-warn" role="alert"><${Icon} name="alert"/>${err}</div>`}
+    <div className="row">
+      <button type="button" className="toggle" role="checkbox" aria-checked=${remember} onClick=${() => setRemember(!remember)}><span className="box">${remember && html`<${Icon} name="check" size=${18}/>`}</span>${t('remember')}</button>
+    </div>
+    <div className="row">
+      <button className="btn" onClick=${onBack}><${Icon} name="back"/>${t('back')}</button>
+      <button className="btn btn-primary btn-lg" disabled=${val.length < 5} onClick=${() => submit()}>${t('next')}<${Icon} name="check"/></button>
+      <button className="btn btn-quiet" onClick=${() => { setVal('6BK4P'); submit('6BK4P'); }}><${Icon} name="zap"/>${t('useDemo')}</button>
+    </div>
+  </div>`;
+}
+
+function PinEntry({ pupil, onBack, onOk }){
+  const { t, update } = useApp();
+  const [pin, setPin] = useState('');
+  const [msg, setMsg] = useState(pupil.locked ? t('locked') : '');
+  const [busy, setBusy] = useState(false);
+  const check = async (p) => {
+    if (pupil.locked) { setMsg(t('locked')); setPin(''); return; }
+    setBusy(true);
+    const h = await hashSecret(p, pupil.salt);
+    setBusy(false);
+    if (h === pupil.pinHash) { update(d => { const x = d.pupils.find(q => q.id === pupil.id); x.failed = 0; }); onOk(); return; }
+    const res = update(d => { const x = d.pupils.find(q => q.id === pupil.id); x.failed = (x.failed || 0) + 1; if (x.failed >= 5) x.locked = true; return x; });
+    setPin('');
+    setMsg(res.locked ? t('locked') : t('pinWrong', { n:5 - res.failed }));
+  };
+  const press = (k) => { if (busy) return; setMsg(m => pupil.locked ? m : ''); setPin(p => { const n = (p + k).slice(0, 4); if (n.length === 4) setTimeout(() => check(n), 120); return n; }); };
+  const del = () => setPin(p => p.slice(0, -1));
+  useEffect(() => {
+    const h = (e) => { if (/^[0-9]$/.test(e.key)) press(e.key); else if (e.key === 'Backspace') del(); };
+    window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h);
+  });
+  return html`<div className="stack" style=${{ alignItems:'center', textAlign:'center' }}>
+    <${Avatar} pupil=${pupil} size=${80}/>
+    <h1>${pupil.name}</h1>
+    <h2 style=${{ fontSize:'1.2rem' }}>${t('enterPin')}</h2>
+    <div className="dots" aria-label=${pin.length + ' of 4 digits entered'} role="status">${[0,1,2,3].map(i => html`<span key=${i} className=${'dot ' + (i < pin.length ? 'on' : '')}></span>`)}</div>
+    ${msg && html`<div className=${'banner ' + (pupil.locked || msg === t('locked') ? 'banner-warn' : 'banner-info')} role="alert"><${Icon} name=${pupil.locked ? 'lock' : 'alert'}/>${msg}</div>`}
+    <div className="pinpad" role="group" aria-label="Number pad">
+      ${['1','2','3','4','5','6','7','8','9'].map(k => html`<button key=${k} type="button" className="key" onClick=${() => press(k)}>${k}</button>`)}
+      <button type="button" className="key" onClick=${del} aria-label="Delete"><${Icon} name="del" size=${28}/></button>
+      <button type="button" className="key" onClick=${() => press('0')}>0</button>
+      <button type="button" className="key" onClick=${onBack} aria-label=${t('back')}><${Icon} name="back" size=${28}/></button>
+    </div>
+    <${Why} k="security"/>
+  </div>`;
+}
+
+function ParentNote({ pupil, onExit }){
+  const { update } = useApp();
+  const [text, setText] = useState('');
+  const [sent, setSent] = useState(false);
+  const submit = (e) => { e.preventDefault(); if (!text.trim()) return; update(d => { d.parentNotes.unshift({ id:uid('pn'), pupilId:pupil.id, text:text.trim(), at:Date.now() }); raiseFlag(d, pupil.id, 'Note from home', text); }); setSent(true); };
+  if (sent) return html`<div className="stack"><div className="banner banner-ok"><${Icon} name="check"/>Thank you. Your note is saved.</div>
+    <p>${pupil.parentShare ? 'School staff can read it, because ' + pupil.name.split(' ')[0] + ' has agreed.' : 'School will only see it if ' + pupil.name.split(' ')[0] + ' agrees in their Recharge profile.'}</p>
+    <div><button className="btn btn-primary" onClick=${onExit}><${Icon} name="home"/>Finish</button></div></div>`;
+  return html`<form className="stack" onSubmit=${submit} style=${{ maxWidth:'640px' }}>
+    <h1>Note from home</h1>
+    <p className="muted">How was ${pupil.name.split(' ')[0]} after school? Anything that drained or helped today?</p>
+    <div><label className="lbl" htmlFor="pn-text">Your note</label><textarea id="pn-text" value=${text} onChange=${(e) => setText(e.target.value)} placeholder="For example: very tired after PE, slept well, worried about the school trip"></textarea></div>
+    <p className="muted small">${pupil.name.split(' ')[0]} decides whether school can read notes from home.</p>
+    <${Why} k="parent"/>
+    <div className="row"><button type="button" className="btn" onClick=${onExit}><${Icon} name="back"/>Cancel</button><button className="btn btn-primary" disabled=${!text.trim()}><${Icon} name="message"/>Send note</button></div>
+  </form>`;
+}
+
+/* ================= PUPIL APP ================= */
+function PupilApp(){
+  const [route, setRoute] = useState('home');
+  const go = (r) => { setRoute(r); window.scrollTo(0, 0); };
+  const screens = { home:PupilHome, checkin:CheckIn, symbols:SymbolBoard, walk:RechargeWalk, profile:MyProfile, feed:Feed, buddy:BuddyEditor };
+  const S = screens[route] || PupilHome;
+  return html`<${S} go=${go}/>`;
+}
+function BackHome({ go }){ const { t } = useApp(); return html`<div><button className="btn" onClick=${() => go('home')}><${Icon} name="back"/>${t('home')}</button></div>`; }
+
+function lastCharge(d, pid){
+  const s = pupilSeries(d, pid); if (!s.length) return null;
+  return s[s.length - 1].avg / 5;
+}
+function PupilHome({ go }){
+  const { t, db, me } = useApp();
+  const ch = lastCharge(db, me.id);
+  const tiles = [
+    ['checkin','battery',t('checkIn'),t('checkInSub')], ['symbols','grid',t('symbols'),t('symbolsSub')], ['walk','camera',t('walk'),t('walkSub')],
+    ['profile','user',t('profile'),t('profileSub')], ['feed','megaphone',t('feed'),t('feedSub')], ['buddy','star',t('buddy'),t('buddySub')]
+  ];
+  return html`<div className="stack" style=${{ gap:'24px' }}>
+    <section className="hero">
+      <${Zip} charge=${ch} colour=${me.buddy.colour} hat=${me.buddy.hat} size=${110}/>
+      <div className="copy"><h1>${t('hello', { name:me.name.split(' ')[0] })}</h1>
+        <p style=${{ fontSize:'1.1rem' }}>${ch == null ? t('zipEmpty') : t('zipCharge', { p:Math.round(ch * 100) })}</p>
+        <p className="muted small">${t('pupilsOnly')}</p><${Why} k="masking"/></div>
+    </section>
+    <div className="tiles">${tiles.map(([r, ic, a, b]) => html`<button key=${r} type="button" className="tile" onClick=${() => go(r)}><span className="tile-ic"><${Icon} name=${ic} size=${28}/></span><b>${a}</b><span>${b}</span></button>`)}</div>
+  </div>`;
+}
+
+/* ---------- pulse check-in ---------- */
+const emptyNote = () => ({ symbols:[], help:{ chips:[], text:'' }, text:'', photo:null, drawing:null, voice:null });
+function CheckIn({ go }){
+  const { t, tr, db, update, me } = useApp();
+  const today = todayISO();
+  const existing = db.checkins.find(c => c.pupilId === me.id && c.date === today);
+  const [ratings, setRatings] = useState(existing ? existing.ratings : {});
+  const [notes, setNotes] = useState(existing ? existing.notes : {});
+  const [open, setOpen] = useState(null);
+  const [done, setDone] = useState(null);
+  const { base, pins } = slotsFor(db, me);
+  const vals = Object.values(ratings).filter(Boolean);
+  const a = avg(vals);
+  const setR = (sid, v) => setRatings(r => { const n = Object.assign({}, r); if (v) n[sid] = v; else delete n[sid]; return n; });
+  const setN = (sid, n) => setNotes(x => Object.assign({}, x, { [sid]:n }));
+  const save = () => {
+    const flagged = update(d => {
+      const id = existing ? existing.id : uid('ci');
+      d.checkins = d.checkins.filter(c => c.id !== id);
+      d.checkins.push({ id, pupilId:me.id, date:today, ratings, notes, at:Date.now() });
+      let f = false;
+      for (const [sid, n] of Object.entries(notes)) if (raiseFlag(d, me.id, 'Check-in note: ' + slotLabel(d, me.id, sid), [n.text, n.help && n.help.text].filter(Boolean).join(' '))) f = true;
+      syncProfile(d, me.id);
+      return f;
+    });
+    setDone({ flagged });
+    window.scrollTo(0, 0);
+  };
+  if (done) return html`<div className="stack" style=${{ alignItems:'flex-start' }}>
+    <div className="zip-stage"><${Zip} charge=${a == null ? null : a / 5} colour=${me.buddy.colour} hat=${me.buddy.hat} size=${120}/>
+      <div className="stack"><h1>${t('saved')}</h1><p style=${{ fontSize:'1.1rem' }}>${a == null ? '' : t('zipCharge', { p:Math.round(a / 5 * 100) })}</p></div></div>
+    ${done.flagged && html`<div className="banner banner-info"><${Icon} name="heart"/>${t('thanksSafe')}</div>`}
+    <button className="btn btn-primary btn-lg" onClick=${() => go('home')}><${Icon} name="home"/>${t('home')}</button>
+  </div>`;
+  const slotCard = (s, isPin) => {
+    const n = notes[s.id];
+    const has = n && (n.text || n.photo || n.drawing || n.voice || (n.symbols || []).length || (n.help && ((n.help.chips || []).length || n.help.text)));
+    const title = isPin ? s.name : tr(s.name);
+    return html`<section key=${s.id} className="card slot" aria-label=${title}>
+      <div className="slot-head">
+        <span className="slot-ic" aria-hidden="true">${isPin ? s.emoji : html`<${Icon} name=${s.icon} size=${26}/>`}</span>
+        <div className="t"><h3>${title}</h3><p className="muted small">${isPin ? html`<span className=${'pill ' + (s.pin.tag === 'drains' ? 'pill-lo' : 'pill-hi')}>${t(s.pin.tag === 'drains' ? 'drains' : 'recharges')}</span>` : s.time + ' · ' + tr(s.place)}</p></div>
+      </div>
+      <${Battery} value=${ratings[s.id]} onChange=${(v) => setR(s.id, v)} label=${title}/>
+      <div className="row">
+        <button type="button" className="btn" aria-expanded=${open === s.id} onClick=${() => setOpen(open === s.id ? null : s.id)}><${Icon} name=${open === s.id ? 'x' : 'plus'}/>${open === s.id ? t('close') : t('addMore')}</button>
+        ${has && open !== s.id && html`<span className="pill pill-hi"><${Icon} name="check" size=${14}/>${t('attached')}</span>`}
+      </div>
+      ${open === s.id && html`<${NotePanel} value=${n || emptyNote()} onChange=${(v) => setN(s.id, v)}/>`}
+    </section>`;
+  };
+  return html`<div className="stack">
+    <${BackHome} go=${go}/>
+    <div className="zip-stage card">
+      <${Zip} charge=${a == null ? null : a / 5} colour=${me.buddy.colour} hat=${me.buddy.hat} size=${80}/>
+      <div className="stack" style=${{ gap:'4px', flex:'1 1 200px' }}><h1>${t('checkIn')}</h1>
+        <p>${a == null ? t('zipEmpty') : t('zipCharge', { p:Math.round(a / 5 * 100) })}</p>
+        <p className="muted small">${t('today')}: ${new Date().toLocaleDateString(undefined, { weekday:'long', day:'numeric', month:'long' })} · ${t('howCharged')}</p>
+        <${Why} k="checkin"/></div>
+    </div>
+    ${base.map(s => slotCard(s, false))}
+    ${pins.length > 0 && html`<h2>${t('yourPlaces')}</h2>`}
+    ${pins.map(s => slotCard(s, true))}
+    <div className="row"><button className="btn btn-primary btn-lg" onClick=${save} disabled=${!vals.length}><${Icon} name="check"/>${t('save')}</button></div>
+  </div>`;
+}
+
+function NotePanel({ value, onChange }){
+  const { t } = useApp();
+  const [tab, setTab] = useState('symbols');
+  const set = (patch) => onChange(Object.assign({}, value, patch));
+  const tabs = [['photo','camera',t('photo')],['draw','pencil',t('draw')],['symbols','grid',t('symbols')],['voice','mic',t('voice')],['type','keyboard',t('type')],['help','bulb',t('whatHelp')]];
+  const helpChips = t('helpChips');
+  return html`<div className="card-flat stack">
+    <div className="tabs note-tabs" role="tablist">${tabs.map(([k, ic, l]) => html`<button key=${k} type="button" role="tab" className="tab" aria-selected=${tab === k} onClick=${() => setTab(k)}><${Icon} name=${ic}/>${l}</button>`)}</div>
+    ${tab === 'photo' && html`<${PhotoPicker} value=${value.photo} onChange=${(photo) => set({ photo })}/>`}
+    ${tab === 'draw' && html`<${DrawPad} value=${value.drawing} onChange=${(drawing) => set({ drawing })}/>`}
+    ${tab === 'symbols' && html`<div className="sym-grid">${SYMBOLS.map(s => { const on = (value.symbols || []).includes(s.key); return html`<button key=${s.key} type="button" className="sym sm" aria-pressed=${on} onClick=${() => set({ symbols:on ? value.symbols.filter(x => x !== s.key) : [].concat(value.symbols || [], [s.key]) })}><span className="sym-ic"><${Icon} name=${s.icon} size=${26}/></span>${t(s.key)}</button>`; })}</div>`}
+    ${tab === 'voice' && html`<${VoicePicker} value=${value.voice} onChange=${(voice) => set({ voice })}/>`}
+    ${tab === 'type' && html`<div><label className="lbl" htmlFor="note-text">${t('type')}</label><textarea id="note-text" value=${value.text || ''} onChange=${(e) => set({ text:e.target.value })} placeholder=${t('typeHere')}></textarea></div>`}
+    ${tab === 'help' && html`<div className="stack">
+      <div className="row">${HELP_CHIPS.map((en, i) => { const on = (value.help.chips || []).includes(en); return html`<button key=${en} type="button" className="chip" aria-pressed=${on} onClick=${() => set({ help:Object.assign({}, value.help, { chips:on ? value.help.chips.filter(x => x !== en) : [].concat(value.help.chips || [], [en]) }) })}>${on && html`<${Icon} name="check" size=${16}/>`}${helpChips[i]}</button>`; })}</div>
+      <div><label className="lbl" htmlFor="help-text">${t('whatHelp')}</label><textarea id="help-text" value=${value.help.text || ''} onChange=${(e) => set({ help:Object.assign({}, value.help, { text:e.target.value }) })} placeholder=${t('typeHere')}></textarea></div>
+    </div>`}
+    <${Why} k="notes"/>
+  </div>`;
+}
+
+function fileToDataUrl(file, max){
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => { const s = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.72)); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('That file is not a photo we can open.')); };
+    img.src = url;
+  });
+}
+function PhotoPicker({ value, onChange, label }){
+  const { t, showToast } = useApp();
+  const id = useId();
+  const onFile = async (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; try { onChange(await fileToDataUrl(f, 720)); } catch(err){ showToast(err.message); } e.target.value = ''; };
+  return html`<div className="stack">
+    ${value && html`<img src=${value} alt="Your photo" className="photo-thumb"/>`}
+    <div className="row">
+      <label className="btn btn-lg file-btn" htmlFor=${id}><${Icon} name="camera"/>${value ? t('changePhoto') : (label || t('takePhoto'))}<input id=${id} type="file" accept="image/*" capture="environment" onChange=${onFile}/></label>
+      ${value && html`<button type="button" className="btn" onClick=${() => onChange(null)}><${Icon} name="x"/>${t('remove')}</button>`}
+    </div>
+  </div>`;
+}
+function VoicePicker({ value, onChange }){
+  const { t, showToast } = useApp();
+  const id = useId();
+  const onFile = (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    if (f.size > 1.5e6) { showToast('That recording is too long for this demo. Keep it under a minute.'); return; }
+    const r = new FileReader(); r.onload = () => onChange(r.result); r.readAsDataURL(f); e.target.value = '';
+  };
+  return html`<div className="stack">
+    ${value && html`<audio controls src=${value} style=${{ maxWidth:'100%' }}></audio>`}
+    <div className="row">
+      <label className="btn btn-lg file-btn" htmlFor=${id}><${Icon} name="mic"/>${t('record')}<input id=${id} type="file" accept="audio/*" capture="user" onChange=${onFile}/></label>
+      ${value && html`<button type="button" className="btn" onClick=${() => onChange(null)}><${Icon} name="x"/>${t('remove')}</button>`}
+    </div>
+    <p className="muted small">${t('voiceNote')}</p>
+  </div>`;
+}
+function DrawPad({ value, onChange }){
+  const { t } = useApp();
+  const ref = useRef(null);
+  const [colour, setColour] = useState(0);
+  const COLS = ['#16302D','#2B6964','#6E4A99','#D0644B','#D99A2B'];
+  const drawing = useRef(false);
+  const paper = '#F7FAF9';
+  const init = useCallback(() => {
+    const c = ref.current; if (!c) return;
+    const r = c.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1;
+    c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
+    const g = c.getContext('2d'); g.scale(dpr, dpr); g.fillStyle = paper; g.fillRect(0, 0, r.width, r.height);
+    if (value) { const img = new Image(); img.onload = () => g.drawImage(img, 0, 0, r.width, r.height); img.src = value; }
+  }, []);
+  useEffect(() => { init(); }, []);
+  const pos = (e) => { const r = ref.current.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  const down = (e) => { drawing.current = true; ref.current.setPointerCapture(e.pointerId); const g = ref.current.getContext('2d'); g.strokeStyle = COLS[colour]; g.lineWidth = 5; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); const [x, y] = pos(e); g.moveTo(x, y); g.lineTo(x + 0.1, y + 0.1); g.stroke(); };
+  const move = (e) => { if (!drawing.current) return; const g = ref.current.getContext('2d'); const [x, y] = pos(e); g.lineTo(x, y); g.stroke(); };
+  const up = () => { if (!drawing.current) return; drawing.current = false; onChange(ref.current.toDataURL('image/png')); };
+  const clear = () => { const c = ref.current; const g = c.getContext('2d'); const r = c.getBoundingClientRect(); g.fillStyle = paper; g.fillRect(0, 0, r.width, r.height); onChange(null); };
+  return html`<div className="stack">
+    <p className="muted small">${t('drawHint')}</p>
+    <div className="draw-wrap"><canvas ref=${ref} aria-label="Drawing space" onPointerDown=${down} onPointerMove=${move} onPointerUp=${up} onPointerLeave=${up}></canvas></div>
+    <div className="row">${COLS.map((c, i) => html`<button key=${c} type="button" className="swatch" style=${{ background:c }} aria-pressed=${colour === i} aria-label=${'Pen colour ' + (i + 1)} onClick=${() => setColour(i)}></button>`)}
+      <button type="button" className="btn" onClick=${clear}><${Icon} name="refresh"/>${t('clear')}</button></div>
+  </div>`;
+}
+
+/* ---------- symbol board ---------- */
+function SymbolBoard({ go }){
+  const { t, db, update, me } = useApp();
+  const [sent, setSent] = useState(null);
+  const adult = (db.staff.find(s => s.id === me.keyAdultId) || {}).name || 'Your key adult';
+  const tap = (s) => {
+    update(d => { d.moments.unshift({ id:uid('m'), pupilId:me.id, kind:'symbol', symbol:s.key, at:Date.now(), seen:false }); });
+    setSent(s.key);
+  };
+  return html`<div className="stack">
+    <${BackHome} go=${go}/>
+    <h1>${t('symbols')}</h1>
+    <p className="muted">${t('symbolsSub')}</p>
+    <${Why} k="symbols"/>
+    ${sent && html`<div className="banner banner-ok" role="status"><${Icon} name="check"/>${t(sent)}: ${sent === 'talkAdult' || sent === 'needBreakSym' ? t('symSent', { adult }) : t('symLogged')}</div>`}
+    <div className="sym-grid">${SYMBOLS.map(s => html`<button key=${s.key} type="button" className="sym" aria-pressed=${sent === s.key} onClick=${() => tap(s)}><span className="sym-ic"><${Icon} name=${s.icon} size=${36}/></span>${t(s.key)}</button>`)}</div>
+  </div>`;
+}
+
+/* ---------- Recharge Walk ---------- */
+function RechargeWalk({ go }){
+  const { t, db, update, me } = useApp();
+  const mine = db.pins.filter(p => p.pupilId === me.id);
+  const [adding, setAdding] = useState(mine.length === 0);
+  const [photo, setPhoto] = useState(null);
+  const [tag, setTag] = useState(null);
+  const [emoji, setEmoji] = useState(null);
+  const [caption, setCaption] = useState('');
+  const chips = t('captionChips');
+  const save = () => {
+    update(d => { d.pins.push({ id:uid('pn'), pupilId:me.id, photo, tag, emoji:emoji || (tag === 'drains' ? '🔊' : '🌈'), caption:caption.trim() || chips[0], at:Date.now() }); raiseFlag(d, me.id, 'Recharge Walk caption', caption); syncProfile(d, me.id); });
+    setAdding(false); setPhoto(null); setTag(null); setEmoji(null); setCaption('');
+  };
+  const removePin = (id) => update(d => { d.pins = d.pins.filter(p => p.id !== id); });
+  return html`<div className="stack">
+    <${BackHome} go=${go}/>
+    <h1>${t('walk')}</h1>
+    <p className="muted" style=${{ maxWidth:'40em' }}>${t('walkIntro')}</p>
+    <${Why} k="walk"/>
+    ${mine.length ? html`<div className="pins">${mine.map(p => html`<article key=${p.id} className="card pin-card">
+        <div className="pin-media">${p.photo ? html`<img src=${p.photo} alt=${p.caption}/>` : html`<span aria-hidden="true">${p.emoji}</span>`}</div>
+        <div className="row"><span className=${'pill ' + (p.tag === 'drains' ? 'pill-lo' : 'pill-hi')}><${Icon} name="battery" size=${14}/>${t(p.tag === 'drains' ? 'drains' : 'recharges')}</span><span aria-hidden="true" style=${{ fontSize:'1.4rem' }}>${p.emoji}</span></div>
+        <p>${p.caption}</p>
+        <button className="btn btn-quiet" onClick=${() => removePin(p.id)}><${Icon} name="x"/>${t('remove')}</button>
+      </article>`)}</div>` : null}
+    ${!adding && html`<div><button className="btn btn-primary btn-lg" onClick=${() => setAdding(true)}><${Icon} name="plus"/>${t('addPlace')}</button></div>`}
+    ${adding && html`<section className="card stack" aria-label=${t('addPlace')}>
+      <h2>${t('addPlace')}</h2>
+      <${PhotoPicker} value=${photo} onChange=${setPhoto}/>
+      <div className="row" role="group" aria-label="Drains or recharges">
+        <button type="button" className="sym sm" style=${{ flex:'1 1 160px' }} aria-pressed=${tag === 'drains'} onClick=${() => setTag('drains')}><span className="sym-ic" style=${{ background:'var(--lo-bg)' }}><${Battery} small value=${1} label=${t('drains')}/></span>${t('drains')}</button>
+        <button type="button" className="sym sm" style=${{ flex:'1 1 160px' }} aria-pressed=${tag === 'recharges'} onClick=${() => setTag('recharges')}><span className="sym-ic" style=${{ background:'var(--hi-bg)' }}><${Battery} small value=${5} label=${t('recharges')}/></span>${t('recharges')}</button>
+      </div>
+      <div><p className="lbl">${t('pickEmoji')}</p><div className="emoji-grid">${EMOJIS.map(e => html`<button key=${e} type="button" className="emoji-btn" aria-pressed=${emoji === e} onClick=${() => setEmoji(e)} aria-label=${'Emoji ' + e}>${e}</button>`)}</div></div>
+      <div className="stack" style=${{ gap:'8px' }}><p className="lbl">${t('caption')}</p>
+        <div className="row">${chips.map(c => html`<button key=${c} type="button" className="chip" aria-pressed=${caption === c} onClick=${() => setCaption(c)}>${c}</button>`)}</div>
+        <label className="sr-only" htmlFor="cap-text">${t('caption')}</label><input id="cap-text" type="text" value=${caption} onChange=${(e) => setCaption(e.target.value)} placeholder=${t('typeHere')}/></div>
+      <div className="row"><button className="btn btn-primary btn-lg" disabled=${!tag} onClick=${save}><${Icon} name="check"/>${t('savePlace')}</button>
+        ${mine.length > 0 && html`<button className="btn" onClick=${() => setAdding(false)}>${t('close')}</button>`}</div>
+    </section>`}
+  </div>`;
+}
+
+/* ---------- My Recharge Profile ---------- */
+function MyProfile({ go }){
+  const { t, db, update, me, showToast } = useApp();
+  useEffect(() => { update(d => syncProfile(d, me.id)); }, []);
+  const prof = db.profiles[me.id] || { items:[] };
+  const sample = useCap('sample');
+  const downloads = useCap('downloads');
+  const [lang, setLang] = useState('Polish');
+  const [trans, setTrans] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [extra, setExtra] = useState('');
+  const toggle = (id) => update(d => { const p = d.profiles[me.id]; const it = p.items.find(i => i.id === id); it.hidden = !it.hidden; if (p.approvedSnapshot) p.dirty = true; });
+  const addOwn = () => { if (!extra.trim()) return; update(d => { const p = d.profiles[me.id]; p.items.push({ id:uid('it'), section:'words', text:'"' + extra.trim() + '"', hidden:false, src:'own' }); if (p.approvedSnapshot) p.dirty = true; raiseFlag(d, me.id, 'Profile words', extra); }); setExtra(''); };
+  const sections = [['drains','battery',t('drains')],['helps','heart',t('helpsMe')],['words','message',t('inMyWords')]];
+  const visible = prof.items.filter(i => !i.hidden);
+  const doTranslate = async () => {
+    if (!sample) return;
+    setBusy(true); setTrans(null);
+    const body = sections.map(([k, , l]) => I18N.en[k === 'helps' ? 'helpsMe' : k === 'words' ? 'inMyWords' : 'drains'] + ':\n' + visible.filter(i => i.section === k).map(i => '- ' + i.text).join('\n')).join('\n\n');
+    try { setTrans(await aiTranslate(sample, body, lang)); } catch(e){ showToast(aiErr(e)); }
+    setBusy(false);
+  };
+  const pdf = async () => {
+    try {
+      await savePdf(downloads, 'recharge-profile-' + me.name.split(' ')[0].toLowerCase() + '.pdf', (doc) => {
+        doc.setFillColor(43, 105, 100); doc.rect(0, 0, 210, 26, 'F');
+        doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.text('My Recharge Profile', 16, 17);
+        doc.setTextColor(22, 48, 45); doc.setFontSize(13); doc.text(me.name + '   ·   Class ' + (db.classes.find(c => c.id === me.classId) || {}).name, 16, 38);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text('These are my own words and choices. I approved this page on ' + new Date(prof.approvedAt || Date.now()).toLocaleDateString('en-GB') + '.', 16, 45);
+        let y = 58;
+        for (const [k, , l] of sections) {
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(14); doc.text(I18N.en[k === 'helps' ? 'helpsMe' : k === 'words' ? 'inMyWords' : 'drains'], 16, y); y += 7;
+          doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+          const items = visible.filter(i => i.section === k);
+          if (!items.length) { doc.text('-', 20, y); y += 6; }
+          for (const it of items) { y = pdfText(doc, '•  ' + it.text, 20, y, 170, 5.6); y += 1; if (y > 270) break; }
+          y += 6;
+        }
+        doc.setFontSize(9); doc.setTextColor(75, 99, 95); doc.text('Made with Recharge. Please read this with me, not about me.', 16, 287);
+      });
+      showToast('Profile saved as PDF.');
+    } catch(e){ if (e && e.code === 'declined') return; showToast(e.message || 'Could not save the PDF.'); }
+  };
+  return html`<div className="stack">
+    <${BackHome} go=${go}/>
+    <h1>${t('profile')}</h1>
+    <${Why} k="profile"/>
+    ${prof.approvedSnapshot && !prof.dirty ? html`<div className="banner banner-ok"><${Icon} name="check"/>${t('approved')}</div>`
+      : prof.dirty ? html`<div className="banner banner-info"><${Icon} name="alert"/>${t('changed')}</div>`
+      : html`<div className="banner banner-info"><${Icon} name="lock"/>${t('notApproved')}</div>`}
+    <div className="grid-2">${sections.map(([k, ic, l]) => html`<section key=${k} className="card prof-sec" aria-label=${l}>
+      <h2 className="row" style=${{ gap:'8px' }}><${Icon} name=${ic}/>${l}</h2>
+      ${prof.items.filter(i => i.section === k).length === 0 && html`<p className="muted">${t('nothing')}</p>`}
+      ${prof.items.filter(i => i.section === k).map(i => html`<div key=${i.id} className=${'prof-item ' + (i.hidden ? 'is-hidden' : '')}>
+        <span className="txt">${i.text}</span>
+        <button type="button" className="btn" onClick=${() => toggle(i.id)} aria-label=${(i.hidden ? t('show') : t('hide')) + ': ' + i.text}><${Icon} name=${i.hidden ? 'eye' : 'eyeOff'}/>${i.hidden ? t('show') : t('hide')}</button>
+      </div>`)}
+      ${k === 'words' && html`<div className="row"><label className="sr-only" htmlFor="own-words">${t('addOwn')}</label><input id="own-words" type="text" value=${extra} onChange=${(e) => setExtra(e.target.value)} placeholder=${t('addOwn')} style=${{ flex:'1 1 200px' }}/><button className="btn" onClick=${addOwn} disabled=${!extra.trim()}><${Icon} name="plus"/>${t('add')}</button></div>`}
+    </section>`)}</div>
+    <div className="row">
+      <button className="btn btn-primary btn-lg" disabled=${prof.approvedSnapshot && !prof.dirty} onClick=${() => { update(d => approveProfile(d, me.id)); showToast(t('approved')); }}><${Icon} name="check"/>${t('approve')}</button>
+      ${downloads !== null && html`<button className="btn btn-lg" onClick=${pdf} disabled=${downloads === undefined}><${Icon} name="download"/>${t('exportPdf')}</button>`}
+    </div>
+    <button type="button" className="toggle" role="checkbox" aria-checked=${!!me.parentShare} onClick=${() => update(d => { const p = d.pupils.find(x => x.id === me.id); p.parentShare = !p.parentShare; })}><span className="box">${me.parentShare && html`<${Icon} name="check" size=${18}/>`}</span><${Icon} name="home2"/>${t('shareHome')}</button>
+    ${sample && html`<section className="card stack" aria-label=${t('translateTo')}>
+      <h2 className="row" style=${{ gap:'8px' }}><${Icon} name="globe"/>${t('translateTo')}</h2>
+      <div className="row"><label className="sr-only" htmlFor="fam-lang">Family language</label>
+        <select id="fam-lang" className="field" style=${{ width:'auto' }} value=${lang} onChange=${(e) => setLang(e.target.value)}>${['Polish','Urdu','Arabic','Romanian','Bengali','Somali','Ukrainian','Spanish','Portuguese','Turkish'].map(l => html`<option key=${l}>${l}</option>`)}</select>
+        <button className="btn" onClick=${doTranslate} disabled=${busy}><${Icon} name="sparkles"/>${busy ? '…' : t('translate')}</button></div>
+      <${Why} k="ai"/>
+      ${trans && html`<div className="note"><p className="eyebrow">Machine translation · ${lang}</p><p style=${{ whiteSpace:'pre-wrap' }}>${trans}</p></div>`}
+    </section>`}
+  </div>`;
+}
+
+/* ---------- You said, we did ---------- */
+function Feed({ go }){
+  const { t, db, me } = useApp();
+  const posts = db.feed.filter(f => f.classId === me.classId).sort((a, b) => b.at - a.at);
+  return html`<div className="stack">
+    <${BackHome} go=${go}/>
+    <h1>${t('feed')}</h1>
+    <${Why} k="feed"/>
+    ${posts.length === 0 && html`<p className="muted">${t('nothing')}</p>`}
+    ${posts.map(p => html`<article key=${p.id} className="card feed-post">
+      <p className="muted small"><${Icon} name="calendar" size=${16}/> ${fmtDay(localISO(new Date(p.at)))} · ${p.by}</p>
+      <div className="said"><p className="eyebrow"><${Icon} name="message" size=${14}/> You said</p><p style=${{ fontSize:'1.1rem' }}>${p.said}</p></div>
+      <div className="did"><p className="eyebrow" style=${{ color:'inherit' }}><${Icon} name="check" size=${14}/> We did</p><p style=${{ fontSize:'1.1rem' }}>${p.did}</p></div>
+    </article>`)}
+  </div>`;
+}
+
+/* ---------- customise Zip ---------- */
+function BuddyEditor({ go }){
+  const { t, update, me } = useApp();
+  const set = (patch) => update(d => { const p = d.pupils.find(x => x.id === me.id); p.buddy = Object.assign({}, p.buddy, patch); });
+  return html`<div className="stack">
+    <${BackHome} go=${go}/>
+    <h1>${t('buddy')}</h1>
+    <${Why} k="buddy"/>
+    <div className="zip-stage card"><${Zip} charge=${0.75} colour=${me.buddy.colour} hat=${me.buddy.hat} size=${150}/>
+      <div className="stack" style=${{ flex:'1 1 260px' }}>
+        <div><p className="lbl">${t('colours')}</p><div className="row">${ZIP_COLOURS.map(c => html`<button key=${c} type="button" className="swatch" style=${{ background:'var(--zip-' + c + ')' }} aria-pressed=${me.buddy.colour === c} aria-label=${'Colour ' + c} onClick=${() => set({ colour:c })}></button>`)}</div></div>
+        <div><p className="lbl">${t('hats')}</p><div className="row">${HATS.map(h => html`<button key=${h} type="button" className="emoji-btn" style=${{ width:'72px', height:'84px' }} aria-pressed=${me.buddy.hat === h} aria-label=${'Hat: ' + h} onClick=${() => set({ hat:h })}><${Zip} charge=${0.75} colour=${me.buddy.colour} hat=${h} size=${48} label=${'Hat: ' + h}/></button>`)}</div></div>
+      </div></div>
+  </div>`;
+}
+
+/* ================= STAFF ================= */
+function StaffLogin({ onExit }){
+  const { db, setSession } = useApp();
+  const [email, setEmail] = useState('');
+  const [pw, setPw] = useState('');
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+  const login = async (e, em, p) => {
+    if (e) e.preventDefault();
+    const address = (em || email).trim().toLowerCase(); const pass = p || pw;
+    const s = db.staff.find(x => x.email === address);
+    setBusy(true);
+    const ok = s && (await hashSecret(pass, s.salt)) === s.pwHash;
+    setBusy(false);
+    if (ok) setSession({ kind:'staff', id:s.id }); else setErr('That email and password do not match. Check them and try again.');
+  };
+  return html`<div className="grid-2">
+    <form className="card stack" onSubmit=${login} aria-label="Staff log in">
+      <h1>Staff log in</h1>
+      <div><label className="lbl" htmlFor="st-email">Email</label><input id="st-email" type="email" autoComplete="username" value=${email} onChange=${(e) => setEmail(e.target.value)}/></div>
+      <div><label className="lbl" htmlFor="st-pw">Password</label><input id="st-pw" type="password" autoComplete="current-password" value=${pw} onChange=${(e) => setPw(e.target.value)}/></div>
+      ${err && html`<div className="banner banner-warn" role="alert"><${Icon} name="alert"/>${err}</div>`}
+      <div className="row"><button type="button" className="btn" onClick=${onExit}><${Icon} name="back"/>Back</button><button className="btn btn-primary" disabled=${busy}><${Icon} name="key"/>Log in</button></div>
+    </form>
+    <section className="card stack" aria-label="Demo accounts">
+      <h2>Demo accounts</h2>
+      <p className="muted small">Each role sees different things. Password for all: demo1234.</p>
+      ${db.staff.map(s => html`<button key=${s.id} type="button" className="btn" style=${{ justifyContent:'space-between' }} onClick=${() => login(null, s.email, 'demo1234')} disabled=${busy}>
+        <span className="row" style=${{ gap:'8px' }}><${Icon} name="user"/>${s.name}</span><span className="pill pill-plain">${ROLE_LABEL[s.role]}</span></button>`)}
+    </section>
+  </div>`;
+}
+
+function StaffApp(){
+  const { db, staff } = useApp();
+  const classes = staff.role === 'class_teacher' ? db.classes.filter(c => c.teacherId === staff.id) : db.classes;
+  const [classId, setClassId] = useState(classes[0] ? classes[0].id : null);
+  const [tab, setTab] = useState('overview');
+  const tabs = [['overview','chart','Overview'],['pupils','users','Pupils'],['themes','bulb','Most asked for'],['yswd','megaphone','You said, we did'],['safe','shield','Safeguarding'],['class','key','Class & PINs']]
+    .filter(([k]) => (k !== 'yswd' && k !== 'class') || Access.canManage(staff));
+  const openFlags = db.flags.filter(f => f.status === 'open').length;
+  const views = { overview:Overview, pupils:PupilsTab, themes:ThemesTab, yswd:YswdTab, safe:SafeTab, class:ClassTab };
+  const V = views[tab];
+  return html`<div className="stack">
+    <div className="spread">
+      <div><p className="eyebrow">${ROLE_LABEL[staff.role]}</p><h1>${staff.name}</h1></div>
+      ${classes.length > 0 && html`<label className="row"><span className="muted small">Class</span><select className="field" style=${{ width:'auto' }} value=${classId || ''} onChange=${(e) => setClassId(e.target.value)}>${classes.map(c => html`<option key=${c.id} value=${c.id}>${c.name} · ${c.code}</option>`)}</select></label>`}
+    </div>
+    <nav className="tabs" role="tablist" aria-label="Staff sections">${tabs.map(([k, ic, l]) => html`<button key=${k} type="button" role="tab" className="tab" aria-selected=${tab === k} onClick=${() => setTab(k)}><${Icon} name=${ic}/>${l}${k === 'safe' && Access.canSeeSafeguarding(staff) && openFlags > 0 ? html`<span className="pill pill-lo">${openFlags}</span>` : null}</button>`)}</nav>
+    ${classId ? html`<${V} classId=${classId} setClassId=${setClassId} setTab=${setTab}/>` : html`<${ClassTab} classId=${null} setClassId=${setClassId}/>`}
+  </div>`;
+}
+
+function Overview({ classId }){
+  const { db, staff, update } = useApp();
+  const pupils = Access.visiblePupils(db, staff, classId);
+  const [filter, setFilter] = useState('all');
+  const ids = new Set(filter === 'all' ? pupils.map(p => p.id) : [filter]);
+  const slots = db.slots[classId] || [];
+  const cs = db.checkins.filter(c => ids.has(c.pupilId));
+  const dates = Array.from(new Set(cs.map(c => c.date))).sort().slice(-6);
+  const rows = slots.map(s => ({ s, cells:dates.map(dt => { const v = cs.filter(c => c.date === dt && c.ratings[s.id]).map(c => c.ratings[s.id]); return v.length ? avg(v) : null; }) }));
+  const drifts = pupils.filter(p => Access.canSeeDrift(staff, p)).map(p => ({ p, s:pupilSeries(db, p.id) })).map(o => Object.assign(o, { d:driftInfo(o.s.map(x => x.avg)) })).filter(o => o.d);
+  const moments = db.moments.filter(m => { const p = pupils.find(x => x.id === m.pupilId); return p && Access.canSeeMoments(staff, p); }).slice(0, 8);
+  const lastDate = dates[dates.length - 1];
+  const checkedLast = lastDate ? new Set(db.checkins.filter(c => c.date === lastDate && pupils.some(p => p.id === c.pupilId)).map(c => c.pupilId)).size : 0;
+  return html`<div className="stack">
+    <div className="stats">
+      <div className="stat"><span className="muted small">Pupils you can see</span><span className="n">${pupils.length}</span></div>
+      <div className="stat"><span className="muted small">Checked in ${lastDate ? fmtDay(lastDate) : ''}</span><span className="n">${checkedLast}</span></div>
+      <div className=${'stat ' + (drifts.length ? 'alert' : '')}><span className="muted small">Drift alerts</span><span className="n">${drifts.length}</span></div>
+      <div className=${'stat ' + (moments.some(m => !m.seen) ? 'alert' : '')}><span className="muted small">New requests</span><span className="n">${moments.filter(m => !m.seen).length}</span></div>
+    </div>
+
+    <section className="card stack" aria-label="Heatmap">
+      <div className="spread"><div><h2>Where energy goes</h2><p className="muted small">Average battery per slot, last ${dates.length} check-ins. 5 = fully charged.</p></div>
+        <label className="row"><span className="sr-only">Show</span><select className="field" style=${{ width:'auto' }} value=${filter} onChange=${(e) => setFilter(e.target.value)}><option value="all">Whole class</option>${pupils.map(p => html`<option key=${p.id} value=${p.id}>${p.name}</option>`)}</select></label></div>
+      <div className="table-scroll"><table className="heat">
+        <thead><tr><th scope="col">Slot · place</th>${dates.map(dt => html`<th key=${dt} scope="col">${fmtDay(dt)}</th>`)}</tr></thead>
+        <tbody>${rows.map(({ s, cells }) => html`<tr key=${s.id}><th scope="row"><span className="row" style=${{ gap:'6px', flexWrap:'nowrap' }}><${Icon} name=${s.icon} size=${16}/>${s.name}<span className="muted" style=${{ fontWeight:400 }}>· ${s.place}</span></span></th>
+          ${cells.map((v, i) => html`<td key=${i} className=${'c b-' + band(v)} aria-label=${s.name + ' ' + fmtDay(dates[i]) + ': ' + (v == null ? 'no data' : v.toFixed(1) + ', ' + BAND_LABEL[band(v)])}>${v == null ? '–' : v.toFixed(1)}</td>`)}</tr>`)}</tbody>
+      </table></div>
+      <div className="legend"><span><i style=${{ background:'var(--hi-bg)' }}></i>Recharges (3.5+)</span><span><i style=${{ background:'var(--mid-bg)' }}></i>Some drain (2.5–3.4)</span><span><i style=${{ background:'var(--lo-bg)', boxShadow:'inset 0 0 0 2px var(--lo)' }}></i>High drain (under 2.5, outlined)</span></div>
+      <${Why} k="heatmap"/>
+    </section>
+
+    <div className="grid-2">
+      <section className="stack" aria-label="Drift alerts">
+        <h2 className="row" style=${{ gap:'8px' }}><${Icon} name="alert"/>Drift alerts</h2>
+        <p className="muted small">A pupil's average battery has fallen for 3 or more check-ins in a row. Only their key adult and the SENCO see this.</p>
+        <${Why} k="drift"/>
+        ${drifts.length === 0 && html`<div className="card"><p className="muted">No drift for the pupils you support.</p></div>`}
+        ${drifts.map(({ p, s, d }) => html`<${DriftCard} key=${p.id} p=${p} s=${s} d=${d}/>`)}
+      </section>
+      <section className="stack" aria-label="Break requests and symbols">
+        <h2 className="row" style=${{ gap:'8px' }}><${Icon} name="bell"/>Breaks and symbols</h2>
+        <p className="muted small">Sent privately by pupils you're key adult for.</p>
+        <${Why} k="break"/>
+        ${moments.length === 0 && html`<div className="card"><p className="muted">Nothing yet.</p></div>`}
+        ${moments.map(m => { const p = db.pupils.find(x => x.id === m.pupilId); return html`<div key=${m.id} className="card row" style=${{ padding:'14px' }}>
+          <${Avatar} pupil=${p} size=${40}/>
+          <div style=${{ flex:'1 1 160px', minWidth:0 }}><b>${p.name}</b> <span className=${'pill ' + (m.kind === 'break' ? 'pill-mid' : 'pill-plain')}>${m.kind === 'break' ? 'Asked for a break' : I18N.en[m.symbol]}</span><p className="muted small">${fmtTime(m.at)}</p></div>
+          ${m.seen ? html`<span className="muted small"><${Icon} name="check" size=${16}/> Seen</span>` : html`<button className="btn" onClick=${() => update(d => { d.moments.find(x => x.id === m.id).seen = true; })}><${Icon} name="check"/>Mark seen</button>`}
+        </div>`; })}
+      </section>
+    </div>
+  </div>`;
+}
+
+function DriftCard({ p, s, d }){
+  const { db, staff, update } = useApp();
+  const [choosing, setChoosing] = useState(false);
+  const plans = db.plans.filter(x => x.pupilId === p.id);
+  const notes = noteList(db, p.id, 3);
+  const plan = (when) => { update(dd => { dd.plans.unshift({ id:uid('pl'), pupilId:p.id, by:staff.name, when, at:Date.now() }); }); setChoosing(false); };
+  return html`<article className="card drift">
+    <div className="row"><${Avatar} pupil=${p} size=${48}/><div style=${{ flex:'1 1 160px', minWidth:0 }}><h3>${p.name}</h3>
+      <p className="small">Battery has fallen across ${d.drops} check-ins: <b>${d.from.toFixed(1)}</b> to <b>${d.to.toFixed(1)}</b></p>
+      <p className="muted small">Attendance ${p.attendance}%, no absences flagged yet</p></div>
+      <${Sparkline} values=${s.map(x => x.avg)}/></div>
+    ${notes.length > 0 && html`<div className="stack" style=${{ gap:'8px' }}><p className="eyebrow">Latest notes</p>${notes.map((n, i) => html`<${NoteView} key=${i} item=${n}/>`)}</div>`}
+    ${plans.length > 0 && html`<div className="banner banner-ok"><${Icon} name="calendar"/>Check-in planned for ${plans[0].when.toLowerCase()} by ${plans[0].by}</div>`}
+    ${choosing ? html`<div className="row" role="group" aria-label="When"><span className="small">When?</span>${['Today','Tomorrow','This week'].map(w => html`<button key=${w} className="btn" onClick=${() => plan(w)}>${w}</button>`)}<button className="btn btn-quiet" onClick=${() => setChoosing(false)}>Cancel</button></div>`
+      : html`<div><button className="btn btn-primary" onClick=${() => setChoosing(true)}><${Icon} name="calendar"/>Plan a check-in</button></div>`}
+  </article>`;
+}
+
+function NoteView({ item, showPupil }){
+  const { db } = useApp();
+  const sample = useCap('sample');
+  const [tr, setTr] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const n = item.n;
+  const pupil = db.pupils.find(p => p.id === item.pupilId);
+  const words = [n.text, n.help && n.help.text].filter(Boolean).join('\n');
+  const looksForeign = /[ąćęłńóśźżñáéíú¿¡]/i.test(words);
+  const translate = async () => { setBusy(true); setErr(''); try { setTr(await aiTranslate(sample, words, 'English')); } catch(e){ setErr(aiErr(e)); } setBusy(false); };
+  return html`<div className="note">
+    <p className="small muted">${showPupil && pupil ? html`<b style=${{ color:'var(--ink)' }}>${pupil.name}</b> · ` : null}${fmtDay(item.date)} · ${item.label}${item.rating ? ' · battery ' + item.rating + '/5' : ''}</p>
+    ${n.text && html`<p>"${n.text}"</p>`}
+    ${(n.symbols || []).length > 0 && html`<div className="row" style=${{ gap:'6px' }}>${n.symbols.map(s => html`<span key=${s} className="pill pill-plain"><${Icon} name=${(SYMBOLS.find(x => x.key === s) || {}).icon} size=${14}/>${I18N.en[s]}</span>`)}</div>`}
+    ${n.help && ((n.help.chips || []).length > 0 || n.help.text) && html`<p className="small"><b>What would help:</b> ${[].concat(n.help.chips || [], n.help.text ? [n.help.text] : []).join(' · ')}</p>`}
+    ${(n.photo || n.drawing) && html`<div className="row">${n.photo && html`<img src=${n.photo} alt="Photo the pupil added" className="photo-thumb" style=${{ maxWidth:'160px' }}/>`}${n.drawing && html`<img src=${n.drawing} alt="Drawing the pupil added" className="photo-thumb" style=${{ maxWidth:'160px' }}/>`}</div><p className="muted small">Images are not analysed. Ask the pupil what it shows.</p>`}
+    ${n.voice && html`<audio controls src=${n.voice} style=${{ maxWidth:'100%' }}></audio>`}
+    ${words && sample && looksForeign && !tr && html`<div><button className="btn" onClick=${translate} disabled=${busy}><${Icon} name="globe"/>${busy ? 'Translating…' : 'Translate to English'}</button></div>`}
+    ${tr && html`<p className="small"><span className="eyebrow">Machine translation</span><br/>${tr}</p>`}
+    ${err && html`<p className="small" style=${{ color:'var(--warn-ink)' }}>${err}</p>`}
+  </div>`;
+}
+
+function PupilsTab({ classId }){
+  const { db, staff } = useApp();
+  const pupils = Access.visiblePupils(db, staff, classId);
+  const [sel, setSel] = useState(null);
+  const p = pupils.find(x => x.id === sel);
+  return html`<div className="stack">
+    <section className="card" aria-label="Pupils">
+      <div className="table-scroll"><table className="list">
+        <thead><tr><th>Pupil</th><th>Latest battery</th><th>Trend</th><th>Attendance</th><th>Profile</th><th>Key adult</th><th></th></tr></thead>
+        <tbody>${pupils.map(x => { const s = pupilSeries(db, x.id); const last = s.length ? s[s.length - 1].avg : null; const prof = Access.profile(db, x); const dr = Access.canSeeDrift(staff, x) && driftInfo(s.map(y => y.avg));
+          return html`<tr key=${x.id}>
+            <td><span className="row" style=${{ gap:'10px', flexWrap:'nowrap' }}><${Avatar} pupil=${x} size=${36}/><b>${x.name}</b>${dr && html`<span className="pill pill-lo">Drift</span>`}</span></td>
+            <td><${Battery} small value=${last} label=${x.name}/> <span className="small mono">${last ? last.toFixed(1) : '–'}</span></td>
+            <td><${Sparkline} values=${s.map(y => y.avg)} w=${100} h=${30}/></td>
+            <td className="mono">${x.attendance}%</td>
+            <td>${prof ? html`<span className="pill pill-hi">Approved</span>` : html`<span className="pill pill-plain">Not shared</span>`}</td>
+            <td className="small">${(db.staff.find(s2 => s2.id === x.keyAdultId) || {}).name}</td>
+            <td><button className="btn" onClick=${() => setSel(x.id)}><${Icon} name="eye"/>Open</button></td>
+          </tr>`; })}</tbody>
+      </table></div>
+    </section>
+    ${p && html`<${Dialog} onClose=${() => setSel(null)} label=${p.name}><${PupilDetail} p=${p} onClose=${() => setSel(null)}/><//>`}
+  </div>`;
+}
+
+function PupilDetail({ p, onClose }){
+  const { db, staff } = useApp();
+  const s = pupilSeries(db, p.id);
+  const prof = Access.profile(db, p);
+  const pn = Access.parentNotes(db, p);
+  const notes = noteList(db, p.id, 6);
+  const sec = [['drains','Drains me'],['helps','Helps me'],['words','In my words']];
+  return html`<div className="stack">
+    <div className="spread"><div className="row"><${Avatar} pupil=${p} size=${56}/><div><h2>${p.name}</h2><p className="muted small">Attendance ${p.attendance}% · key adult ${(db.staff.find(x => x.id === p.keyAdultId) || {}).name}</p></div></div>
+      <button className="btn" onClick=${onClose}><${Icon} name="x"/>Close</button></div>
+    <div className="card-flat"><p className="eyebrow">Battery trend</p><${Sparkline} values=${s.map(x => x.avg)} w=${280} h=${60}/></div>
+    <div className="stack" style=${{ gap:'8px' }}><h3>Recharge Profile</h3>
+      ${prof ? sec.map(([k, l]) => html`<div key=${k}><p className="eyebrow">${l}</p><ul style=${{ margin:'4px 0 0', paddingLeft:'20px' }}>${prof.filter(i => i.section === k).map((i, j) => html`<li key=${j}>${i.text}</li>`)}</ul></div>`)
+        : html`<p className="muted">Not approved yet. Only ${p.name.split(' ')[0]} can see it until they approve it.</p>`}</div>
+    <div className="stack" style=${{ gap:'8px' }}><h3>Recent notes</h3>${notes.length ? notes.map((n, i) => html`<${NoteView} key=${i} item=${n}/>`) : html`<p className="muted">No notes.</p>`}</div>
+    <div className="stack" style=${{ gap:'8px' }}><h3>Notes from home</h3>
+      ${pn == null ? html`<p className="muted"><${Icon} name="lock" size=${16}/> Hidden. ${p.name.split(' ')[0]} has not agreed to share notes from home.</p>`
+        : pn.length ? pn.map(n => html`<div key=${n.id} className="note"><p className="small muted">${fmtTime(n.at)}</p><p>${n.text}</p></div>`) : html`<p className="muted">None yet.</p>`}</div>
+  </div>`;
+}
+
+function ThemesTab({ classId }){
+  const { db, staff, showToast } = useApp();
+  const sample = useCap('sample');
+  const pupils = Access.visiblePupils(db, staff, classId);
+  const answers = helpAnswers(db, new Set(pupils.map(p => p.id)));
+  const groups = {};
+  for (const a of answers) { const k = themeOf(a.all); (groups[k] = groups[k] || []).push(a); }
+  const list = Object.entries(groups).map(([k, v]) => ({ k, label:k === 'other' ? 'Other ideas' : THEMES.find(t => t.id === k).label, items:v, pupils:new Set(v.map(x => x.pupilId)).size })).sort((a, b) => b.items.length - a.items.length);
+  const max = Math.max(1, ...list.map(l => l.items.length));
+  const [ai, setAi] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const runAi = async () => {
+    setBusy(true);
+    try {
+      const r = await sample.json(AI_RULES + '\n\nThese are anonymous answers from pupils to the question "What would help?". Group them into 3 to 6 themes a teacher could act on. Use plain, practical theme names. Reply with only JSON: [{"theme": "...", "count": 3, "examples": ["exact pupil words", "..."]}]. Examples must be copied exactly from the answers.\n\nAnswers:\n' + answers.map(a => '- ' + a.text).join('\n'), { modelTier:'default' });
+      if (Array.isArray(r)) setAi(r); else showToast('AI returned something unexpected. Showing keyword groups.');
+    } catch(e){ showToast(aiErr(e)); }
+    setBusy(false);
+  };
+  return html`<div className="stack">
+    <section className="card stack">
+      <div className="spread"><div><h2>Most asked for</h2><p className="muted small">${answers.length} answers to "What would help?" from ${new Set(answers.map(a => a.pupilId)).size} pupils, grouped by keywords.</p></div>
+        ${sample ? html`<button className="btn" onClick=${runAi} disabled=${busy || !answers.length}><${Icon} name="sparkles"/>${busy ? 'Grouping…' : 'Group with AI'}</button>` : html`<span className="pill pill-plain">AI off · keyword grouping</span>`}</div>
+      ${list.map(l => html`<div key=${l.k} className="stack" style=${{ gap:'6px' }}>
+        <div className="spread"><b>${l.label}</b><span className="small muted mono">${l.items.length} answers · ${l.pupils} pupils</span></div>
+        <div className="theme-track"><div className="theme-bar" style=${{ width:(l.items.length / max * 100) + '%' }}></div></div>
+        <p className="small muted">${l.items.slice(0, 4).map(x => '"' + x.text + '"').join('  ·  ')}</p>
+      </div>`)}
+      <${Why} k="themes"/>
+    </section>
+    ${ai && html`<section className="card stack"><div><h2 className="row" style=${{ gap:'8px' }}><${Icon} name="sparkles"/>AI summary</h2><p className="muted small">Check this against the pupils' own words. AI does not interpret images or feelings.</p><${Why} k="ai"/></div>
+      ${ai.map((g, i) => html`<div key=${i} className="note"><div className="spread"><b>${g.theme}</b><span className="small mono">${g.count}</span></div><p className="small muted">${(g.examples || []).map(e => '"' + e + '"').join('  ·  ')}</p></div>`)}
+    </section>`}
+  </div>`;
+}
+
+function YswdTab({ classId, setTab }){
+  const { db, staff, update, showToast } = useApp();
+  const pupils = Access.visiblePupils(db, staff, classId);
+  const answers = helpAnswers(db, new Set(pupils.map(p => p.id)));
+  const counts = {}; answers.forEach(a => { const k = themeOf(a.all); counts[k] = (counts[k] || 0) + 1; });
+  const top = Object.entries(counts).filter(([k]) => k !== 'other').sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k]) => THEMES.find(t => t.id === k).label);
+  const [said, setSaid] = useState('');
+  const [did, setDid] = useState('');
+  const post = (e) => { e.preventDefault(); update(d => { d.feed.unshift({ id:uid('f'), classId, said:said.trim(), did:did.trim(), by:staff.name, at:Date.now() }); }); setSaid(''); setDid(''); showToast('Posted to pupils\' feeds.'); };
+  const posts = db.feed.filter(f => f.classId === classId).sort((a, b) => b.at - a.at);
+  return html`<div className="grid-2">
+    <form className="card stack" onSubmit=${post} aria-label="Post a change">
+      <h2>Tell pupils what changed</h2>
+      <div className="stack" style=${{ gap:'8px' }}><label className="lbl" htmlFor="ys-said">You said</label>
+        <div className="row">${top.map(tp => html`<button key=${tp} type="button" className="chip" aria-pressed=${said === tp} onClick=${() => setSaid(tp)}>${tp}</button>`)}</div>
+        <input id="ys-said" type="text" value=${said} onChange=${(e) => setSaid(e.target.value)} placeholder="For example: The lunch hall is too loud."/></div>
+      <div><label className="lbl" htmlFor="ys-did">We did</label><textarea id="ys-did" value=${did} onChange=${(e) => setDid(e.target.value)} placeholder="Say what changed, when, and where. Keep it short and concrete."></textarea></div>
+      <div><button className="btn btn-primary" disabled=${!said.trim() || !did.trim()}><${Icon} name="megaphone"/>Post to class feed</button></div>
+      <${Why} k="feed"/>
+    </form>
+    <section className="stack" aria-label="Posted">
+      <h2>Posted</h2>
+      ${posts.map(p => html`<article key=${p.id} className="card feed-post"><p className="muted small">${fmtTime(p.at)} · ${p.by}</p><div className="said"><p className="eyebrow">You said</p><p>${p.said}</p></div><div className="did"><p className="eyebrow" style=${{ color:'inherit' }}>We did</p><p>${p.did}</p></div></article>`)}
+    </section>
+  </div>`;
+}
+
+const CHECKLIST = [
+  ['read','Read the full note and any earlier notes'],
+  ['spoke','Spoken with the pupil today, in a safe and quiet place'],
+  ['record','Recorded on the school safeguarding system (e.g. CPOMS / MyConcern)'],
+  ['immediate','Considered whether the pupil is at immediate risk (call 999 if so)'],
+  ['parents','Decided whether to inform parents or carers (unless this would increase risk)'],
+  ['referral','Considered referral to children\'s social care or early help'],
+  ['followup','Follow-up date set and key adult informed']
+];
+function SafeTab(){
+  const { db, staff, update } = useApp();
+  if (!Access.canSeeSafeguarding(staff)) {
+    const dsl = db.staff.find(s => s.role === 'dsl');
+    return html`<section className="card stack"><h2 className="row" style=${{ gap:'8px' }}><${Icon} name="shield"/>Safeguarding</h2>
+      <p>If a pupil's note contains concerning words, Recharge sends it straight to the safeguarding lead${dsl ? ', ' + dsl.name : ''}. Only they see the flag here.</p>
+      <p className="muted">If you are worried about a pupil right now, follow your school's safeguarding policy and speak to the DSL in person. Recharge does not replace that.</p><${Why} k="safe"/></section>`;
+  }
+  return html`<div className="stack">
+    <div className="banner banner-info"><${Icon} name="shield"/><div><b>Keyword flags, for a human to review.</b> Recharge spots words such as hurt, unsafe or self-harm. It doesn't judge risk or interpret images. Follow your school's safeguarding policy.</div></div>
+    <${Why} k="safe"/>
+    ${db.flags.length === 0 && html`<div className="card"><p className="muted">No flags.</p></div>`}
+    ${db.flags.map(f => { const p = db.pupils.find(x => x.id === f.pupilId); const done = CHECKLIST.filter(([k]) => f.checklist[k]).length;
+      return html`<article key=${f.id} className="card stack" style=${{ borderLeft:'6px solid ' + (f.status === 'open' ? 'var(--lo)' : 'var(--hi)') }}>
+        <div className="spread"><div className="row"><${Avatar} pupil=${p} size=${44}/><div><h3>${p.name}</h3><p className="muted small">${fmtTime(f.at)} · ${f.source}</p></div></div>
+          <span className=${'pill ' + (f.status === 'open' ? 'pill-lo' : 'pill-hi')}>${f.status === 'open' ? 'Open' : 'Closed'} · ${done}/${CHECKLIST.length}</span></div>
+        <blockquote className="note" style=${{ margin:0 }}><p style=${{ fontSize:'1.05rem' }}>"${f.text}"</p><p className="small muted">Matched: ${f.words.join(', ')}</p></blockquote>
+        <div className="stack" style=${{ gap:'6px' }}>${CHECKLIST.map(([k, l]) => html`<button key=${k} type="button" role="checkbox" aria-checked=${!!f.checklist[k]} className="check-item" onClick=${() => update(d => { const x = d.flags.find(y => y.id === f.id); x.checklist[k] = !x.checklist[k]; })}><span className="box">${f.checklist[k] && html`<${Icon} name="check" size=${18}/>`}</span>${l}</button>`)}</div>
+        <div className="row">${f.status === 'open'
+          ? html`<button className="btn btn-primary" disabled=${done < CHECKLIST.length} onClick=${() => update(d => { d.flags.find(y => y.id === f.id).status = 'closed'; })}><${Icon} name="check"/>Close flag</button>${done < CHECKLIST.length && html`<span className="muted small">Tick every step to close.</span>`}`
+          : html`<button className="btn" onClick=${() => update(d => { d.flags.find(y => y.id === f.id).status = 'open'; })}><${Icon} name="refresh"/>Reopen</button>`}</div>
+      </article>`; })}
+  </div>`;
+}
+
+function ClassTab({ classId, setClassId }){
+  const { db, staff, update, showToast, resetDemo } = useApp();
+  const downloads = useCap('downloads');
+  const cls = db.classes.find(c => c.id === classId);
+  const pupils = cls ? db.pupils.filter(p => p.classId === cls.id).sort((a, b) => a.name.localeCompare(b.name)) : [];
+  const [cards, setCards] = useState(null);
+  const [name, setName] = useState('');
+  const [colour, setColour] = useState('teal');
+  const [keyAdult, setKeyAdult] = useState(staff.id);
+  const [newClass, setNewClass] = useState('');
+  const [confirmReset, setConfirmReset] = useState(false);
+  const issue = async (list) => {
+    const out = [];
+    for (const p of list) { const pin = randomPin(); const sec = await makeSecret(pin); out.push({ id:p.id, name:p.name, pin, sec }); }
+    update(d => { for (const o of out) { const x = d.pupils.find(q => q.id === o.id); x.salt = o.sec.salt; x.pinHash = o.sec.hash; x.failed = 0; x.locked = false; } });
+    setCards(out.map(o => ({ name:o.name, pin:o.pin })));
+  };
+  const addPupil = async (e) => {
+    e.preventDefault(); if (!name.trim()) return;
+    const pin = randomPin(); const sec = await makeSecret(pin);
+    update(d => { d.pupils.push({ id:uid('p'), classId:cls.id, name:name.trim(), avatar:colour, keyAdultId:keyAdult, base:0, attendance:100, salt:sec.salt, pinHash:sec.hash, failed:0, locked:false, buddy:{ colour:'teal', hat:'none' }, parentShare:false }); });
+    setCards([{ name:name.trim(), pin }]); setName('');
+  };
+  const createClass = (e) => {
+    e.preventDefault(); if (!newClass.trim()) return;
+    const id = uid('c'); let code = newClassCode(newClass.trim());
+    while (db.classes.some(c => c.code === code)) code = newClassCode(newClass.trim());
+    update(d => { d.classes.push({ id, name:newClass.trim(), code, teacherId:staff.id }); d.slots[id] = SLOT_DEFS.map(s => Object.assign({}, s, { place:s.place === 'Classroom 6B' ? 'Classroom ' + newClass.trim() : s.place })); });
+    setNewClass(''); setClassId(id); showToast('Class ' + newClass.trim() + ' created with code ' + code + '.');
+  };
+  const pdf = async () => {
+    try {
+      await savePdf(downloads, 'recharge-pin-cards-' + cls.name + '.pdf', (doc) => {
+        const W = 90, H = 58; let i = 0;
+        for (const c of cards) {
+          const col = i % 2, row = Math.floor(i / 2) % 4; if (i && i % 8 === 0) doc.addPage();
+          const x = 12 + col * (W + 6), y = 14 + row * (H + 8);
+          doc.setDrawColor(150); doc.setLineDashPattern([2, 2], 0); doc.roundedRect(x, y, W, H, 4, 4);
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor(22, 48, 45); doc.text(c.name, x + 6, y + 11);
+          doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text('Class code', x + 6, y + 21); doc.text('My PIN', x + 50, y + 21);
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.text(cls.code, x + 6, y + 30); doc.text(c.pin.split('').join(' '), x + 50, y + 30);
+          doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.text(['1. Type the class code.', '2. Tap your name.', '3. Enter your PIN. Keep it secret.'], x + 6, y + 40);
+          i++;
+        }
+      });
+      showToast('PIN cards saved.');
+    } catch(e){ if (e && e.code === 'declined') return; showToast(e.message || 'Could not save the PDF.'); }
+  };
+  if (!cls) return null;
+  return html`<div className="stack">
+    <div className="grid-2">
+      <section className="card stack" aria-label="Class code">
+        <p className="eyebrow">Class ${cls.name}</p>
+        <p style=${{ fontFamily:'var(--font-display)', fontSize:'2.6rem', fontWeight:700, letterSpacing:'.08em' }}>${cls.code}</p>
+        <p className="muted small">Pupils type this code, tap their name, then enter their PIN. On a shared iPad, tick "Remember this class" once.</p>
+        <div className="row"><button className="btn" onClick=${() => issue(pupils)} disabled=${!pupils.length}><${Icon} name="key"/>New PINs for everyone</button></div>
+        <${Why} k="security"/>
+      </section>
+      <form className="card stack" onSubmit=${addPupil} aria-label="Add a pupil">
+        <h2>Add a pupil</h2>
+        <div><label className="lbl" htmlFor="np-name">Name (first name and initial)</label><input id="np-name" type="text" value=${name} onChange=${(e) => setName(e.target.value)} placeholder="e.g. Maya R."/></div>
+        <div><p className="lbl">Avatar colour</p><div className="row">${AV_COLOURS.map(c => html`<button key=${c} type="button" className="swatch" style=${{ background:'var(--av-' + c + ')' }} aria-pressed=${colour === c} aria-label=${'Avatar colour ' + c} onClick=${() => setColour(c)}></button>`)}</div></div>
+        <div><label className="lbl" htmlFor="np-ka">Key adult</label><select id="np-ka" className="field" value=${keyAdult} onChange=${(e) => setKeyAdult(e.target.value)}>${db.staff.filter(s => s.role !== 'dsl').map(s => html`<option key=${s.id} value=${s.id}>${s.name} · ${ROLE_LABEL[s.role]}</option>`)}</select></div>
+        <div><button className="btn btn-primary" disabled=${!name.trim()}><${Icon} name="plus"/>Add pupil and make PIN</button></div>
+      </form>
+    </div>
+    <section className="card" aria-label="Pupils and PINs">
+      <h2 style=${{ marginBottom:'10px' }}>Pupils and PINs</h2>
+      <div className="table-scroll"><table className="list">
+        <thead><tr><th>Pupil</th><th>Key adult</th><th>Status</th><th></th></tr></thead>
+        <tbody>${pupils.map(p => html`<tr key=${p.id}>
+          <td><span className="row" style=${{ gap:'10px', flexWrap:'nowrap' }}><${Avatar} pupil=${p} size=${36}/><b>${p.name}</b></span></td>
+          <td className="small">${(db.staff.find(s => s.id === p.keyAdultId) || {}).name}</td>
+          <td>${p.locked ? html`<span className="pill pill-lo"><${Icon} name="lock" size=${14}/>Locked after 5 tries</span>` : p.failed ? html`<span className="pill pill-mid">${p.failed} wrong tries</span>` : html`<span className="pill pill-hi">OK</span>`}</td>
+          <td><button className="btn" onClick=${() => issue([p])}><${Icon} name="key"/>${p.locked ? 'Unlock and reset PIN' : 'Reset PIN'}</button></td>
+        </tr>`)}</tbody>
+      </table></div>
+    </section>
+    <div className="grid-2">
+      <form className="card stack" onSubmit=${createClass} aria-label="Create a class">
+        <h2>Create a class</h2>
+        <div><label className="lbl" htmlFor="nc-name">Class name</label><input id="nc-name" type="text" value=${newClass} onChange=${(e) => setNewClass(e.target.value)} placeholder="e.g. 5H"/></div>
+        <div><button className="btn btn-primary" disabled=${!newClass.trim()}><${Icon} name="plus"/>Create class and code</button></div>
+      </form>
+      <section className="card stack" aria-label="Reset demo">
+        <h2>Reset demo</h2>
+        <p className="muted small">Puts back the fictional class 6B, 12 pupils and 6 check-ins. Removes everything added since.</p>
+        <div className="row">${confirmReset
+          ? html`<button className="btn btn-danger" onClick=${() => { setConfirmReset(false); resetDemo(); }}><${Icon} name="refresh"/>Yes, reset everything</button><button className="btn" onClick=${() => setConfirmReset(false)}>Cancel</button>`
+          : html`<button className="btn" onClick=${() => setConfirmReset(true)}><${Icon} name="refresh"/>Reset demo</button>`}</div>
+      </section>
+    </div>
+    ${cards && html`<${Dialog} onClose=${() => setCards(null)} label="PIN cards">
+      <div className="spread"><h2>PIN cards</h2><button className="btn" onClick=${() => setCards(null)}><${Icon} name="x"/>Close</button></div>
+      <div className="banner banner-info"><${Icon} name="lock"/>PINs are stored scrambled (hashed), so this is the only time they are shown. Save or copy them now.</div>
+      <div className="pin-cards">${cards.map(c => html`<div key=${c.name} className="pin-cardp"><b>${c.name}</b><span className="small muted">Class code ${cls.code}</span><span className="big">${c.pin}</span></div>`)}</div>
+      ${downloads !== null && html`<div><button className="btn btn-primary" onClick=${pdf} disabled=${downloads === undefined}><${Icon} name="download"/>Save PIN cards as PDF</button></div>`}
+    <//>`}
+  </div>`;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+})();
+</script>
+
+</body>
+</html>
