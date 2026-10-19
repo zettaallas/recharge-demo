@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from '@/components/Dropdown';
 import { Sparkline } from '@/components/Sparkline';
 import { Heatmap } from '@/components/staff/Heatmap';
+import { useStaffClass } from '@/components/staff/StaffClass';
 import { NoteView } from '@/components/staff/NoteView';
 import { Card, H2, Stat, fmtDay } from '@/components/staff/StaffUi';
 import { Avatar, Banner, Button, H1, Muted, Row, Screen } from '@/components/ui';
@@ -17,7 +18,8 @@ import type { Pupil } from '@/types';
 // Staff overview. Each role only sees its own parts: the heatmap (tutor, key adult, SENCO),
 // drift alerts (key adult for their pupils, SENCO for all) and the requests count (key adult).
 export default function Overview() {
-  const { db, staffMe } = useApp();
+  const { db, staffMe, colors } = useApp();
+  const { classId } = useStaffClass();
   const router = useRouter();
   const [filter, setFilter] = useState<string | null>(null);
   if (!staffMe) return null;
@@ -29,15 +31,17 @@ export default function Overview() {
         <Card>
           <H2>Safeguarding</H2>
           <Muted>
-            As safeguarding lead you see flagged posts only. Pupils' other check-ins, notes and profiles stay with their key adult. The flags list
-            and checklist arrive in Step 9b.
+            As safeguarding lead you see flagged posts only. Pupils' other check-ins, notes and profiles stay with their key adult.
           </Muted>
-          <Text>{'Open flags right now: ' + db.flags.filter((f) => f.status === 'open').length}</Text>
+          <Text style={{ color: colors.ink }}>{'Open flags right now: ' + db.flags.filter((f) => f.status === 'open').length}</Text>
+          <Row>
+            <Button label="Open safeguarding" kind="primary" onPress={() => router.navigate('/safeguarding')} />
+          </Row>
         </Card>
       </Screen>
     );
 
-  const cls = staffMe.role === 'class_teacher' ? db.classes.find((c) => c.teacherId === staffMe.id) : db.classes[0];
+  const cls = db.classes.find((c) => c.id === classId);
   if (!cls) return null;
   const pupils = Access.visiblePupils(db, staffMe, cls.id);
   const canPick = (p: Pupil) => Access.canSeePupilDetail(staffMe, p);

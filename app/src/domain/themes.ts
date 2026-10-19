@@ -26,3 +26,55 @@ export function setHelpful(db: Db, feedId: string, pupilId: string, answer: Help
   if (item.helpful[pupilId] === answer) delete item.helpful[pupilId];
   else item.helpful[pupilId] = answer;
 }
+
+export interface HelpAnswer {
+  pupilId: string;
+  date: string;
+  /** What to quote: the pupil's own words, or their chips if they didn't type. */
+  text: string;
+  /** Everything, for keyword grouping. */
+  all: string;
+}
+
+/** Every "What would help?" answer from these pupils' check-ins, leaving out notes a pupil kept private. */
+export function helpAnswers(db: Db, pupilIds: Set<string>): HelpAnswer[] {
+  const hidden = new Set(db.posts.filter((p) => p.kind === 'note' && p.sharedWith === 'private').map((p) => p.refId));
+  const out: HelpAnswer[] = [];
+  for (const c of db.checkins) {
+    if (!pupilIds.has(c.pupilId)) continue;
+    for (const [sid, n] of Object.entries(c.notes || {})) {
+      if (hidden.has(c.id + ':' + sid)) continue;
+      const parts = [...n.help.chips, ...(n.help.text ? [n.help.text] : [])];
+      if (!parts.length) continue;
+      out.push({ pupilId: c.pupilId, date: c.date, text: n.help.text || n.help.chips.join(', '), all: parts.join(' ') });
+    }
+  }
+  return out;
+}
+
+export interface ThemeGroup {
+  id: ThemeId;
+  label: string;
+  answers: HelpAnswer[];
+  pupils: number;
+}
+
+/** Groups answers by keyword theme, most asked for first. */
+export function groupThemes(answers: HelpAnswer[]): ThemeGroup[] {
+  const groups: Partial<Record<ThemeId, HelpAnswer[]>> = {};
+  for (const a of answers) (groups[themeOf(a.all)] ??= []).push(a);
+  return (Object.entries(groups) as [ThemeId, HelpAnswer[]][])
+    .map(([id, list]) => ({
+      id,
+      label: id === 'other' ? 'Other ideas' : THEMES.find((t) => t.id === id)!.label,
+      answers: list,
+      pupils: new Set(list.map((x) => x.pupilId)).size,
+    }))
+    .sort((a, b) => b.answers.length - a.answers.length);
+}
+
+/** "Was this helpful?" answers on one You said / We did post. */
+export function helpfulTally(item: Db['feed'][number]): { yes: number; notReally: number } {
+  const v = Object.values(item.helpful);
+  return { yes: v.filter((x) => x === 'yes').length, notReally: v.filter((x) => x === 'notReally').length };
+}
