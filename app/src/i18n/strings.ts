@@ -195,7 +195,30 @@ export const en = {
   "sentIntro": "Breaks, talk requests, symbols, notes and places. Tap one to see it, share it or keep it private.",
   "sentTab": "What I've sent",
   "seeSent": "See what I've sent",
-  "myZip": "My Zip"
+  "myZip": "My Zip",
+  "regTitle": "Make Recharge yours",
+  "regIntro": "Everything here is optional. You can skip it and change it later in Settings.",
+  "regName": "What would you like to be called?",
+  "regNameHint": "Leave empty to use {name}",
+  "regZip": "Choose Zip's colour and hat",
+  "regHelps": "Things that usually help me (optional)",
+  "regHelpsHint": "These go into your profile under Helps me. You choose who sees your profile.",
+  "regSave": "Save and continue",
+  "regSkip": "Skip for now",
+  "wtSkip": "Skip",
+  "wtNext": "Next",
+  "wtStart": "Start",
+  "wtStep": "{n} of {total}",
+  "wt1Title": "Share how you feel, your way",
+  "wt1Body": "Rate places and moments on a battery, tap symbols, or take photos of places. You rate places, not feelings. Zip shows your charge.",
+  "wt2Title": "Ask for help any time",
+  "wt2Body": "\"I need a break\" is always at the top. \"Ask to talk to my teacher\" sends {adult} a request. You don't have to explain.",
+  "wt3Title": "You decide who sees what",
+  "wt3Body": "Only {adult} sees what you share, and you can keep any post private. If you tell us something about your safety, a safeguarding adult will see it so they can help.",
+  "wt4Title": "See what happens next",
+  "wt4Body": "Each post shows ✓ Sent, ✓✓ Read or ↩ Follow-up. You can switch \"Read\" off in Settings. Replies are in \"See my teacher's response\".",
+  "personalise": "Change how Recharge looks for me",
+  "replayWalkthrough": "Show the walkthrough again"
 };
 
 export type Strings = typeof en;

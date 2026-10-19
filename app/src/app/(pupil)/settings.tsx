@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Button, Checkbox, H1, Muted, Row, Screen } from '@/components/ui';
+import { Button, Checkbox, H1, Row, Screen } from '@/components/ui';
 import { useApp } from '@/state/AppContext';
 import type { PupilSettings } from '@/types';
 
@@ -17,7 +17,7 @@ export default function Settings() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button label={t('back')} onPress={() => router.back()} />
       </Row>
       <H1>{t('settings')}</H1>
 
@@ -33,7 +33,12 @@ export default function Settings() {
       )}
       <Checkbox label={t('sharedDevice')} hint={t('sharedDeviceHint')} checked={sharedDevice} onChange={setSharedDevice} />
 
-      <Muted small>The walkthrough and your registration choices will be here after Step 8b.</Muted>
+      <Row>
+        <Button label={t('personalise')} onPress={() => router.push({ pathname: '/register', params: { edit: '1' } })} />
+      </Row>
+      <Row>
+        <Button label={t('replayWalkthrough')} onPress={() => router.push({ pathname: '/walkthrough', params: { replay: '1' } })} />
+      </Row>
       <Row>
         <Button label={t('logout')} onPress={() => logOut()} />
       </Row>

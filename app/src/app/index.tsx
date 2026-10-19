@@ -48,7 +48,7 @@ export default function Entry() {
       <View style={[styles.demo, { backgroundColor: colors.surface2 }]}>
         <Text style={[styles.eyebrow, { color: colors.ink2 }]}>DEMO · FICTIONAL DATA ONLY</Text>
         <Text style={{ color: colors.ink }}>
-          Pupils: class code {DEMO.classCode}, any name, PIN {DEMO.pupilPin}. Isla M. shows a falling battery with normal attendance.
+          Pupils: class code {DEMO.classCode}, any name, PIN {DEMO.pupilPin}. Isla M. shows a falling battery with normal attendance. Noor H. is new, to try first login.
         </Text>
         <Muted small>Everything is saved only on this device. PINs are stored hashed.</Muted>
         {confirmReset ? (

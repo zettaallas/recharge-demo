@@ -199,7 +199,7 @@ export interface Flag {
 
 /** The whole local database. Supabase replaces the storage behind it later, not this shape. */
 export interface Db {
-  version: 3;
+  version: 4;
   seededAt: number;
   staff: Staff[];
   pupils: Pupil[];

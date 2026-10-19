@@ -39,7 +39,7 @@ export function syncProfile(db: Db, pid: string): void {
   }
   for (const p of db.pins.filter((x) => x.pupilId === pid))
     want.push({ section: p.tag === 'drains' ? 'drains' : 'helps', text: p.emoji + ' ' + p.caption, src: 'walk' });
-  const helps = new Set<string>();
+  const helps = new Set<string>(pupil.settings.helps);
   for (const c of cs)
     for (const n of Object.values(c.notes || {})) {
       (n.help?.chips || []).forEach((x) => helps.add(x));

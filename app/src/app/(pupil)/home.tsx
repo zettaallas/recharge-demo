@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { BigButton } from '@/components/BigButton';
 import { H1, Muted, Screen } from '@/components/ui';
@@ -13,6 +13,9 @@ export default function Home() {
   const { t, colors, db, me } = useApp();
   const router = useRouter();
   if (!me) return null;
+  // first login: optional personalisation, then the walkthrough (both skippable, both asked only once)
+  if (!me.settings.registered) return <Redirect href="/register" />;
+  if (!me.settings.walkthroughDone) return <Redirect href="/walkthrough" />;
   const ch = lastCharge(db, me.id);
   const adult = keyAdultName(db, me.id);
   // the badge shows how many replies the pupil has had

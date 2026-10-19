@@ -1,6 +1,6 @@
 # New home: four big buttons
 
-**Commit:** not committed yet
+**Commit:** `5ec3a7b` (committed by eko)
 
 ## What changed
 

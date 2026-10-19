@@ -78,6 +78,18 @@ export async function buildSeed(): Promise<Db> {
     checkins.push(...series);
   }
 
+  // A new pupil who has never logged in, to try first-run personalisation and the walkthrough.
+  {
+    const sec = await makeSecret(DEMO.pupilPin);
+    pupils.push({
+      id: 'p_noor', classId: 'c8b', name: 'Noor H.', avatar: 'rose', keyAdultId: 't3', attendance: 100,
+      salt: sec.salt, pinHash: sec.hash, failed: 0, locked: false,
+      buddy: { colour: 'teal', hat: 'none' },
+      parentShare: false,
+      settings: { showReadReceipts: true, helps: [], pinOnReopen: false, registered: false, walkthroughDone: false },
+    });
+  }
+
   const ci = (pid: string, i: number) => checkins.filter((c) => c.pupilId === pid)[i];
   const note = (pid: string, i: number, slot: string, n: Partial<Note>) => {
     ci(pid, i).notes[slot] = { symbols: [], help: { chips: [], text: '' }, ...n };
@@ -131,7 +143,7 @@ export async function buildSeed(): Promise<Db> {
   ];
 
   const db: Db = {
-    version: 3,
+    version: 4,
     seededAt: now,
     staff,
     pupils,
