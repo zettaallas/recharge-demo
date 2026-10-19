@@ -81,7 +81,7 @@ export default function RechargeWalk() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button label={t('back')} onPress={() => router.back()} />
       </Row>
       <H1>{t('walk')}</H1>
       <Muted>{t('walkIntro')}</Muted>

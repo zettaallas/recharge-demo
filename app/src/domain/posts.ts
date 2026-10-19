@@ -78,6 +78,7 @@ export function demoFollowUp(db: Db, postId: string, adult: string): void {
   const p = db.posts.find((x) => x.id === postId);
   if (!p) return;
   p.readAt = p.readAt ?? Date.now();
+  p.repliedAt = Date.now();
   p.status = 'followUp';
   p.followUp = adult + ': thanks for telling me. Let’s talk at break tomorrow about what would help.';
 }

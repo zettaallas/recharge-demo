@@ -11,7 +11,8 @@ One file per step of the Recharge → Expo migration (see [../../MIGRATION_PLAN.
 | [5](step-5.md) | Pupil home, Zip, battery check-in | `e7d0f6a` |
 | [6](step-6.md) | Symbol board, "I need a break", Recharge Walk, photos | `01daa36` |
 | [7](step-7.md) | My Recharge Profile, You said / We did, "Was this helpful?" | `93a3139` |
-| [8a](step-8a.md) | My posts, Sent / Read / Follow-up, read indicator switch, share / unshare, Settings | not committed yet |
-| [8a+](step-8a-symbols.md) | Symbol board update: pick several, optional details and place, Save with a "Saved" pop-up | not committed yet |
+| [8a](step-8a.md) | My posts, Sent / Read / Follow-up, read indicator switch, share / unshare, Settings | `98b476e` |
+| [8a+](step-8a-symbols.md) | Symbol board update: pick several, optional details and place, Save with a "Saved" pop-up | `98b476e` |
+| [8-home](step-8-home.md) | New home: four big buttons, Share how I feel, Ask to talk to my teacher, See my teacher's response (Replies / What I've sent / You said, we did), break link | not committed yet |
 
 All data in the app is fictional.

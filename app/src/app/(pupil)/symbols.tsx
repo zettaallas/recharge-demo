@@ -41,7 +41,7 @@ export default function SymbolBoard() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button label={t('back')} onPress={() => router.back()} />
       </Row>
       <H1>{t('symbols')}</H1>
       <Muted>{t('symbolsPick')}</Muted>
@@ -108,7 +108,7 @@ export default function SymbolBoard() {
         extra={saved?.flagged ? t('thanksSafe') : undefined}
         onOk={() => {
           setSaved(null);
-          router.back();
+          router.dismissTo('/home');
         }}
       />
     </Screen>

@@ -57,7 +57,7 @@ export default function CheckIn() {
         </View>
         {done.flagged && <Banner kind="info">{t('thanksSafe')}</Banner>}
         <Row>
-          <Button label={t('home')} kind="primary" large onPress={() => router.back()} />
+          <Button label={t('home')} kind="primary" large onPress={() => router.dismissTo('/home')} />
         </Row>
       </Screen>
     );
@@ -94,7 +94,7 @@ export default function CheckIn() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button label={t('back')} onPress={() => router.back()} />
       </Row>
       <View style={[styles.stage, styles.card, { backgroundColor: colors.surface, borderColor: colors.line }]}>
         <Zip charge={charge} colour={me.buddy.colour} hat={me.buddy.hat} size={80} />

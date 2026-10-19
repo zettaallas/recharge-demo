@@ -1,6 +1,6 @@
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { KIND, postDate } from '@/components/postMeta';
+import { KIND, postDate, replyTime } from '@/components/postMeta';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Banner, Button, H1, Muted, Row, Screen } from '@/components/ui';
 import { demoFollowUp, demoMarkRead, keyAdultName, setPostHelpful, setShared, visibleStatus } from '@/domain/posts';
@@ -14,7 +14,7 @@ export default function PostDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const post = db.posts.find((p) => p.id === id && p.pupilId === me?.id);
   if (!me) return null;
-  if (!post) return <Redirect href="/posts" />;
+  if (!post) return <Redirect href="/responses" />;
   const adult = keyAdultName(db, me.id);
   const shared = post.sharedWith === 'keyAdult';
   const status = visibleStatus(post, me.settings.showReadReceipts);
@@ -55,6 +55,9 @@ export default function PostDetail() {
         <View style={[styles.reply, { backgroundColor: colors.okBg }]}>
           <Text style={[styles.eyebrow, { color: colors.okInk }]}>{t('replyFrom').toUpperCase()}</Text>
           <Text style={{ color: colors.okInk, fontSize: 18 }}>{post.followUp}</Text>
+          {!!(post.repliedAt ?? post.readAt) && (
+            <Text style={{ color: colors.okInk, fontSize: 14, fontWeight: '700' }}>{t('repliedAt', { when: replyTime((post.repliedAt ?? post.readAt)!) })}</Text>
+          )}
           <Text style={{ color: colors.okInk, fontWeight: '700', marginTop: 6 }}>{t('wasHelpful')}</Text>
           <Row style={{ gap: 8 }}>
             {helpfulBtn('yes', t('helpfulYes'))}

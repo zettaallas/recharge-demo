@@ -1,6 +1,6 @@
 # Symbol board update
 
-**Commit:** not committed yet. This is kept separate from Step 8a.
+**Commit:** `98b476e` (committed by eko together with the symbol board update)
 
 ## What changed
 

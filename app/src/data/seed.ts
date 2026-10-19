@@ -124,7 +124,7 @@ export async function buildSeed(): Promise<Db> {
   const isla4 = ci('p_isla', 4);
   const isla5 = ci('p_isla', 5);
   const posts: Db['posts'] = [
-    { id: 'post_1', pupilId: 'p_isla', kind: 'note', refId: isla4.id, summary: "Everyone pushes and it is so loud I can't think", sharedWith: 'keyAdult', status: 'followUp', readAt: isla4.at + 3600e3, followUp: 'Ms Rivera: you can leave Maths 2 minutes early and use the side stairs from Monday.', at: isla4.at },
+    { id: 'post_1', pupilId: 'p_isla', kind: 'note', refId: isla4.id, summary: "Everyone pushes and it is so loud I can't think", sharedWith: 'keyAdult', status: 'followUp', readAt: isla4.at + 3600e3, followUp: 'Ms Rivera: you can leave Maths 2 minutes early and use the side stairs from Monday.', repliedAt: isla4.at + 18 * 3600e3, at: isla4.at },
     { id: 'post_2', pupilId: 'p_isla', kind: 'symbol', refId: 'm_isla_sym', summary: 'Too loud', sharedWith: 'keyAdult', status: 'read', readAt: symAt + 1800e3, at: symAt },
     { id: 'post_3', pupilId: 'p_isla', kind: 'break', refId: 'm_isla_break', summary: 'I need a break', sharedWith: 'keyAdult', status: 'sent', at: breakAt },
     { id: 'post_4', pupilId: 'p_isla', kind: 'note', refId: isla5.id, summary: 'I sat in the toilets at lunch because the hall was too much', sharedWith: 'private', status: 'sent', at: isla5.at },

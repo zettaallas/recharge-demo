@@ -144,7 +144,7 @@ export interface FeedItem {
 export interface Moment {
   id: string;
   pupilId: string;
-  kind: 'break' | 'symbol';
+  kind: 'break' | 'symbol' | 'talk';
   /** Older single-symbol moments (seed data). */
   symbol?: SymbolKey;
   /** Symbol board: one or more symbols saved together. */
@@ -158,7 +158,7 @@ export interface Moment {
 }
 
 export type PostStatus = 'sent' | 'read' | 'followUp';
-export type PostKind = 'note' | 'symbol' | 'break' | 'pin';
+export type PostKind = 'note' | 'symbol' | 'break' | 'pin' | 'talk';
 
 /** Anything a pupil has sent or kept: the "earlier posts" list. */
 export interface Post {
@@ -173,6 +173,8 @@ export interface Post {
   status: PostStatus;
   readAt?: number;
   followUp?: string;
+  /** When the key adult replied. */
+  repliedAt?: number;
   helpful?: Helpful;
   at: number;
 }

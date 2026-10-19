@@ -1,6 +1,6 @@
 # Step 8a: My posts, statuses, the read indicator and Settings
 
-**Commit:** not committed yet
+**Commit:** `98b476e` (committed by eko together with the symbol board update)
 
 Step 8 is split in two. This part covers posts and settings. **8b** adds optional personalisation at registration and the skippable walkthrough.
 
