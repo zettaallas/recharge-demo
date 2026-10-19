@@ -65,20 +65,3 @@ export function syncNotePosts(db: Db, checkin: CheckIn, labelOf: (sid: string) =
     addPost(db, { pupilId: checkin.pupilId, kind: 'note', refId: prefix + sid, summary, sharedWith: old?.sharedWith ?? 'keyAdult', at: checkin.at });
   }
 }
-
-// Demo only, until the staff side exists: lets testers see how Read and Follow-up look to a pupil.
-export function demoMarkRead(db: Db, postId: string): void {
-  const p = db.posts.find((x) => x.id === postId);
-  if (p && p.status === 'sent') {
-    p.status = 'read';
-    p.readAt = Date.now();
-  }
-}
-export function demoFollowUp(db: Db, postId: string, adult: string): void {
-  const p = db.posts.find((x) => x.id === postId);
-  if (!p) return;
-  p.readAt = p.readAt ?? Date.now();
-  p.repliedAt = Date.now();
-  p.status = 'followUp';
-  p.followUp = adult + ': thanks for telling me. Let’s talk at break tomorrow about what would help.';
-}

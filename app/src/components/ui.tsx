@@ -8,9 +8,10 @@ import type { Pupil } from '@/types';
 // Small shared building blocks, styled like the web prototype's .btn, .banner, .card and .avatar.
 
 /** belowBar: the screen sits under the pupil top bar, which already handles the top safe area. */
-export function Screen({ children, center, scroll = true, belowBar }: { children: ReactNode; center?: boolean; scroll?: boolean; belowBar?: boolean }) {
+export function Screen({ children, center, scroll = true, belowBar, wide }: { children: ReactNode; center?: boolean; scroll?: boolean; belowBar?: boolean; wide?: boolean }) {
   const { colors } = useApp();
-  const inner = <View style={[styles.inner, center && styles.center]}>{children}</View>;
+  // wide: staff screens are laptop-first, so they use more of a big screen
+  const inner = <View style={[styles.inner, wide && styles.wide, center && styles.center]}>{children}</View>;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={belowBar ? ['bottom', 'left', 'right'] : ['top', 'bottom', 'left', 'right']}>
       {scroll ? <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">{inner}</ScrollView> : inner}
@@ -129,6 +130,7 @@ export function Key({ label, onPress, size = 52, accessibilityLabel }: { label: 
 const styles = StyleSheet.create({
   inner: { flex: 1, padding: 16, gap: 16, width: '100%', maxWidth: 720, alignSelf: 'center' },
   center: { alignItems: 'center' },
+  wide: { maxWidth: 1160 },
   h1: { fontSize: 30, fontWeight: '700', lineHeight: 36 },
   btn: { minHeight: 48, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   btnLg: { minHeight: 60, paddingHorizontal: 24, borderRadius: radius.md - 2 },

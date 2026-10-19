@@ -11,7 +11,7 @@ export default function Entry() {
   const router = useRouter();
   const [confirmReset, setConfirmReset] = useState(false);
 
-  if (session) return <Redirect href="/home" />;
+  if (session) return <Redirect href={session.kind === 'staff' ? '/overview' : '/home'} />;
   if (resumePupilId) return <Redirect href={{ pathname: '/pin', params: { pupilId: resumePupilId, resume: '1' } }} />;
 
   const pupil = () =>
@@ -41,7 +41,7 @@ export default function Entry() {
 
       <View style={{ gap: 12 }}>
         <Tile title={t('iAmPupil')} sub={t('enterCode')} onPress={pupil} />
-        <Tile title={t('iAmStaff')} sub="Email and password" soon />
+        <Tile title={t('iAmStaff')} sub="Email and password" onPress={() => router.push('/staff-login')} />
         <Tile title={t('familyNote')} sub="For parents and carers, with your child's PIN" soon />
       </View>
 
@@ -49,6 +49,9 @@ export default function Entry() {
         <Text style={[styles.eyebrow, { color: colors.ink2 }]}>DEMO · FICTIONAL DATA ONLY</Text>
         <Text style={{ color: colors.ink }}>
           Pupils: class code {DEMO.classCode}, any name, PIN {DEMO.pupilPin}. Isla M. shows a falling battery with normal attendance. Noor H. is new, to try first login.
+        </Text>
+        <Text style={{ color: colors.ink }}>
+          Staff: demo@recharge.test (class teacher), keyadult@, senco@ and dsl@recharge.test, password {DEMO.staffPassword}.
         </Text>
         <Muted small>Everything is saved only on this device. PINs are stored hashed.</Muted>
         {confirmReset ? (

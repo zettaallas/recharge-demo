@@ -10,6 +10,13 @@ import { avg, clamp, lastSchoolDays, mulberry32, uid } from '@/domain/util';
 import type { AvatarColour, CheckIn, Db, Note, Pupil, Rating, Staff } from '@/types';
 import { HATS, SLOT_DEFS, ZIP_COLOURS } from './vocab';
 
+/** Starting quick replies for every staff member; each teacher can change their own. */
+export const DEFAULT_QUICK_REPLIES = [
+  "I've seen this. Take the time you need.",
+  "Thanks for telling me. Let's talk at break time.",
+  "Thank you for letting me know. I'm here if you need me.",
+];
+
 export const DEMO = { classCode: '8B-K4P', pupilPin: '1234', staffPassword: 'demo1234' };
 
 const DAY = 864e5;
@@ -18,7 +25,7 @@ export async function buildSeed(): Promise<Db> {
   const rnd = mulberry32(61);
   const days = lastSchoolDays(6);
 
-  const staffBase: Omit<Staff, 'salt' | 'pwHash'>[] = [
+  const staffBase: Omit<Staff, 'salt' | 'pwHash' | 'quickReplies'>[] = [
     { id: 't1', name: 'Ms Rivera', email: 'demo@recharge.test', role: 'class_teacher' },
     { id: 't2', name: 'Mr Adeyemi', email: 'senco@recharge.test', role: 'senco' },
     { id: 't3', name: 'Mrs Hughes', email: 'keyadult@recharge.test', role: 'key_adult' },
@@ -27,7 +34,7 @@ export async function buildSeed(): Promise<Db> {
   const staff: Staff[] = [];
   for (const s of staffBase) {
     const sec = await makeSecret(DEMO.staffPassword);
-    staff.push({ ...s, salt: sec.salt, pwHash: sec.hash });
+    staff.push({ ...s, salt: sec.salt, pwHash: sec.hash, quickReplies: [...DEFAULT_QUICK_REPLIES] });
   }
 
   // name, avatar colour, key adult, base battery, attendance %
@@ -136,10 +143,10 @@ export async function buildSeed(): Promise<Db> {
   const isla4 = ci('p_isla', 4);
   const isla5 = ci('p_isla', 5);
   const posts: Db['posts'] = [
-    { id: 'post_1', pupilId: 'p_isla', kind: 'note', refId: isla4.id, summary: "Everyone pushes and it is so loud I can't think", sharedWith: 'keyAdult', status: 'followUp', readAt: isla4.at + 3600e3, followUp: 'Ms Rivera: you can leave Maths 2 minutes early and use the side stairs from Monday.', repliedAt: isla4.at + 18 * 3600e3, at: isla4.at },
+    { id: 'post_1', pupilId: 'p_isla', kind: 'note', refId: isla4.id + ':chg1', summary: "Everyone pushes and it is so loud I can't think", sharedWith: 'keyAdult', status: 'followUp', readAt: isla4.at + 3600e3, followUp: 'Ms Rivera: you can leave Maths 2 minutes early and use the side stairs from Monday.', repliedAt: isla4.at + 18 * 3600e3, repliedBy: 'Ms Rivera', at: isla4.at },
     { id: 'post_2', pupilId: 'p_isla', kind: 'symbol', refId: 'm_isla_sym', summary: 'Too loud', sharedWith: 'keyAdult', status: 'read', readAt: symAt + 1800e3, at: symAt },
     { id: 'post_3', pupilId: 'p_isla', kind: 'break', refId: 'm_isla_break', summary: 'I need a break', sharedWith: 'keyAdult', status: 'sent', at: breakAt },
-    { id: 'post_4', pupilId: 'p_isla', kind: 'note', refId: isla5.id, summary: 'I sat in the toilets at lunch because the hall was too much', sharedWith: 'private', status: 'sent', at: isla5.at },
+    { id: 'post_4', pupilId: 'p_isla', kind: 'note', refId: isla5.id + ':lunch', summary: 'I sat in the toilets at lunch because the hall was too much', sharedWith: 'private', status: 'sent', at: isla5.at },
   ];
 
   const db: Db = {
@@ -158,6 +165,7 @@ export async function buildSeed(): Promise<Db> {
     ],
     moments,
     posts,
+    plans: [],
     parentNotes: [
       { id: 'pn1', pupilId: 'p_dev', text: 'Dev came home exhausted on Tuesday and said changing for PE in a busy room was hard.', at: now - DAY * 3 },
       { id: 'pn2', pupilId: 'p_isla', text: 'Isla has been very quiet at home this week and is not finishing packed lunch.', at: now - DAY * 2 },

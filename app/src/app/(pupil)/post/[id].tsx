@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { KIND, postDate, replyTime } from '@/components/postMeta';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Banner, Button, H1, Muted, Row, Screen } from '@/components/ui';
-import { demoFollowUp, demoMarkRead, keyAdultName, setPostHelpful, setShared, visibleStatus } from '@/domain/posts';
+import { keyAdultName, setPostHelpful, setShared, visibleStatus } from '@/domain/posts';
 import { useApp } from '@/state/AppContext';
 import type { Helpful } from '@/types';
 
@@ -82,16 +82,6 @@ export default function PostDetail() {
         )}
       </View>
 
-      {/* Until the staff side exists, testers can see what Read and a reply look like. */}
-      {shared && post.status !== 'followUp' && (
-        <View style={[styles.demo, { borderColor: colors.line }]}>
-          <Muted small>{t('demoOnly')}</Muted>
-          <Row>
-            {post.status === 'sent' && <Button label={t('demoRead')} onPress={() => update((d) => demoMarkRead(d, post.id))} />}
-            <Button label={t('demoFollowUp', { adult })} onPress={() => update((d) => demoFollowUp(d, post.id, adult))} />
-          </Row>
-        </View>
-      )}
     </Screen>
   );
 }
@@ -100,5 +90,4 @@ const styles = StyleSheet.create({
   reply: { borderRadius: 16, padding: 14, gap: 6 },
   eyebrow: { fontSize: 12, fontWeight: '700', letterSpacing: 1 },
   chip: { minHeight: 48, paddingHorizontal: 16, borderRadius: 999, justifyContent: 'center' },
-  demo: { borderWidth: 1, borderStyle: 'dashed', borderRadius: 16, padding: 12, gap: 8 },
 });

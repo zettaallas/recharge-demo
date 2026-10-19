@@ -14,6 +14,8 @@ One file per step of the Recharge → Expo migration (see [../../MIGRATION_PLAN.
 | [8a](step-8a.md) | My posts, Sent / Read / Follow-up, read indicator switch, share / unshare, Settings | `98b476e` |
 | [8a+](step-8a-symbols.md) | Symbol board update: pick several, optional details and place, Save with a "Saved" pop-up | `98b476e` |
 | [8-home](step-8-home.md) | New home: four big buttons, Share how I feel, Ask to talk to my teacher, See my teacher's response (Replies / What I've sent / You said, we did), break link | `5ec3a7b` |
-| [8b](step-8b.md) | Optional personalisation at first login, skippable walkthrough, both from Settings | not committed yet |
+| [8b](step-8b.md) | Optional personalisation at first login, skippable walkthrough, both from Settings | `13d18d0` |
+| [9 plan](step-9-plan.md) | Teachers' side: roles, screens, questions (answered) | – |
+| [9a](step-9a.md) | Staff login, access rules, Overview, Requests with replies and quick replies, Pupils | not committed yet |
 
 All data in the app is fictional.

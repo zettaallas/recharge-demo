@@ -46,7 +46,11 @@ export function syncProfile(db: Db, pid: string): void {
       if (n.help?.text) helps.add(n.help.text);
     }
   helps.forEach((h) => want.push({ section: 'helps', text: h.charAt(0).toUpperCase() + h.slice(1), src: 'help' }));
-  for (const c of cs) for (const n of Object.values(c.notes || {})) if (n.text) want.push({ section: 'words', text: '"' + n.text + '"', src: 'typed' });
+  // a note the pupil kept private never gets copied into their profile
+  const privateNotes = new Set(db.posts.filter((x) => x.pupilId === pid && x.kind === 'note' && x.sharedWith === 'private').map((x) => x.refId));
+  for (const c of cs)
+    for (const [sid, n] of Object.entries(c.notes || {}))
+      if (n.text && !privateNotes.has(c.id + ':' + sid)) want.push({ section: 'words', text: '"' + n.text + '"', src: 'typed' });
   let added = false;
   for (const w of want) {
     if (!prof.items.some((i) => i.section === w.section && i.text === w.text)) {

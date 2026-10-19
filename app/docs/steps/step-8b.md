@@ -1,6 +1,6 @@
 # Step 8b: Optional personalisation and a skippable walkthrough
 
-**Commit:** not committed yet
+**Commit:** `13d18d0` (committed by eko)
 
 ## What changed
 

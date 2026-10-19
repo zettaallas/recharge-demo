@@ -5,7 +5,7 @@ import { SHARED_DEVICE_TIMEOUT_MS } from '@/data/vocab';
 import { translate, type TextKey } from '@/i18n';
 import { localStore, loadOrSeed, resetDemo as resetStore } from '@/storage';
 import { useColors, type Colors } from '@/theme';
-import type { Db, Pupil } from '@/types';
+import type { Db, Pupil, Staff } from '@/types';
 
 // App-wide state: the local database, who is logged in, and device settings.
 // Mirrors App() in the web prototype.
@@ -15,7 +15,7 @@ const REMEMBER_KEY = 'recharge.rememberClass';
 const SHARED_KEY = 'recharge.sharedDevice';
 
 export interface Session {
-  kind: 'pupil';
+  kind: 'pupil' | 'staff';
   id: string;
   last: number;
 }
@@ -26,6 +26,7 @@ interface AppCtx {
   update: <R>(fn: (d: Db) => R) => R;
   session: Session | null;
   logIn: (pupilId: string) => void;
+  logInStaff: (staffId: string) => void;
   logOut: (reason?: 'timeout') => void;
   /** A pupil whose app was reopened with "Ask for my PIN" on. The entry screen sends them to the PIN pad. */
   resumePupilId: string | null;
@@ -33,6 +34,8 @@ interface AppCtx {
   /** Set when the last logout was the 20-minute timeout, so the entry screen can say why. */
   timedOut: boolean;
   me: Pupil | null;
+  /** The logged-in staff member, on the staff side. */
+  staffMe: Staff | null;
   /** Set per device. Only shared devices (e.g. school iPads) get the 20-minute auto-logout. */
   sharedDevice: boolean;
   setSharedDevice: (shared: boolean) => void;
@@ -73,7 +76,8 @@ export function AppProvider({ children, loading }: { children: ReactNode; loadin
       const saved: Session | null = s ? JSON.parse(s) : null;
       // own device: stay logged in; shared device: only within 20 minutes of the last touch
       const fresh = !shared || (saved != null && Date.now() - saved.last < SHARED_DEVICE_TIMEOUT_MS);
-      const pupil = saved ? d.pupils.find((p) => p.id === saved.id) : undefined;
+      const pupil = saved?.kind === 'pupil' ? d.pupils.find((p) => p.id === saved.id) : undefined;
+      if (saved && fresh && saved.kind === 'staff' && d.staff.some((x) => x.id === saved.id)) setSession(saved);
       if (saved && fresh && pupil) {
         // the pupil chose "Ask for my PIN when I reopen the app"
         if (pupil.settings.pinOnReopen) {
@@ -109,6 +113,13 @@ export function AppProvider({ children, loading }: { children: ReactNode; loadin
     saveSession({ kind: 'pupil', id: pupilId, last: Date.now() });
   }, []);
 
+  const logInStaff = useCallback((staffId: string) => {
+    lastTouch.current = Date.now();
+    setTimedOut(false);
+    setResume(null);
+    saveSession({ kind: 'staff', id: staffId, last: Date.now() });
+  }, []);
+
   const logOut = useCallback((reason?: 'timeout') => {
     setTimedOut(reason === 'timeout');
     saveSession(null);
@@ -126,7 +137,7 @@ export function AppProvider({ children, loading }: { children: ReactNode; loadin
         logOut();
         return;
       }
-      if (dbRef.current?.pupils.find((p) => p.id === s.id)?.settings.pinOnReopen) {
+      if (s.kind === 'pupil' && dbRef.current?.pupils.find((p) => p.id === s.id)?.settings.pinOnReopen) {
         // lock now, but keep the saved session so a cold start also lands on the PIN pad
         setSession(null);
         setResume(s.id);
@@ -186,6 +197,7 @@ export function AppProvider({ children, loading }: { children: ReactNode; loadin
       update,
       session,
       logIn,
+      logInStaff,
       logOut,
       resumePupilId,
       cancelResume: () => {
@@ -193,7 +205,8 @@ export function AppProvider({ children, loading }: { children: ReactNode; loadin
         AsyncStorage.removeItem(SESSION_KEY).catch(() => {});
       },
       timedOut,
-      me: session ? db.pupils.find((p) => p.id === session.id) ?? null : null,
+      me: session?.kind === 'pupil' ? db.pupils.find((p) => p.id === session.id) ?? null : null,
+      staffMe: session?.kind === 'staff' ? db.staff.find((x) => x.id === session.id) ?? null : null,
       sharedDevice,
       setSharedDevice,
       rememberedClass,
@@ -202,7 +215,7 @@ export function AppProvider({ children, loading }: { children: ReactNode; loadin
       colors,
       resetDemo,
     };
-  }, [db, update, session, logIn, logOut, resumePupilId, timedOut, sharedDevice, setSharedDevice, rememberedClass, setRememberedClass, colors, resetDemo]);
+  }, [db, update, session, logIn, logInStaff, logOut, resumePupilId, timedOut, sharedDevice, setSharedDevice, rememberedClass, setRememberedClass, colors, resetDemo]);
 
   if (!value) return <>{loading}</>;
   return (

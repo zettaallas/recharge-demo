@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { buildSeed } from '@/data/seed';
+import { buildSeed, DEFAULT_QUICK_REPLIES } from '@/data/seed';
 import type { Db } from '@/types';
 
 /**
@@ -35,7 +35,12 @@ export const localStore: Store = {
 /** Loads saved data, or builds and saves the fictional demo data on first run. */
 export async function loadOrSeed(store: Store = localStore): Promise<Db> {
   const saved = await store.load();
-  if (saved && saved.version === 4) return saved;
+  if (saved && saved.version === 4) {
+    // fields added after version 4 was first saved on a device
+    saved.plans ??= [];
+    for (const s of saved.staff) s.quickReplies ??= [...DEFAULT_QUICK_REPLIES];
+    return saved;
+  }
   const db = await buildSeed();
   await store.save(db);
   return db;

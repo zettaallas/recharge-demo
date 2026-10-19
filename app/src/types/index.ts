@@ -19,6 +19,17 @@ export interface Staff {
   role: StaffRole;
   salt: string;
   pwHash: string;
+  /** The teacher's own one-tap replies. They can add, edit, delete and reorder them. */
+  quickReplies: string[];
+}
+
+/** A check-in a staff member planned from a drift alert. */
+export interface Plan {
+  id: string;
+  pupilId: string;
+  by: string;
+  when: string;
+  at: number;
 }
 
 export interface Buddy {
@@ -175,6 +186,8 @@ export interface Post {
   followUp?: string;
   /** When the key adult replied. */
   repliedAt?: number;
+  /** Name of the adult who replied. */
+  repliedBy?: string;
   helpful?: Helpful;
   at: number;
 }
@@ -213,4 +226,5 @@ export interface Db {
   posts: Post[];
   parentNotes: ParentNote[];
   flags: Flag[];
+  plans: Plan[];
 }
