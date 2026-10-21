@@ -1,6 +1,6 @@
 # Step 10a: Supabase schema
 
-**Commit:** not committed yet. **Not run on Supabase yet.** eko reviews it first, then runs it.
+**Commit:** `9e6a86c` · applied on Supabase by eko
 
 ## What changed
 

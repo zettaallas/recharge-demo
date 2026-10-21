@@ -1,6 +1,6 @@
 # Step 10c: Remove the "I need a break" button
 
-**Commit:** not committed yet.
+**Commit:** `e6937fa`
 
 One of the educators didn't like the "I need a break" button, so it's removed from the pupil side.
 

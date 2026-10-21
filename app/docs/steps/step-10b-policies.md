@@ -1,6 +1,6 @@
 # Step 10b: Supabase access rules (row-level security)
 
-**Commit:** not committed yet. **Not run on Supabase yet.** eko reviews it first, then runs it.
+**Commit:** `ab3dcfe` · applied on Supabase by eko
 
 ## Before this step
 

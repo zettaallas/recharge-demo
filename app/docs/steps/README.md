@@ -18,8 +18,9 @@ One file per step of the Recharge → Expo migration (see [../../MIGRATION_PLAN.
 | [9 plan](step-9-plan.md) | Teachers' side: roles, screens, questions (answered) | – |
 | [9a](step-9a.md) | Staff login, access rules, Overview, Requests with replies and quick replies, Pupils | `3f4fa13` |
 | [9b](step-9b.md) | Most asked for, You said / We did with helpful tally, Safeguarding checklist, Class & PINs, class picker | `a22bbf6` |
-| [10a](step-10a-schema.md) | Supabase schema: tables, keys, checks, RLS on with no policies yet | not committed yet (applied to Supabase by eko) |
-| [10b](step-10b-policies.md) | Supabase access rules (RLS policies), summary functions for class views | not committed yet |
-| [10c](step-10c-remove-break.md) | Remove the pupil's "I need a break" button and pop-up | not committed yet |
+| [10a](step-10a-schema.md) | Supabase schema: tables, keys, checks, RLS on with no policies yet | `9e6a86c` (applied on Supabase) |
+| [10b](step-10b-policies.md) | Supabase access rules (RLS policies), summary functions for class views | `ab3dcfe` (applied on Supabase) |
+| [10c](step-10c-remove-break.md) | Remove the pupil's "I need a break" button and pop-up | `e6937fa` |
+| [10d](step-10d-pin-login.md) | Pupil PIN sign-in on the server (Edge Functions), staff PIN reset, app Supabase client | not committed yet, not deployed |
 
 All data in the app is fictional.
