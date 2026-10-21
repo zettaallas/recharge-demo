@@ -1,6 +1,6 @@
 # Step 9a: Teachers' side, part 1
 
-**Commit:** not committed yet
+**Commit:** `3f4fa13` (committed by eko)
 
 This follows the plan in [step-9-plan.md](step-9-plan.md) and eko's answers: the scope's access rules, editable quick replies, and laptop-first layouts that still work on a phone.
 
