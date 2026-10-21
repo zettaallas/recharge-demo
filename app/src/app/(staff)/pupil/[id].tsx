@@ -19,8 +19,10 @@ export default function PupilDetail() {
   if (!p || !Access.canSeePupilDetail(staffMe, p)) return <Redirect href="/overview" />;
   const s = pupilSeries(db, p.id);
   const prof = Access.profile(db, p);
-  const home = Access.parentNotes(db, p);
-  const notes = sharedNotes(db, p.id, 6);
+  // notes (check-in and from home) are for the key adult only; the SENCO sees drift and the approved profile
+  const canNotes = Access.canSeeNotes(staffMe, p);
+  const home = canNotes ? Access.parentNotes(db, p) : null;
+  const notes = canNotes ? sharedNotes(db, p.id, 6) : [];
   const first = p.name.split(' ')[0];
   const sections: [string, string][] = [
     ['drains', 'Drains me'],
@@ -63,27 +65,35 @@ export default function PupilDetail() {
         )}
       </Card>
 
-      <Card>
-        <H2>Recent notes</H2>
-        <Muted small>{'Only notes ' + first + ' shared. Notes they kept private are not shown.'}</Muted>
-        {notes.length ? notes.map((n, i) => <NoteView key={i} item={n} />) : <Muted>No notes.</Muted>}
-      </Card>
+      {canNotes ? (
+        <>
+          <Card>
+            <H2>Recent notes</H2>
+            <Muted small>{'Only notes ' + first + ' shared. Notes they kept private are not shown.'}</Muted>
+            {notes.length ? notes.map((n, i) => <NoteView key={i} item={n} />) : <Muted>No notes.</Muted>}
+          </Card>
 
-      <Card>
-        <H2>Notes from home</H2>
-        {home == null ? (
-          <Muted>{'Hidden. ' + first + ' has not agreed to share notes from home.'}</Muted>
-        ) : home.length ? (
-          home.map((n) => (
-            <View key={n.id} style={{ gap: 2 }}>
-              <Muted small>{fmtTime(n.at)}</Muted>
-              <Text style={{ color: colors.ink }}>{n.text}</Text>
-            </View>
-          ))
-        ) : (
-          <Muted>None yet.</Muted>
-        )}
-      </Card>
+          <Card>
+            <H2>Notes from home</H2>
+            {home == null ? (
+              <Muted>{'Hidden. ' + first + ' has not agreed to share notes from home.'}</Muted>
+            ) : home.length ? (
+              home.map((n) => (
+                <View key={n.id} style={{ gap: 2 }}>
+                  <Muted small>{fmtTime(n.at)}</Muted>
+                  <Text style={{ color: colors.ink }}>{n.text}</Text>
+                </View>
+              ))
+            ) : (
+              <Muted>None yet.</Muted>
+            )}
+          </Card>
+        </>
+      ) : (
+        <Card>
+          <Muted>{first + "'s notes go to their key adult only. You see the battery trend and the approved profile."}</Muted>
+        </Card>
+      )}
     </Screen>
   );
 }

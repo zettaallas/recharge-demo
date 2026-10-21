@@ -123,7 +123,7 @@ function DriftCard({ p, values, from, to, drops }: { p: Pupil; values: (number |
   const router = useRouter();
   const [choosing, setChoosing] = useState(false);
   const plan = db.plans.find((x) => x.pupilId === p.id);
-  const notes = sharedNotes(db, p.id, 3);
+  const notes = staffMe && Access.canSeeNotes(staffMe, p) ? sharedNotes(db, p.id, 3) : [];
   return (
     <Card style={{ borderLeftWidth: 6, borderLeftColor: colors.lo }}>
       <Row>

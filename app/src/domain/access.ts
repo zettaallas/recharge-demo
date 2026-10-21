@@ -5,7 +5,7 @@ import type { Db, Post, Pupil, Staff, StaffRole } from '@/types';
 //   Class teacher / tutor: class themes and the places heatmap, no individual notes.
 //   Key adult: what their own pupils choose to share (and can reply), their drift alerts and approved profiles.
 //     Being a key adult is per pupil, so a class teacher can also be the key adult for some pupils.
-//   SENCO: drift alerts and approved profiles for everyone.
+//   SENCO: drift alerts and approved profiles for everyone. No notes (check-in or from home) and no Requests.
 //   DSL: safeguarding flags only.
 // Posts a pupil keeps private never reach staff. The only exception is a safeguarding flag, which goes to the DSL.
 
@@ -24,6 +24,8 @@ export const Access = {
   canSeeHeatmap: (staff: Staff) => is(staff, 'class_teacher', 'key_adult', 'senco'),
   canSeeDrift: (staff: Staff, p: Pupil) => staff.role === 'senco' || isKeyAdult(staff, p),
   canSeePupilDetail: (staff: Staff, p: Pupil) => staff.role === 'senco' || isKeyAdult(staff, p),
+  /** Shared check-in notes and notes from home: only the pupil's own key adult (not the SENCO). */
+  canSeeNotes: (staff: Staff, p: Pupil) => isKeyAdult(staff, p),
   /** Only the pupil's own key adult receives and answers what they share. */
   canReply: (staff: Staff, p: Pupil) => isKeyAdult(staff, p),
   /** True if this person is key adult for at least one pupil. */
@@ -34,6 +36,7 @@ export const Access = {
   profile: (db: Db, p: Pupil) => db.profiles[p.id]?.approvedSnapshot ?? null,
   /** Notes from home only if the pupil agreed. */
   parentNotes: (db: Db, p: Pupil) => (p.parentShare ? db.parentNotes.filter((n) => n.pupilId === p.id) : null),
+  // parentNotes is only called for people who pass canSeeNotes
 };
 
 /** Posts the pupil shared with this key adult, newest first. Private posts are never included. */
