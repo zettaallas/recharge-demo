@@ -20,12 +20,6 @@ export function logSymbol(db: Db, pupilId: string, symbol: SymbolKey, summary: s
   addPost(db, { pupilId, kind: 'symbol', refId: id, summary, sharedWith: 'keyAdult' });
 }
 
-/** Records "I need a break". The key adult is told; the pupil can go to their calm place. */
-export function logBreak(db: Db, pupilId: string, summary: string): void {
-  const id = uid('m');
-  db.moments.unshift({ id, pupilId, kind: 'break', at: Date.now(), seen: false });
-  addPost(db, { pupilId, kind: 'break', refId: id, summary, sharedWith: 'keyAdult' });
-}
 
 /** The pupil's key adult's name, for messages like "Ms Rivera will see it." */
 export function keyAdultName(db: Db, pupilId: string): string {

@@ -131,10 +131,10 @@ export async function buildSeed(): Promise<Db> {
   ci('p_isla', 5).ratings['pin_pin_hall'] = 1;
   pupils.find((p) => p.id === 'p_dev')!.parentShare = true;
 
-  const breakAt = new Date(days[5] + 'T12:25:00').getTime();
+  const talkAt = new Date(days[5] + 'T12:25:00').getTime();
   const symAt = new Date(days[5] + 'T12:20:00').getTime();
   const moments: Db['moments'] = [
-    { id: 'm_isla_break', pupilId: 'p_isla', kind: 'break', at: breakAt, seen: false },
+    { id: 'm_isla_talk', pupilId: 'p_isla', kind: 'talk', at: talkAt, seen: false },
     { id: 'm_isla_sym', pupilId: 'p_isla', kind: 'symbol', symbol: 'tooLoud', at: symAt, seen: false },
     { id: 'm_amara_sym', pupilId: 'p_amara', kind: 'symbol', symbol: 'feelsSafe', at: new Date(days[4] + 'T10:50:00').getTime(), seen: true },
   ];
@@ -145,7 +145,7 @@ export async function buildSeed(): Promise<Db> {
   const posts: Db['posts'] = [
     { id: 'post_1', pupilId: 'p_isla', kind: 'note', refId: isla4.id + ':chg1', summary: "Everyone pushes and it is so loud I can't think", sharedWith: 'keyAdult', status: 'followUp', readAt: isla4.at + 3600e3, followUp: 'Ms Rivera: you can leave Maths 2 minutes early and use the side stairs from Monday.', repliedAt: isla4.at + 18 * 3600e3, repliedBy: 'Ms Rivera', at: isla4.at },
     { id: 'post_2', pupilId: 'p_isla', kind: 'symbol', refId: 'm_isla_sym', summary: 'Too loud', sharedWith: 'keyAdult', status: 'read', readAt: symAt + 1800e3, at: symAt },
-    { id: 'post_3', pupilId: 'p_isla', kind: 'break', refId: 'm_isla_break', summary: 'I need a break', sharedWith: 'keyAdult', status: 'sent', at: breakAt },
+    { id: 'post_3', pupilId: 'p_isla', kind: 'talk', refId: 'm_isla_talk', summary: "I'd like to talk", sharedWith: 'keyAdult', status: 'sent', at: talkAt },
     { id: 'post_4', pupilId: 'p_isla', kind: 'note', refId: isla5.id + ':lunch', summary: 'I sat in the toilets at lunch because the hall was too much', sharedWith: 'private', status: 'sent', at: isla5.at },
   ];
 

@@ -16,6 +16,10 @@ One file per step of the Recharge → Expo migration (see [../../MIGRATION_PLAN.
 | [8-home](step-8-home.md) | New home: four big buttons, Share how I feel, Ask to talk to my teacher, See my teacher's response (Replies / What I've sent / You said, we did), break link | `5ec3a7b` |
 | [8b](step-8b.md) | Optional personalisation at first login, skippable walkthrough, both from Settings | `13d18d0` |
 | [9 plan](step-9-plan.md) | Teachers' side: roles, screens, questions (answered) | – |
-| [9a](step-9a.md) | Staff login, access rules, Overview, Requests with replies and quick replies, Pupils | not committed yet |
+| [9a](step-9a.md) | Staff login, access rules, Overview, Requests with replies and quick replies, Pupils | `3f4fa13` |
+| [9b](step-9b.md) | Most asked for, You said / We did with helpful tally, Safeguarding checklist, Class & PINs, class picker | `a22bbf6` |
+| [10a](step-10a-schema.md) | Supabase schema: tables, keys, checks, RLS on with no policies yet | not committed yet (applied to Supabase by eko) |
+| [10b](step-10b-policies.md) | Supabase access rules (RLS policies), summary functions for class views | not committed yet |
+| [10c](step-10c-remove-break.md) | Remove the pupil's "I need a break" button and pop-up | not committed yet |
 
 All data in the app is fictional.

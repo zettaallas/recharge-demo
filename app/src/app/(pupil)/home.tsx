@@ -8,7 +8,7 @@ import { keyAdultName } from '@/domain/posts';
 import { useApp } from '@/state/AppContext';
 
 // Pupil home: Zip shows the latest charge, then four big buttons for the four things a pupil does.
-// Zip, Settings and "I need a break" are in the top bar.
+// Zip and Settings are in the top bar.
 export default function Home() {
   const { t, colors, db, me } = useApp();
   const router = useRouter();
