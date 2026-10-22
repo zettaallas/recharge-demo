@@ -6,11 +6,17 @@ import { fmtDay } from './StaffUi';
 
 // "Where energy goes": average battery per place and moment, for the last 6 check-in days.
 // High drain is outlined as well as coloured, so it doesn't rely on colour alone.
-export function Heatmap({ db, classId, pupilIds }: { db: Db; classId: string; pupilIds: Set<string> }) {
+export function Heatmap({ db, classId, pupilIds, cells }: {
+  db: Db;
+  classId: string;
+  pupilIds: Set<string>;
+  /** Supabase mode: averages from the class_heatmap() summary, so no individual ratings are needed */
+  cells?: { slot_key: string; date: string; average: number }[];
+}) {
   const { colors } = useApp();
   const slots = db.slots[classId] ?? [];
   const cs = db.checkins.filter((c) => pupilIds.has(c.pupilId));
-  const dates = Array.from(new Set(cs.map((c) => c.date))).sort().slice(-6);
+  const dates = Array.from(new Set(cells ? cells.map((c) => c.date) : cs.map((c) => c.date))).sort().slice(-6);
   const bg = { hi: colors.hiBg, mid: colors.midBg, lo: colors.loBg, none: colors.noneBg };
   const label = { hi: 'Recharges', mid: 'Some drain', lo: 'High drain', none: 'No data' };
 
@@ -31,7 +37,9 @@ export function Heatmap({ db, classId, pupilIds }: { db: Db; classId: string; pu
                 <Text style={{ color: colors.ink2 }}>{' · ' + s.place}</Text>
               </Text>
               {dates.map((d) => {
-                const v = avg(cs.filter((c) => c.date === d && c.ratings[s.id]).map((c) => c.ratings[s.id]));
+                const v = cells
+                  ? (cells.find((c) => c.slot_key === s.id && c.date === d)?.average ?? null)
+                  : avg(cs.filter((c) => c.date === d && c.ratings[s.id]).map((c) => c.ratings[s.id]));
                 const b = band(v);
                 return (
                   <View

@@ -17,6 +17,8 @@ export interface Staff {
   name: string;
   email: string;
   role: StaffRole;
+  /** Supabase mode: the school, needed when creating a class. */
+  schoolId?: string;
   salt: string;
   pwHash: string;
   /** The teacher's own one-tap replies. They can add, edit, delete and reorder them. */

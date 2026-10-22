@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRouter, useFocusEffect } from 'expo-router';
+import { useState, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { replyTime } from '@/components/postMeta';
 import { Card, Pill, fmtTime } from '@/components/staff/StaffUi';
@@ -14,7 +14,9 @@ import type { Post } from '@/types';
 type Filter = 'new' | 'all';
 
 export default function Requests() {
-  const { db, staffMe } = useApp();
+  const { db, staffMe, refresh } = useApp();
+  // Supabase mode: fetch the latest requests each time this screen opens
+  useFocusEffect(useCallback(() => void refresh(), [refresh]));
   const router = useRouter();
   const [filter, setFilter] = useState<Filter>('new');
   if (!staffMe) return null;
@@ -43,13 +45,13 @@ export default function Requests() {
 }
 
 function RequestCard({ post }: { post: Post }) {
-  const { db, staffMe, update, colors } = useApp();
+  const { db, staffMe, update, save, colors } = useApp();
   const [text, setText] = useState('');
   const pupil = db.pupils.find((x) => x.id === post.pupilId);
   if (!pupil || !staffMe || !Access.canReply(staffMe, pupil)) return null;
-  const send = (words: string) => {
-    update((d) => replyToPost(d, post.id, staffMe, words));
-    setText('');
+  const send = async (words: string) => {
+    const res = await save((d) => replyToPost(d, post.id, staffMe, words));
+    if (res.ok) setText(''); // if not, the reply stays in the box with the message
   };
   const statusPill = post.status === 'followUp' ? <Pill text="↩ Replied" kind="hi" /> : post.status === 'read' ? <Pill text="✓✓ Read" /> : <Pill text="New" kind="mid" />;
 

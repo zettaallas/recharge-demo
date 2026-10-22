@@ -1,17 +1,26 @@
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Checkbox, H1, Muted, Row, Screen } from '@/components/ui';
 import { useApp } from '@/state/AppContext';
 
 // Tap your name. Names show for the chosen class only.
 export default function PickName() {
-  const { t, colors, db, rememberedClass, setRememberedClass, sharedDevice, setSharedDevice } = useApp();
+  const { t, colors, db, rememberedClass, setRememberedClass, sharedDevice, setSharedDevice, mode, roster, loadRoster } = useApp();
   const router = useRouter();
-  const { classId } = useLocalSearchParams<{ classId: string }>();
-  const cls = db.classes.find((c) => c.id === classId);
+  const { classId, code } = useLocalSearchParams<{ classId?: string; code?: string }>();
+  // Supabase mode: names come from the server (class-roster) by class code
+  const needRoster = mode === 'supabase' && !!code && roster?.code !== code;
+  useEffect(() => {
+    if (needRoster) loadRoster(code!).then((ro) => !ro && router.replace('/class-code'));
+  }, [needRoster, code]);
+  if (needRoster) return <ActivityIndicator style={{ flex: 1 }} accessibilityLabel="Loading names" />;
+
+  const local = db.classes.find((c) => c.id === classId);
+  const cls = mode === 'supabase' && roster ? { id: roster.classId, name: roster.className, key: roster.code } : local ? { ...local, key: local.id } : null;
   if (!cls) return <Redirect href="/class-code" />;
 
-  const pupils = db.pupils.filter((p) => p.classId === cls.id).sort((a, b) => a.name.localeCompare(b.name));
+  const pupils = (mode === 'supabase' && roster ? roster.pupils : db.pupils.filter((p) => p.classId === cls.id)).slice().sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Screen>
@@ -26,14 +35,14 @@ export default function PickName() {
           }}
         />
       </Row>
-      {rememberedClass === cls.id && <Muted>{t('remembered', { c: cls.name })}</Muted>}
+      {rememberedClass === cls.key && <Muted>{t('remembered', { c: cls.name })}</Muted>}
       <View style={styles.grid}>
         {pupils.map((p) => (
           <Pressable
             key={p.id}
             accessibilityRole="button"
             accessibilityLabel={p.name + (p.locked ? ', paused' : '')}
-            onPress={() => router.push({ pathname: '/pin', params: { pupilId: p.id } })}
+            onPress={() => router.push({ pathname: '/pin', params: { pupilId: p.id, ...(code ? { code } : {}) } })}
             style={({ pressed }) => [styles.tile, { backgroundColor: colors.surface, borderColor: pressed ? colors.accent : colors.line }]}>
             <Avatar pupil={p} size={56} />
             <Text style={{ color: colors.ink, fontWeight: '700', fontSize: 17 }}>{p.name}</Text>

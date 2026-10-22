@@ -35,3 +35,11 @@ export const ROLE_LABEL: Record<StaffRole, string> = {
 /** Pupil login rules, same as the web prototype. */
 export const MAX_PIN_TRIES = 5;
 export const SHARED_DEVICE_TIMEOUT_MS = 20 * 60 * 1000;
+
+/** The fictional demo staff accounts (no passwords here; on Supabase those are made when the demo is seeded). */
+export const DEMO_STAFF: { name: string; email: string; role: StaffRole }[] = [
+  { name: 'Ms Rivera', email: 'demo@recharge.test', role: 'class_teacher' },
+  { name: 'Mr Adeyemi', email: 'senco@recharge.test', role: 'senco' },
+  { name: 'Mrs Hughes', email: 'keyadult@recharge.test', role: 'key_adult' },
+  { name: 'Ms Shah', email: 'dsl@recharge.test', role: 'dsl' },
+];

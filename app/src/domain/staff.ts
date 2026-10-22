@@ -132,13 +132,16 @@ export function applyPins(db: Db, secrets: Record<string, { salt: string; hash: 
   }
 }
 
-export function addPupil(db: Db, classId: string, name: string, avatar: AvatarColour, keyAdultId: string, secret: { salt: string; hash: string }): void {
+/** Adds a pupil and returns their id. In Supabase mode the secret is empty: the server makes the PIN (set-pupil-pin). */
+export function addPupil(db: Db, classId: string, name: string, avatar: AvatarColour, keyAdultId: string, secret: { salt: string; hash: string }): string {
+  const id = uid('p');
   db.pupils.push({
-    id: uid('p'), classId, name: name.trim(), avatar, keyAdultId, attendance: 100,
+    id, classId, name: name.trim(), avatar, keyAdultId, attendance: 100,
     salt: secret.salt, pinHash: secret.hash, failed: 0, locked: false,
     buddy: { colour: 'teal', hat: 'none' }, parentShare: false,
     settings: { showReadReceipts: true, helps: [], pinOnReopen: false, registered: false, walkthroughDone: false },
   });
+  return id;
 }
 
 export function createClass(db: Db, name: string, staff: Staff): string {

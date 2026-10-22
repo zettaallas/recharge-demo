@@ -11,7 +11,7 @@ import type { Buddy } from '@/types';
 // Make Recharge yours: shown once after a pupil's first login, and any time from Settings.
 // Every field is optional; "Skip for now" saves nothing but still counts as done, so it isn't asked again.
 export default function Register() {
-  const { t, colors, me, update, sharedDevice, setSharedDevice } = useApp();
+  const { t, colors, me, save, sharedDevice, setSharedDevice } = useApp();
   const router = useRouter();
   const { edit } = useLocalSearchParams<{ edit?: string }>();
   const [name, setName] = useState(me?.settings.preferredName ?? '');
@@ -27,21 +27,21 @@ export default function Register() {
     else router.replace('/home');
   };
 
-  const save = () => {
-    update((d) => {
+  const done = async () => {
+    const res = await save((d) => {
       const p = d.pupils.find((x) => x.id === me.id)!;
       p.buddy = buddy;
       p.settings = { ...p.settings, preferredName: name.trim() || undefined, helps, registered: true };
       syncProfile(d, me.id);
     });
-    next();
+    if (res.ok) next();
   };
 
-  const skip = () => {
-    update((d) => {
+  const skip = async () => {
+    const res = await save((d) => {
       d.pupils.find((x) => x.id === me.id)!.settings.registered = true;
     });
-    next();
+    if (res.ok) next();
   };
 
   const toggle = (c: string) => setHelps((x) => (x.includes(c) ? x.filter((y) => y !== c) : [...x, c]));
@@ -93,7 +93,7 @@ export default function Register() {
       <Checkbox label={t('sharedDevice')} hint={t('sharedDeviceHint')} checked={sharedDevice} onChange={setSharedDevice} />
 
       <Row>
-        <Button label={t('regSave')} kind="primary" large onPress={save} />
+        <Button label={t('regSave')} kind="primary" large onPress={done} />
         <Button label={t('regSkip')} kind="quiet" onPress={skip} />
       </Row>
     </Screen>

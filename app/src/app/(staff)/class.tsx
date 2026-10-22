@@ -7,13 +7,15 @@ import { AV_COLOURS, ROLE_LABEL } from '@/data/vocab';
 import { Access } from '@/domain/access';
 import { makeSecret } from '@/domain/auth';
 import { addPupil, applyPins, createClass, issuePins, randomPin, type PinCard } from '@/domain/staff';
+import { setPupilPins } from '@/lib/supabase';
 import { useApp } from '@/state/AppContext';
 import type { AvatarColour } from '@/types';
 
 // Class & PINs: the class code, resetting or unlocking PINs, adding a pupil and creating a class.
 // PINs are stored only as hashes, so new PINs are shown once on cards and never again.
+// Supabase mode: PINs are made and stored on the server (set-pupil-pin); the app only shows the cards.
 export default function ClassAndPins() {
-  const { db, staffMe, update, colors, resetDemo } = useApp();
+  const { db, staffMe, update, save, refresh, colors, resetDemo, mode } = useApp();
   const { classId, setClassId } = useStaffClass();
   const [cards, setCards] = useState<PinCard[] | null>(null);
   const [name, setName] = useState('');
@@ -21,6 +23,7 @@ export default function ClassAndPins() {
   const [keyAdult, setKeyAdult] = useState(staffMe?.id ?? '');
   const [newClass, setNewClass] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
+  const [pinError, setPinError] = useState('');
   if (!staffMe) return null;
   if (!Access.canManage(staffMe))
     return (
@@ -33,18 +36,41 @@ export default function ClassAndPins() {
   const pupils = cls ? db.pupils.filter((p) => p.classId === cls.id).sort((a, b) => a.name.localeCompare(b.name)) : [];
   const input = [styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.surface }];
 
+  const serverPins = async (ids: string[]) => {
+    const r = await setPupilPins(ids);
+    if (r.error || !r.cards.length) {
+      setPinError("Couldn't make new PINs just now. Check the internet and try again.");
+      return;
+    }
+    setPinError('');
+    setCards(r.cards);
+  };
   const issue = async (ids: string[]) => {
+    if (mode === 'supabase') return serverPins(ids);
     const { cards: c, secrets } = await issuePins(db.pupils.filter((p) => ids.includes(p.id)));
     update((d) => applyPins(d, secrets));
     setCards(c);
   };
   const add = async () => {
     if (!cls || !name.trim()) return;
+    if (mode === 'supabase') {
+      const res = await save((d) => addPupil(d, cls.id, name, avatar, keyAdult, { salt: '', hash: '' }));
+      if (!res.ok) return; // the name stays in the box with the message
+      setName('');
+      return serverPins([res.value]);
+    }
     const pin = randomPin();
     const secret = await makeSecret(pin);
     update((d) => addPupil(d, cls.id, name, avatar, keyAdult, secret));
     setCards([{ name: name.trim(), pin }]);
     setName('');
+  };
+  const create = async () => {
+    const res = await save((d) => createClass(d, newClass, staffMe));
+    if (!res.ok) return;
+    setNewClass('');
+    setClassId(res.value);
+    if (mode === 'supabase') refresh(); // picks up the new class's summary
   };
 
   return (
@@ -60,6 +86,7 @@ export default function ClassAndPins() {
               <Row>
                 <Button label="New PINs for everyone" disabled={!pupils.length} onPress={() => issue(pupils.map((p) => p.id))} />
               </Row>
+              {!!pinError && <Banner kind="warn">{pinError}</Banner>}
             </Card>
             <Card style={styles.col}>
               <H2>Add a pupil</H2>
@@ -108,8 +135,9 @@ export default function ClassAndPins() {
                   <Text style={{ color: colors.ink, fontWeight: '700' }}>{p.name}</Text>
                 </Row>
                 <Text style={{ color: colors.ink2, minWidth: 120 }}>{db.staff.find((s) => s.id === p.keyAdultId)?.name}</Text>
-                {p.locked ? <Pill text="Locked after 5 tries" kind="lo" /> : p.failed ? <Pill text={p.failed + ' wrong tries'} kind="mid" /> : <Pill text="OK" kind="hi" />}
-                <Button label={p.locked ? 'Unlock and reset PIN' : 'Reset PIN'} accessibilityLabel={(p.locked ? 'Unlock and reset PIN for ' : 'Reset PIN for ') + p.name} onPress={() => issue([p.id])} />
+                {/* Supabase mode: tries and locks stay on the server; "Reset PIN" also unlocks */}
+                {mode === 'local' && (p.locked ? <Pill text="Locked after 5 tries" kind="lo" /> : p.failed ? <Pill text={p.failed + ' wrong tries'} kind="mid" /> : <Pill text="OK" kind="hi" />)}
+                <Button label={mode === 'supabase' ? 'Reset or unlock PIN' : p.locked ? 'Unlock and reset PIN' : 'Reset PIN'} accessibilityLabel={(mode === 'supabase' ? 'Reset or unlock PIN for ' : p.locked ? 'Unlock and reset PIN for ' : 'Reset PIN for ') + p.name} onPress={() => issue([p.id])} />
               </View>
             ))}
           </Card>
@@ -125,14 +153,11 @@ export default function ClassAndPins() {
               label="Create class and code"
               kind="primary"
               disabled={!newClass.trim()}
-              onPress={() => {
-                const id = update((d) => createClass(d, newClass, staffMe));
-                setNewClass('');
-                setClassId(id);
-              }}
+              onPress={create}
             />
           </Row>
         </Card>
+        {mode === 'local' && (
         <Card style={styles.col}>
           <H2>Reset demo</H2>
           <Muted small>Puts back the fictional class 8B and its pupils. Removes everything added since, on this device.</Muted>
@@ -147,6 +172,7 @@ export default function ClassAndPins() {
             </Row>
           )}
         </Card>
+        )}
       </View>
 
       <Modal visible={!!cards} transparent animationType="fade" onRequestClose={() => setCards(null)}>

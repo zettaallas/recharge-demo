@@ -46,8 +46,8 @@ export function setPostHelpful(db: Db, postId: string, answer: Helpful): void {
   p.helpful = p.helpful === answer ? undefined : answer;
 }
 
-/** One post per check-in place that has a note, replacing the posts from an earlier save of the same check-in.
- *  A post the pupil had made private stays private. */
+/** One post per check-in place that has a note. Saving the same check-in again updates those posts:
+ *  a post the pupil had made private stays private, and the key adult's read status and reply are kept. */
 export function syncNotePosts(db: Db, checkin: CheckIn, labelOf: (sid: string) => string): void {
   const prefix = checkin.id + ':';
   const before = new Map(db.posts.filter((p) => p.kind === 'note' && p.refId.startsWith(prefix)).map((p) => [p.refId, p]));
@@ -56,6 +56,7 @@ export function syncNotePosts(db: Db, checkin: CheckIn, labelOf: (sid: string) =
     const words = [n.text, n.help.text, ...n.help.chips].filter(Boolean).join(' · ');
     const summary = labelOf(sid) + (words ? ': ' + words : n.symbols.length ? ': symbols' : n.photo ? ': photo' : '');
     const old = before.get(prefix + sid);
-    addPost(db, { pupilId: checkin.pupilId, kind: 'note', refId: prefix + sid, summary, sharedWith: old?.sharedWith ?? 'keyAdult', at: checkin.at });
+    if (old) db.posts.unshift({ ...old, summary });
+    else addPost(db, { pupilId: checkin.pupilId, kind: 'note', refId: prefix + sid, summary, sharedWith: 'keyAdult', at: checkin.at });
   }
 }

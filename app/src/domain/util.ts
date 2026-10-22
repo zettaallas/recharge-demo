@@ -1,6 +1,15 @@
 import type { Band } from '@/types';
 
-export const uid = (p: string) => p + '_' + Math.random().toString(36).slice(2, 10);
+/** A new id. Always a UUID, so the shared database accepts it; the label only says what the id is for at the call site. */
+export const uid = (_label: string): string => {
+  const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  if (c?.randomUUID) return c.randomUUID();
+  // fallback (random version-4 UUID): ids only need to be unique, not secret
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (ch) => {
+    const r = (Math.random() * 16) | 0;
+    return (ch === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+};
 export const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 export const avg = (a: number[]): number | null => (a.length ? a.reduce((s, x) => s + x, 0) / a.length : null);
 

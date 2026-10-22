@@ -12,7 +12,7 @@ import type { SlotId } from '@/types';
 
 // Ask to talk to my teacher: one button sends the request. What it's about and where you are are both optional.
 export default function Talk() {
-  const { t, colors, db, me, update } = useApp();
+  const { t, colors, db, me, save } = useApp();
   const router = useRouter();
   const [text, setText] = useState('');
   const [where, setWhere] = useState<SlotId | null>(null);
@@ -25,10 +25,10 @@ export default function Talk() {
     ...pins.map((p) => ({ id: p.id, label: p.emoji + ' ' + p.name })),
   ];
 
-  const send = () => {
+  const send = async () => {
     const whereLabel = places.find((p) => p.id === where)?.label;
-    const flagged = update((d) => requestTalk(d, me.id, t('talkSummary'), { text, where: where ?? undefined, whereLabel }));
-    setSaved({ flagged });
+    const res = await save((d) => requestTalk(d, me.id, t('talkSummary'), { text, where: where ?? undefined, whereLabel }));
+    if (res.ok) setSaved({ flagged: res.value });
   };
 
   return (

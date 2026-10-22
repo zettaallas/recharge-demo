@@ -7,7 +7,7 @@ import { useApp } from '@/state/AppContext';
 
 // My quick replies: each teacher's own one-tap replies. Add, edit, delete and reorder them.
 export default function QuickReplies() {
-  const { staffMe, update, colors } = useApp();
+  const { staffMe, update, save, colors } = useApp();
   const [adding, setAdding] = useState('');
   const [editing, setEditing] = useState<{ i: number; text: string } | null>(null);
   if (!staffMe) return null;
@@ -31,9 +31,8 @@ export default function QuickReplies() {
                     label="Save"
                     kind="primary"
                     disabled={!editing.text.trim()}
-                    onPress={() => {
-                      update((d) => editQuickReply(d, staffMe.id, i, editing.text));
-                      setEditing(null);
+                    onPress={async () => {
+                      if ((await save((d) => editQuickReply(d, staffMe.id, i, editing.text))).ok) setEditing(null);
                     }}
                   />
                   <Button label="Cancel" kind="quiet" onPress={() => setEditing(null)} />
@@ -62,9 +61,8 @@ export default function QuickReplies() {
             label="Add"
             kind="primary"
             disabled={!adding.trim()}
-            onPress={() => {
-              update((d) => addQuickReply(d, staffMe.id, adding));
-              setAdding('');
+            onPress={async () => {
+              if ((await save((d) => addQuickReply(d, staffMe.id, adding))).ok) setAdding('');
             }}
           />
         </Row>

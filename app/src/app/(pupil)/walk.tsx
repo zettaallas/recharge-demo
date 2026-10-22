@@ -16,7 +16,7 @@ import type { Pin } from '@/types';
 // The pupil's caption is the meaning; nobody guesses what a photo shows. Places become the pupil's own
 // check-in places and appear in their profile.
 export default function RechargeWalk() {
-  const { t, colors, db, me, update } = useApp();
+  const { t, colors, db, me, update, save: saveDb } = useApp();
   const router = useRouter();
   const mine = me ? db.pins.filter((p) => p.pupilId === me.id) : [];
   const [adding, setAdding] = useState(mine.length === 0);
@@ -35,9 +35,9 @@ export default function RechargeWalk() {
     setCaption('');
   };
 
-  const save = () => {
+  const save = async () => {
     if (!tag) return;
-    update((d) => {
+    const res = await saveDb((d) => {
       const pin: Pin = {
         id: uid('pn'),
         pupilId: me.id,
@@ -53,7 +53,7 @@ export default function RechargeWalk() {
       raiseFlag(d, me.id, 'Recharge Walk caption', caption);
       syncProfile(d, me.id);
     });
-    reset();
+    if (res.ok) reset(); // if not, the photo, tag and caption stay with the message
   };
 
   const removePin = (id: string) =>

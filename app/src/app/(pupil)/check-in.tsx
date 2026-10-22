@@ -15,7 +15,7 @@ import type { CheckIn as CheckInT, Note, Rating, Slot } from '@/types';
 // Pulse check-in: rate today's places and moments on the battery. Pupils rate places, not feelings.
 // Each place can have an optional note. Saving again on the same day updates today's check-in.
 export default function CheckIn() {
-  const { t, colors, db, me, update } = useApp();
+  const { t, colors, db, me, save: saveDb } = useApp();
   const router = useRouter();
   const today = todayISO();
   const existing = me ? db.checkins.find((c) => c.pupilId === me.id && c.date === today) : undefined;
@@ -38,11 +38,11 @@ export default function CheckIn() {
     });
   const setN = (sid: string, n: Note) => setNotes((x) => ({ ...x, [sid]: n }));
 
-  const save = () => {
+  const save = async () => {
     // drop empty notes so "Add more" opened by accident doesn't count as a note
     const kept = Object.fromEntries(Object.entries(notes).filter(([, n]) => hasNote(n)));
-    const flagged = update((d) => saveCheckIn(d, me.id, today, ratings, kept, existing?.id));
-    setDone({ flagged });
+    const res = await saveDb((d) => saveCheckIn(d, me.id, today, ratings, kept, existing?.id));
+    if (res.ok) setDone({ flagged: res.value }); // if not, the ratings and notes stay on screen with the message
   };
 
   if (done)

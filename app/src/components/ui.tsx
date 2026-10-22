@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '@/state/AppContext';
 import { radius } from '@/theme';
@@ -9,12 +9,43 @@ import type { Pupil } from '@/types';
 
 /** belowBar: the screen sits under the pupil top bar, which already handles the top safe area. */
 export function Screen({ children, center, scroll = true, belowBar, wide }: { children: ReactNode; center?: boolean; scroll?: boolean; belowBar?: boolean; wide?: boolean }) {
-  const { colors } = useApp();
+  const { colors, mode, session, refresh, offline, saveError, clearSaveError } = useApp();
+  const [pulling, setPulling] = useState(false);
+  // Supabase mode: pull down to fetch the latest data from school
+  const onRefresh = async () => {
+    setPulling(true);
+    await refresh();
+    setPulling(false);
+  };
   // wide: staff screens are laptop-first, so they use more of a big screen
-  const inner = <View style={[styles.inner, wide && styles.wide, center && styles.center]}>{children}</View>;
+  const inner = (
+    <View style={[styles.inner, wide && styles.wide, center && styles.center]}>
+      {mode === 'supabase' && offline && !!session && !saveError && (
+        <Banner kind="warn">Can't reach school right now. You can keep looking; pull down to try again.</Banner>
+      )}
+      {mode === 'supabase' && !!saveError && !!session && (
+        <View style={{ gap: 6 }}>
+          <Banner kind="warn">{saveError}</Banner>
+          <Row>
+            <Button label="OK" kind="quiet" accessibilityLabel="Hide this message" onPress={clearSaveError} />
+          </Row>
+        </View>
+      )}
+      {children}
+    </View>
+  );
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }} edges={belowBar ? ['bottom', 'left', 'right'] : ['top', 'bottom', 'left', 'right']}>
-      {scroll ? <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">{inner}</ScrollView> : inner}
+      {scroll ? (
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          refreshControl={mode === 'supabase' && session ? <RefreshControl refreshing={pulling} onRefresh={onRefresh} /> : undefined}>
+          {inner}
+        </ScrollView>
+      ) : (
+        inner
+      )}
     </SafeAreaView>
   );
 }
@@ -77,7 +108,7 @@ export function Row({ children, style }: { children: ReactNode; style?: StylePro
   return <View style={[styles.row, style]}>{children}</View>;
 }
 
-export function Avatar({ pupil, size = 56 }: { pupil: Pupil; size?: number }) {
+export function Avatar({ pupil, size = 56 }: { pupil: Pick<Pupil, 'name' | 'avatar'>; size?: number }) {
   const { colors } = useApp();
   const initials = pupil.name.split(' ').map((w) => w[0]).join('').slice(0, 2);
   return (

@@ -1,24 +1,57 @@
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Banner, Button, H1, Key, Muted, Screen } from '@/components/ui';
 import { checkPin } from '@/domain/auth';
-import { useApp } from '@/state/AppContext';
+import { lastClassCode, useApp } from '@/state/AppContext';
 
 // 4-digit PIN on a number pad. 5 wrong tries pause the account until a teacher resets it.
+// Local mode checks the PIN on this device; Supabase mode checks it on the server (pupil-login).
 export default function Pin() {
-  const { t, colors, db, update, logIn, cancelResume } = useApp();
+  const { t, colors, db, update, logIn, cancelResume, mode, roster, loadRoster, pupilSignIn } = useApp();
   const router = useRouter();
-  const { pupilId, resume } = useLocalSearchParams<{ pupilId: string; resume?: string }>();
-  const pupil = db.pupils.find((p) => p.id === pupilId);
+  const { pupilId, resume, code } = useLocalSearchParams<{ pupilId: string; resume?: string; code?: string }>();
   const [pin, setPin] = useState('');
-  const [msg, setMsg] = useState(pupil?.locked ? t('locked') : '');
+  const [msg, setMsg] = useState('');
+  const [lockedNow, setLockedNow] = useState(false);
+  const [classCode, setClassCode] = useState<string | null>(code ?? null);
   const busy = useRef(false);
+
+  // Supabase mode, reopened with "Ask for my PIN": find the class again from the last code used
+  useEffect(() => {
+    if (mode !== 'supabase' || roster?.pupils.some((p) => p.id === pupilId)) return;
+    (async () => {
+      const c = code ?? (await lastClassCode());
+      if (c) {
+        setClassCode(c);
+        await loadRoster(c);
+      }
+    })();
+  }, [mode, pupilId]);
+
+  const pupil = mode === 'supabase' ? roster?.pupils.find((p) => p.id === pupilId) : db.pupils.find((p) => p.id === pupilId);
+  const locked = lockedNow || !!pupil?.locked;
+  if (mode === 'supabase' && !pupil) return roster || resume ? <ActivityIndicator style={{ flex: 1 }} accessibilityLabel="Loading" /> : <Redirect href="/" />;
   if (!pupil) return <Redirect href="/" />;
+
+  const done = () => {
+    // clear the login screens so Back can't return to them
+    if (router.canDismiss()) router.dismissAll();
+    router.replace('/home');
+  };
 
   const check = async (p: string) => {
     busy.current = true;
-    const copy = { ...pupil };
+    if (mode === 'supabase') {
+      const res = await pupilSignIn(classCode ?? roster?.code ?? '', pupil.id, p);
+      busy.current = false;
+      setPin('');
+      if (res.ok) return done();
+      if (res.reason === 'locked') setLockedNow(true);
+      return setMsg(res.reason === 'locked' ? t('locked') : res.message);
+    }
+    const local = db.pupils.find((q) => q.id === pupil.id)!;
+    const copy = { ...local };
     const res = await checkPin(copy, p);
     update((d) => {
       const x = d.pupils.find((q) => q.id === pupil.id)!;
@@ -29,23 +62,21 @@ export default function Pin() {
     setPin('');
     if (res.ok) {
       logIn(pupil.id);
-      // clear the login screens so Back can't return to them
-      if (router.canDismiss()) router.dismissAll();
-      router.replace('/home');
-      return;
+      return done();
     }
+    if (res.locked) setLockedNow(true);
     setMsg(res.locked ? t('locked') : t('pinWrong', { n: res.triesLeft }));
   };
 
   const press = (k: string) => {
     if (busy.current) return;
-    if (pupil.locked) return setMsg(t('locked'));
+    if (locked) return setMsg(t('locked'));
     setMsg('');
     const n = (pin + k).slice(0, 4);
     setPin(n);
     if (n.length === 4) check(n);
   };
-  const del = () => setPin((p) => p.slice(0, -1));
+  const del = () => setPin((x) => x.slice(0, -1));
   // reopened with "Ask for my PIN" on: leaving goes to the entry screen, logged out
   const back = () => {
     if (!resume) return router.back();
@@ -63,7 +94,7 @@ export default function Pin() {
           <View key={i} style={[styles.dot, { borderColor: colors.accent, backgroundColor: i < pin.length ? colors.accent : 'transparent' }]} />
         ))}
       </View>
-      {!!msg && <Banner kind={pupil.locked ? 'warn' : 'info'}>{msg}</Banner>}
+      {!!(msg || (locked && t('locked'))) && <Banner kind={locked ? 'warn' : 'info'}>{msg || t('locked')}</Banner>}
       <View accessibilityLabel="Number pad" style={styles.pad}>
         {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((k) => (
           <Key key={k} label={k} size={84} onPress={() => press(k)} />

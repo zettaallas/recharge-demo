@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from '@/components/Dropdown';
 import { Sparkline } from '@/components/Sparkline';
+import { checkedInLatest } from '@/components/staff/classData';
 import { Heatmap } from '@/components/staff/Heatmap';
 import { useStaffClass } from '@/components/staff/StaffClass';
 import { NoteView } from '@/components/staff/NoteView';
@@ -18,7 +19,7 @@ import type { Pupil } from '@/types';
 // Staff overview. Each role only sees its own parts: the heatmap (tutor, key adult, SENCO),
 // drift alerts (key adult for their pupils, SENCO for all) and the requests count (key adult).
 export default function Overview() {
-  const { db, staffMe, colors } = useApp();
+  const { db, staffMe, colors, mode, summaries } = useApp();
   const { classId } = useStaffClass();
   const router = useRouter();
   const [filter, setFilter] = useState<string | null>(null);
@@ -46,8 +47,7 @@ export default function Overview() {
   const pupils = Access.visiblePupils(db, staffMe, cls.id);
   const canPick = (p: Pupil) => Access.canSeePupilDetail(staffMe, p);
   const ids = new Set(filter ? [filter] : pupils.map((p) => p.id));
-  const lastDate = db.checkins.filter((c) => ids.has(c.pupilId)).map((c) => c.date).sort().pop();
-  const checkedLast = lastDate ? new Set(db.checkins.filter((c) => c.date === lastDate && pupils.some((p) => p.id === c.pupilId)).map((c) => c.pupilId)).size : 0;
+  const { date: lastDate, n: checkedLast } = checkedInLatest(mode, db, new Set(pupils.map((p) => p.id)), summaries[cls.id]);
   const drifts = pupils
     .filter((p) => Access.canSeeDrift(staffMe, p))
     .map((p) => {
@@ -89,7 +89,7 @@ export default function Overview() {
               onChange={setFilter}
             />
           )}
-          <Heatmap db={db} classId={cls.id} pupilIds={ids} />
+          <Heatmap db={db} classId={cls.id} pupilIds={ids} cells={mode === 'supabase' && !filter ? summaries[cls.id]?.heatmap : undefined} />
         </Card>
       )}
 

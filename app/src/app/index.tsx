@@ -7,7 +7,7 @@ import { useApp } from '@/state/AppContext';
 
 // Entry: choose who you are. Same choices as the web prototype.
 export default function Entry() {
-  const { t, colors, session, timedOut, rememberedClass, resetDemo, resumePupilId } = useApp();
+  const { t, colors, session, timedOut, rememberedClass, resetDemo, resumePupilId, mode } = useApp();
   const router = useRouter();
   const [confirmReset, setConfirmReset] = useState(false);
 
@@ -15,7 +15,9 @@ export default function Entry() {
   if (resumePupilId) return <Redirect href={{ pathname: '/pin', params: { pupilId: resumePupilId, resume: '1' } }} />;
 
   const pupil = () =>
-    rememberedClass ? router.push({ pathname: '/pick-name', params: { classId: rememberedClass } }) : router.push('/class-code');
+    rememberedClass
+      ? router.push({ pathname: '/pick-name', params: mode === 'supabase' ? { code: rememberedClass } : { classId: rememberedClass } })
+      : router.push('/class-code');
 
   const Tile = ({ title, sub, onPress, soon }: { title: string; sub: string; onPress?: () => void; soon?: boolean }) => (
     <Pressable
@@ -51,10 +53,17 @@ export default function Entry() {
           Pupils: class code {DEMO.classCode}, any name, PIN {DEMO.pupilPin}. Isla M. shows a falling battery with normal attendance. Noor H. is new, to try first login.
         </Text>
         <Text style={{ color: colors.ink }}>
-          Staff: demo@recharge.test (class teacher), keyadult@, senco@ and dsl@recharge.test, password {DEMO.staffPassword}.
+          {mode === 'supabase'
+            ? 'Staff: demo@recharge.test (class teacher), keyadult@, senco@ and dsl@recharge.test, with the passwords shown when the demo was set up.'
+            : 'Staff: demo@recharge.test (class teacher), keyadult@, senco@ and dsl@recharge.test, password ' + DEMO.staffPassword + '.'}
         </Text>
-        <Muted small>Everything is saved only on this device. PINs are stored hashed.</Muted>
-        {confirmReset ? (
+        <Muted small>
+          {mode === 'supabase'
+            ? 'Shared school database: the phone and the laptop see the same (fictional) data. PINs are checked on the server.'
+            : 'Everything is saved only on this device. PINs are stored hashed.'}
+        </Muted>
+        {/* the shared database is never reset from the app */}
+        {mode === 'supabase' ? null : confirmReset ? (
           <Row>
             <Text style={{ color: colors.ink }}>Clear all changes and reload the demo data?</Text>
             <Button label="Yes, reset" kind="danger" onPress={() => { setConfirmReset(false); resetDemo(); }} />

@@ -4,13 +4,14 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Card, H2, Pill } from '@/components/staff/StaffUi';
 import { Banner, Button, H1, Muted, Row, Screen } from '@/components/ui';
 import { DEMO } from '@/data/seed';
+import { DEMO_STAFF } from '@/data/vocab';
 import { ROLE_LABEL } from '@/data/vocab';
 import { checkStaffLogin } from '@/domain/staff';
 import { useApp } from '@/state/AppContext';
 
 // Staff log in: email and password. The four demo accounts each show a different role's view.
 export default function StaffLogin() {
-  const { colors, db, logInStaff } = useApp();
+  const { colors, db, logInStaff, mode, staffSignIn } = useApp();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
@@ -19,10 +20,18 @@ export default function StaffLogin() {
 
   const login = async (em = email, p = pw) => {
     setBusy(true);
-    const s = await checkStaffLogin(db, em, p);
-    setBusy(false);
-    if (!s) return setErr('That email and password do not match. Check them and try again.');
-    logInStaff(s.id);
+    setErr('');
+    if (mode === 'supabase') {
+      // checked by Supabase Auth; the password never touches this app's data
+      const res = await staffSignIn(em, p);
+      setBusy(false);
+      if (!res.ok) return setErr(res.message ?? 'That email and password do not match.');
+    } else {
+      const s = await checkStaffLogin(db, em, p);
+      setBusy(false);
+      if (!s) return setErr('That email and password do not match. Check them and try again.');
+      logInStaff(s.id);
+    }
     if (router.canDismiss()) router.dismissAll();
     router.replace('/overview');
   };
@@ -46,14 +55,18 @@ export default function StaffLogin() {
         </Card>
         <Card style={styles.col}>
           <H2>Demo accounts</H2>
-          <Muted small>{'Each role sees different things. Password for all: ' + DEMO.staffPassword + '. All data is fictional.'}</Muted>
-          {db.staff.map((s) => (
+          <Muted small>
+            {mode === 'supabase'
+              ? 'Each role sees different things. Tap one to fill in its email, then type the password that was shown when the demo was set up. All data is fictional.'
+              : 'Each role sees different things. Password for all: ' + DEMO.staffPassword + '. All data is fictional.'}
+          </Muted>
+          {(mode === 'supabase' ? DEMO_STAFF.map((s, i) => ({ ...s, id: String(i) })) : db.staff).map((s) => (
             <Pressable
               key={s.id}
               accessibilityRole="button"
-              accessibilityLabel={'Log in as ' + s.name + ', ' + ROLE_LABEL[s.role]}
+              accessibilityLabel={(mode === 'supabase' ? 'Use the email of ' : 'Log in as ') + s.name + ', ' + ROLE_LABEL[s.role]}
               disabled={busy}
-              onPress={() => login(s.email, DEMO.staffPassword)}
+              onPress={() => (mode === 'supabase' ? setEmail(s.email) : login(s.email, DEMO.staffPassword))}
               style={({ pressed }) => [styles.demo, { borderColor: pressed ? colors.accent : colors.line, backgroundColor: colors.surface }]}>
               <Text style={{ color: colors.ink, fontWeight: '700', fontSize: 16 }}>{s.name}</Text>
               <Pill text={ROLE_LABEL[s.role]} />

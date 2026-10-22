@@ -19,7 +19,7 @@ const SECTIONS: [ProfileSection, IconName, TextKey][] = [
 ];
 
 export default function MyProfile() {
-  const { t, colors, db, me, update } = useApp();
+  const { t, colors, db, me, update, save } = useApp();
   const router = useRouter();
   const [extra, setExtra] = useState('');
   // pick up anything new from check-ins, symbols and Walk places
@@ -30,14 +30,14 @@ export default function MyProfile() {
   const prof = db.profiles[me.id] ?? { items: [], approvedSnapshot: null, dirty: false, approvedAt: null };
   const approved = !!prof.approvedSnapshot && !prof.dirty;
 
-  const addOwn = () => {
+  const addOwn = async () => {
     const text = extra.trim();
     if (!text) return;
-    update((d) => {
+    const res = await save((d) => {
       addOwnWords(d, me.id, text);
       raiseFlag(d, me.id, 'Profile words', text);
     });
-    setExtra('');
+    if (res.ok) setExtra('');
   };
 
   return (

@@ -8,13 +8,20 @@ import { useApp } from '@/state/AppContext';
 
 // Class code in an ordinary text box. Case, spaces and the hyphen don't matter.
 export default function ClassCode() {
-  const { t, colors, db, setRememberedClass } = useApp();
+  const { t, colors, db, setRememberedClass, mode, loadRoster } = useApp();
   const router = useRouter();
   const [val, setVal] = useState('');
   const [remember, setRemember] = useState(false);
   const [err, setErr] = useState('');
 
-  const submit = (v = val) => {
+  const submit = async (v = val) => {
+    if (mode === 'supabase') {
+      // the class list comes from the server; an unknown code just finds nothing
+      const ro = await loadRoster(v);
+      if (!ro) return setErr(t('codeWrong'));
+      if (remember) setRememberedClass(ro.code);
+      return router.replace({ pathname: '/pick-name', params: { code: ro.code } });
+    }
     const c = findClass(db, v);
     if (!c) return setErr(t('codeWrong'));
     if (remember) setRememberedClass(c.id);

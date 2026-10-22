@@ -16,7 +16,7 @@ import type { SlotId, SymbolKey } from '@/types';
 // Symbol board: say something without words. Pick one or more symbols; optionally add details and where it was;
 // then Save. A pop-up confirms it, and OK goes back home.
 export default function SymbolBoard() {
-  const { t, colors, db, me, update } = useApp();
+  const { t, colors, db, me, save: saveDb } = useApp();
   const router = useRouter();
   const [picked, setPicked] = useState<SymbolKey[]>([]);
   const [text, setText] = useState('');
@@ -32,10 +32,10 @@ export default function SymbolBoard() {
 
   const toggle = (k: SymbolKey) => setPicked((x) => (x.includes(k) ? x.filter((y) => y !== k) : [...x, k]));
 
-  const save = () => {
+  const save = async () => {
     const whereLabel = places.find((p) => p.id === where)?.label;
-    const flagged = update((d) => saveSymbols(d, me.id, { symbols: picked, where: where ?? undefined, whereLabel, text }, (s) => t(s)));
-    setSaved({ adult: needsAdult(picked), flagged });
+    const res = await saveDb((d) => saveSymbols(d, me.id, { symbols: picked, where: where ?? undefined, whereLabel, text }, (s) => t(s)));
+    if (res.ok) setSaved({ adult: needsAdult(picked), flagged: res.value });
   };
 
   return (

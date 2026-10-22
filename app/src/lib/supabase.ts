@@ -4,14 +4,14 @@ import { createClient } from '@supabase/supabase-js';
 
 // The app's Supabase client. URL and anon (public) key come from app/.env.local (never committed).
 // The anon key is safe in the app: what it can read is decided by the row-level security rules.
-// NOT used by any screen yet; the login screen switches over in the store-swap step.
+// Empty or missing settings = local (on-device) mode; the client then exists but is never used.
 
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 export const supabaseConfigured = !!url && !!anonKey;
 
-export const supabase = createClient(url ?? 'http://localhost', anonKey ?? 'missing', {
+export const supabase = createClient(url || 'http://localhost', anonKey || 'missing', {
   auth: { storage: AsyncStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
 });
 

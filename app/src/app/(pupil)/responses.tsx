@@ -1,5 +1,5 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
+import { useEffect, useState, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FeedList } from '@/components/FeedList';
 import { PostCard } from '@/components/PostCard';
@@ -12,7 +12,9 @@ import { useApp } from '@/state/AppContext';
 type Tab = 'replies' | 'sent' | 'feed';
 
 export default function Responses() {
-  const { t, colors, db, me } = useApp();
+  const { t, colors, db, me, refresh } = useApp();
+  // Supabase mode: fetch the latest replies each time this screen opens
+  useFocusEffect(useCallback(() => void refresh(), [refresh]));
   const router = useRouter();
   const params = useLocalSearchParams<{ tab?: Tab; at?: string }>();
   const [tab, setTab] = useState<Tab>(params.tab === 'sent' || params.tab === 'feed' ? params.tab : 'replies');

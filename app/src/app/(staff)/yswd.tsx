@@ -5,12 +5,13 @@ import { useStaffClass } from '@/components/staff/StaffClass';
 import { Banner, Button, H1, Muted, Row, Screen } from '@/components/ui';
 import { Access } from '@/domain/access';
 import { postYouSaidWeDid } from '@/domain/staff';
-import { groupThemes, helpAnswers, helpfulTally } from '@/domain/themes';
+import { classHelpAnswers } from '@/components/staff/classData';
+import { groupThemes, helpfulTally } from '@/domain/themes';
 import { useApp } from '@/state/AppContext';
 
 // You said, we did: tell the class what changed because of what they said. Each post shows how many pupils found it helpful.
 export default function YouSaidWeDid() {
-  const { db, staffMe, update, colors } = useApp();
+  const { db, staffMe, save, colors, mode, summaries } = useApp();
   const { classId } = useStaffClass();
   const [said, setSaid] = useState('');
   const [did, setDid] = useState('');
@@ -24,15 +25,15 @@ export default function YouSaidWeDid() {
       </Screen>
     );
   const pupils = db.pupils.filter((p) => p.classId === classId);
-  const top = groupThemes(helpAnswers(db, new Set(pupils.map((p) => p.id))))
+  const top = groupThemes(classHelpAnswers(mode, db, new Set(pupils.map((p) => p.id)), summaries[classId]))
     .filter((g) => g.id !== 'other')
     .slice(0, 4)
     .map((g) => g.label);
   const posts = db.feed.filter((f) => f.classId === classId).sort((a, b) => b.at - a.at);
   const input = [styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.surface }];
 
-  const post = () => {
-    update((d) => postYouSaidWeDid(d, classId, staffMe, said, did));
+  const post = async () => {
+    if (!(await save((d) => postYouSaidWeDid(d, classId, staffMe, said, did))).ok) return;
     setSaid('');
     setDid('');
     setPosted(true);
