@@ -1,6 +1,6 @@
 # Step 11a: Less text, more pictures (pupil side)
 
-**Commit:** not committed yet. eko approves the commit.
+**Commit:** `4d17b6a`.
 
 Feedback from educators: "less text, more pictorial". This step changes the **pupil screens only**. Staff screens stay as they were (laptop-first, text is fine there), except that they now show the pictures a pupil picked.
 
