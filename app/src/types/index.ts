@@ -8,7 +8,19 @@ export type ZipColour = 'teal' | 'lilac' | 'sky' | 'sun' | 'coral';
 export type Hat = 'none' | 'beanie' | 'cap' | 'crown' | 'headphones' | 'flower';
 export type AvatarColour = 'teal' | 'sky' | 'lilac' | 'sun' | 'coral' | 'leaf' | 'rose' | 'slate';
 
-export type SymbolKey = 'tooLoud' | 'tooBright' | 'tooCrowded' | 'needBreakSym' | 'feelsSafe' | 'talkAdult';
+/** Symbol board pictures. Saved by name, so new ones need no database change. */
+export type SymbolKey =
+  // feelings
+  | 'happy' | 'calm' | 'feelsSafe' | 'sad' | 'worried' | 'angry' | 'confused' | 'tired' | 'overwhelmed'
+  // body
+  | 'hungry' | 'thirsty' | 'unwell' | 'toilet'
+  // around me
+  | 'tooLoud' | 'tooBright' | 'tooCrowded' | 'tooHot' | 'tooCold' | 'strongSmell'
+  // I need
+  | 'needQuiet' | 'needHelp' | 'needMove' | 'needBreakSym' | 'talkAdult';
+
+/** "What about?" pictures on a talk request. Optional; saved in the request's symbols list. */
+export type TalkTopic = 'topicFriends' | 'topicWork' | 'topicHome' | 'topicWorried' | 'topicUnwell' | 'topicHappened' | 'topicJustTalk';
 
 export type StaffRole = 'class_teacher' | 'senco' | 'key_adult' | 'dsl';
 
@@ -162,6 +174,8 @@ export interface Moment {
   symbol?: SymbolKey;
   /** Symbol board: one or more symbols saved together. */
   symbols?: SymbolKey[];
+  /** Talk request: optional "what about?" pictures. */
+  topics?: TalkTopic[];
   /** Optional: the class or place it was about. */
   where?: SlotId;
   /** Optional: the pupil's own details. */

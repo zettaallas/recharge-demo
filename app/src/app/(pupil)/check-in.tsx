@@ -5,7 +5,7 @@ import { Battery } from '@/components/Battery';
 import { Icon } from '@/components/Icon';
 import type { IconName } from '@/components/icons';
 import { NotePanel } from '@/components/NotePanel';
-import { Banner, Button, H1, Muted, Row, Screen } from '@/components/ui';
+import { Banner, Button, H1, InfoTip, Muted, Row, Screen } from '@/components/ui';
 import { Zip } from '@/components/Zip';
 import { emptyNote, hasNote, saveCheckIn, slotsFor, type PinSlot } from '@/domain/checkins';
 import { avg, todayISO } from '@/domain/util';
@@ -57,7 +57,7 @@ export default function CheckIn() {
         </View>
         {done.flagged && <Banner kind="info">{t('thanksSafe')}</Banner>}
         <Row>
-          <Button label={t('home')} kind="primary" large onPress={() => router.dismissTo('/home')} />
+          <Button icon="home" label={t('home')} kind="primary" large onPress={() => router.dismissTo('/home')} />
         </Row>
       </Screen>
     );
@@ -81,7 +81,7 @@ export default function CheckIn() {
         </View>
         <Battery value={ratings[s.id]} onChange={(v) => setR(s.id, v)} label={s.name} />
         <Row>
-          <Button label={isOpen ? t('close') : t('addMore')} onPress={() => setOpen(isOpen ? null : s.id)} />
+          <Button icon={isOpen ? 'x' : 'plus'} label={isOpen ? t('close') : t('addMore')} onPress={() => setOpen(isOpen ? null : s.id)} />
           {hasNote(notes[s.id]) && !isOpen && <Text style={{ color: colors.okInk, fontWeight: '700' }}>✓ {t('attached')}</Text>}
         </Row>
         {isOpen && <NotePanel value={notes[s.id] ?? emptyNote()} onChange={(n) => setN(s.id, n)} />}
@@ -89,27 +89,27 @@ export default function CheckIn() {
     );
   };
 
-  const date = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  const date = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' });
 
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('back')} onPress={() => router.back()} />
+        <Button icon="back" label={t('back')} onPress={() => router.back()} />
       </Row>
       <View style={[styles.stage, styles.card, { backgroundColor: colors.surface, borderColor: colors.line }]}>
         <Zip charge={charge} colour={me.buddy.colour} hat={me.buddy.hat} size={80} />
         <View style={{ flex: 1, minWidth: 180, gap: 4 }}>
           <H1>{t('checkIn')}</H1>
           <Text style={{ color: colors.ink }}>{charge == null ? t('zipEmpty') : t('zipCharge', { p: Math.round(charge * 100) })}</Text>
-          <Muted small>{t('today') + ': ' + date + ' · ' + t('howCharged')}</Muted>
-          <Text style={{ color: colors.ink, fontWeight: '700' }}>{t('rateOneOrMore')}</Text>
+          <Muted small>{date}</Muted>
+          <InfoTip text={t('howCharged') + ' ' + t('rateOneOrMore')} />
         </View>
       </View>
       {base.map((s) => slotCard(s))}
       {pins.length > 0 && <Text style={[styles.h2, { color: colors.ink }]}>{t('yourPlaces')}</Text>}
       {pins.map((s) => slotCard(s, s))}
       <Row>
-        <Button label={t('save')} kind="primary" large disabled={!Object.keys(ratings).length} onPress={save} />
+        <Button icon="check" label={t('save')} kind="primary" large disabled={!Object.keys(ratings).length} onPress={save} />
       </Row>
     </Screen>
   );

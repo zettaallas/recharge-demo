@@ -3,7 +3,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FeedList } from '@/components/FeedList';
 import { PostCard } from '@/components/PostCard';
-import { Button, H1, Muted, Row, Screen } from '@/components/ui';
+import { Icon } from '@/components/Icon';
+import type { IconName } from '@/components/icons';
+import { Button, H1, InfoTip, Muted, Row, Screen } from '@/components/ui';
 import { keyAdultName } from '@/domain/posts';
 import { useApp } from '@/state/AppContext';
 
@@ -28,7 +30,7 @@ export default function Responses() {
   const all = db.posts.filter((p) => p.pupilId === me.id).sort((a, b) => b.at - a.at);
   const replies = all.filter((p) => p.sharedWith === 'keyAdult' && p.status === 'followUp');
 
-  const tabBtn = (k: Tab, label: string) => {
+  const tabBtn = (k: Tab, icon: IconName, label: string) => {
     const on = tab === k;
     return (
       <Pressable
@@ -36,6 +38,7 @@ export default function Responses() {
         accessibilityState={{ selected: on }}
         onPress={() => setTab(k)}
         style={[styles.tab, { backgroundColor: on ? colors.accent : colors.surface, borderColor: on ? colors.accent : colors.line }]}>
+        <Icon name={icon} size={20} color={on ? colors.accentInk : colors.ink} />
         <Text style={{ fontWeight: '700', fontSize: 16, color: on ? colors.accentInk : colors.ink }}>{label}</Text>
       </Pressable>
     );
@@ -44,13 +47,13 @@ export default function Responses() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button icon="home" label={t('home')} onPress={() => router.back()} />
       </Row>
       <H1>{t('teacherResponse')}</H1>
       <View accessibilityRole="tablist" style={styles.tabs}>
-        {tabBtn('replies', t('repliesTab'))}
-        {tabBtn('sent', t('sentTab'))}
-        {tabBtn('feed', t('feedTab'))}
+        {tabBtn('replies', 'bell', t('repliesTab'))}
+        {tabBtn('sent', 'send', t('sentTab'))}
+        {tabBtn('feed', 'megaphone', t('feedTab'))}
       </View>
 
       {tab === 'replies' ? (
@@ -62,7 +65,7 @@ export default function Responses() {
         </View>
       ) : tab === 'sent' ? (
         <View style={{ gap: 12 }}>
-          <Muted>{t('sentIntro')}</Muted>
+          <InfoTip text={t('sentIntro')} />
           {all.length === 0 && <Muted>{t('noPosts')}</Muted>}
           {all.map((p) => (
             <PostCard key={p.id} post={p} adult={adult} />
@@ -77,5 +80,5 @@ export default function Responses() {
 
 const styles = StyleSheet.create({
   tabs: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  tab: { minHeight: 52, paddingHorizontal: 18, borderRadius: 14, borderWidth: 1, justifyContent: 'center' },
+  tab: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 52, paddingHorizontal: 16, borderRadius: 14, borderWidth: 1 },
 });

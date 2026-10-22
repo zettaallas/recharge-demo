@@ -52,7 +52,30 @@ export const ICONS = {
   "key": "<circle cx=\"7.5\" cy=\"15.5\" r=\"5.5\"/><path d=\"m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3\"/>",
   "type": "<path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>",
   "home2": "<path d=\"M3 10.5 12 3l9 7.5V21H3z\"/><path d=\"M9 21v-6h6v6\"/>",
-  "battery": "<rect x=\"2\" y=\"7\" width=\"16\" height=\"10\" rx=\"2\"/><path d=\"M22 11v2\"/><path d=\"M6 11v2M10 11v2\"/>"
+  "battery": "<rect x=\"2\" y=\"7\" width=\"16\" height=\"10\" rx=\"2\"/><path d=\"M22 11v2\"/><path d=\"M6 11v2M10 11v2\"/>",
+  // Step 11a: pictures drawn for Recharge in the same style (one face shape, simple lines, no fill)
+  "faceHappy": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/><path d=\"M8 14s1.5 2.5 4 2.5 4-2.5 4-2.5\"/>",
+  "faceCalm": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M7.5 10q1.5 1.2 3 0M13.5 10q1.5 1.2 3 0\"/><path d=\"M9.5 15q2.5 1.5 5 0\"/>",
+  "faceSad": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/><path d=\"M16 17s-1.5-2.5-4-2.5-4 2.5-4 2.5\"/>",
+  "faceWorried": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M7.5 8.5 10 7.5M16.5 8.5 14 7.5\"/><path d=\"M9 11h.01M15 11h.01\"/><path d=\"M8 16q1-1.2 2 0t2 0 2 0 2 0\"/>",
+  "faceAngry": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M7 8l3 1.5M17 8l-3 1.5\"/><path d=\"M9 11.5h.01M15 11.5h.01\"/><path d=\"M15.5 16.5s-1.3-1.5-3.5-1.5-3.5 1.5-3.5 1.5\"/>",
+  "faceConfused": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M9 9.5h.01M15 9.5h.01\"/><path d=\"M8.5 16 15.5 14.5\"/>",
+  "faceTired": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M7.5 10.5h3M13.5 10.5h3\"/><path d=\"M10 15.5h4\"/>",
+  "faceOverwhelmed": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"9\" cy=\"10\" r=\"1.6\"/><circle cx=\"15\" cy=\"10\" r=\"1.6\"/><circle cx=\"12\" cy=\"16\" r=\"1.6\"/>",
+  "drink": "<path d=\"M6 9h12l-1.4 11a2 2 0 0 1-2 1.8H9.4a2 2 0 0 1-2-1.8z\"/><path d=\"M12 2s-2 2.3-2 3.6a2 2 0 0 0 4 0C14 4.3 12 2 12 2z\"/>",
+  "thermometer": "<path d=\"M14 4v10.5a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z\"/><path d=\"M12 14v3\"/>",
+  "toilet": "<path d=\"M6 3h5v7H6z\"/><path d=\"M4 10h16a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6z\"/><path d=\"M9 16l-1 5h8l-1-5\"/>",
+  "flame": "<path d=\"M12 22a6 6 0 0 0 6-6c0-4-3-6-4-10-2 2-3 4-3 6-1-1-1.5-2-1.5-3C7 10.5 6 13 6 16a6 6 0 0 0 6 6z\"/>",
+  "snowflake": "<path d=\"M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7\"/><path d=\"M9.5 3.5 12 5.5l2.5-2M9.5 20.5l2.5-2 2.5 2\"/>",
+  "smell": "<path d=\"M7 21c-2-3 2-5 0-8s2-5 0-8M12 21c-2-3 2-5 0-8s2-5 0-8M17 21c-2-3 2-5 0-8s2-5 0-8\"/>",
+  "headphones": "<path d=\"M4 15v-3a8 8 0 0 1 16 0v3\"/><rect x=\"3\" y=\"14\" width=\"5\" height=\"7\" rx=\"2\"/><rect x=\"16\" y=\"14\" width=\"5\" height=\"7\" rx=\"2\"/>",
+  "hand": "<path d=\"M8 12V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4a1.5 1.5 0 0 1 3 0v7M14 10.5V6a1.5 1.5 0 0 1 3 0v8\"/><path d=\"M8 12 6.5 10.5a1.5 1.5 0 0 0-2.2 2.1l3.7 4.6C9.3 19.6 11 21 13.5 21a3.5 3.5 0 0 0 3.5-3.5V14\"/>",
+  "speakerOff": "<path d=\"M11 5 6 9H3v6h3l5 4z\"/><path d=\"m22 9-6 6M16 9l6 6\"/>",
+  "chair": "<path d=\"M7 3v18M7 13h10v8\"/>",
+  "sofa": "<path d=\"M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3\"/><path d=\"M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2z\"/><path d=\"M5 18v2M19 18v2\"/>",
+  "info": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 16v-4M12 8h.01\"/>",
+  "next": "<path d=\"m12 5 7 7-7 7M5 12h14\"/>",
+  "send": "<path d=\"M22 2 11 13M22 2l-7 20-4-9-9-4z\"/>"
 } as const;
 
 export type IconName = keyof typeof ICONS;

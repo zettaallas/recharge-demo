@@ -105,7 +105,8 @@ export function rowsToDb(r: RemoteRows, now = Date.now()): Db {
 
   const moments: Moment[] = r.moments.map((m) => ({
     id: m.id, pupilId: m.pupil_id, kind: m.kind, at: ms(m.created_at)!, seen: m.seen,
-    ...(m.symbols?.length ? { symbols: m.symbols, symbol: m.symbols[0] } : {}),
+    // a talk request keeps its "what about?" pictures in the same symbols column
+    ...(m.symbols?.length ? (m.kind === 'talk' ? { topics: m.symbols } : { symbols: m.symbols, symbol: m.symbols[0] }) : {}),
     ...(m.where_slot ? { where: m.where_slot } : {}),
     ...(m.text ? { text: m.text } : {}),
   }));

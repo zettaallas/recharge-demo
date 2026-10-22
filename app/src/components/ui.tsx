@@ -1,9 +1,11 @@
 import { useState, type ReactNode } from 'react';
-import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '@/state/AppContext';
 import { radius } from '@/theme';
 import type { Pupil } from '@/types';
+import { Icon } from './Icon';
+import type { IconName } from './icons';
 
 // Small shared building blocks, styled like the web prototype's .btn, .banner, .card and .avatar.
 
@@ -62,7 +64,7 @@ export function Muted({ children, small, center }: { children: ReactNode; small?
 
 type BtnKind = 'default' | 'primary' | 'quiet' | 'danger' | 'break';
 
-export function Button({ label, onPress, kind = 'default', large, disabled, accessibilityLabel, style }: {
+export function Button({ label, onPress, kind = 'default', large, disabled, accessibilityLabel, style, icon }: {
   label: string;
   onPress: () => void;
   kind?: BtnKind;
@@ -70,6 +72,8 @@ export function Button({ label, onPress, kind = 'default', large, disabled, acce
   disabled?: boolean;
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
+  /** a picture before the word (pupil screens pair every button with one) */
+  icon?: IconName;
 }) {
   const { colors } = useApp();
   const bg = { default: colors.surface, primary: colors.accent, quiet: 'transparent', danger: colors.warnBg, break: colors.break }[kind];
@@ -88,8 +92,66 @@ export function Button({ label, onPress, kind = 'default', large, disabled, acce
         { backgroundColor: bg, borderColor: border, opacity: disabled ? 0.5 : pressed ? 0.8 : 1 },
         style,
       ]}>
-      <Text style={{ color: fg, fontWeight: '700', fontSize: large ? 18 : 16 }}>{label}</Text>
+      <View style={styles.btnInner}>
+        {!!icon && <Icon name={icon} size={large ? 24 : 20} color={fg} />}
+        <Text style={{ color: fg, fontWeight: '700', fontSize: large ? 18 : 16 }}>{label}</Text>
+      </View>
     </Pressable>
+  );
+}
+
+/** Words are always optional: a small "Add words" button that opens the text box. Starts open if there are words already. */
+export function OptionalWords({ value, onChange, label, multiline = true, maxLength, onSubmit }: {
+  value: string;
+  onChange: (s: string) => void;
+  /** what the box is for, read out by screen readers */
+  label: string;
+  multiline?: boolean;
+  maxLength?: number;
+  onSubmit?: () => void;
+}) {
+  const { t, colors } = useApp();
+  const [open, setOpen] = useState(!!value);
+  if (!open)
+    return (
+      <Button icon="keyboard" label={t('addWords')} accessibilityLabel={t('addWords') + ', ' + t('optional') + ': ' + label} onPress={() => setOpen(true)} style={{ alignSelf: 'flex-start' }} />
+    );
+  return (
+    <View style={{ gap: 8 }}>
+      <TextInput
+        autoFocus
+        multiline={multiline}
+        value={value}
+        onChangeText={onChange}
+        onSubmitEditing={onSubmit}
+        maxLength={maxLength}
+        placeholder={t('typeHere')}
+        placeholderTextColor={colors.ink2}
+        accessibilityLabel={label}
+        style={[styles.words, multiline && { minHeight: 96, textAlignVertical: 'top' }, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.surface }]}
+      />
+      {!value && <Button kind="quiet" icon="x" label={t('hideWords')} onPress={() => setOpen(false)} style={{ alignSelf: 'flex-start' }} />}
+    </View>
+  );
+}
+
+/** A small "i" button: longer explanations stay out of the way until a pupil wants them. */
+export function InfoTip({ text }: { text: string }) {
+  const { t, colors } = useApp();
+  const [open, setOpen] = useState(false);
+  return (
+    <View style={{ gap: 6 }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('moreInfo')}
+        accessibilityState={{ expanded: open }}
+        onPress={() => setOpen(!open)}
+        hitSlop={8}
+        style={[styles.info, { borderColor: colors.line, backgroundColor: open ? colors.accentSoft : colors.surface }]}>
+        <Icon name="info" size={22} color={colors.ink2} />
+      </Pressable>
+      {open && <Text style={{ color: colors.ink2, fontSize: 15 }}>{text}</Text>}
+    </View>
   );
 }
 
@@ -164,6 +226,9 @@ const styles = StyleSheet.create({
   wide: { maxWidth: 1160 },
   h1: { fontSize: 30, fontWeight: '700', lineHeight: 36 },
   btn: { minHeight: 48, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  btnInner: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  words: { minHeight: 48, borderWidth: 1, borderRadius: 14, padding: 12, fontSize: 16 },
+  info: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   btnLg: { minHeight: 60, paddingHorizontal: 24, borderRadius: radius.md - 2 },
   banner: { borderRadius: 14, paddingHorizontal: 16, paddingVertical: 12 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, alignItems: 'center' },

@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { PhotoPicker } from '@/components/PhotoPicker';
-import { Button, H1, Muted, Row, Screen } from '@/components/ui';
-import { EMOJIS } from '@/data/vocab';
+import { PictoGrid, PictoHeading } from '@/components/Pictos';
+import { Button, H1, InfoTip, OptionalWords, Row, Screen } from '@/components/ui';
+import { CHIP_ICON, EMOJIS } from '@/data/vocab';
 import { syncProfile } from '@/domain/profile';
 import { addPost } from '@/domain/posts';
 import { raiseFlag } from '@/domain/safeguarding';
@@ -23,7 +24,9 @@ export default function RechargeWalk() {
   const [photo, setPhoto] = useState<string | null>(null);
   const [tag, setTag] = useState<Pin['tag'] | null>(null);
   const [emoji, setEmoji] = useState<string | null>(null);
-  const [caption, setCaption] = useState('');
+  // a picked phrase and/or the pupil's own words; both optional
+  const [chip, setChip] = useState<string | null>(null);
+  const [words, setWords] = useState('');
   if (!me) return null;
   const captionChips = chips('captionChips');
 
@@ -32,7 +35,8 @@ export default function RechargeWalk() {
     setPhoto(null);
     setTag(null);
     setEmoji(null);
-    setCaption('');
+    setChip(null);
+    setWords('');
   };
 
   const save = async () => {
@@ -44,13 +48,14 @@ export default function RechargeWalk() {
         photo,
         tag,
         emoji: emoji ?? (tag === 'drains' ? '🔊' : '🌈'),
-        caption: caption.trim() || captionChips[0],
+        // with no words, the pupil's own "drains / recharges" choice names the place (nothing is guessed for them)
+        caption: [chip, words.trim()].filter(Boolean).join('. ') || t(tag),
         at: Date.now(),
       };
       d.pins.push(pin);
       // places stay private until the pupil approves their profile
       addPost(d, { pupilId: me.id, kind: 'pin', refId: pin.id, summary: pin.emoji + ' ' + pin.caption, sharedWith: 'private' });
-      raiseFlag(d, me.id, 'Recharge Walk caption', caption);
+      if (words.trim()) raiseFlag(d, me.id, 'Recharge Walk caption', words);
       syncProfile(d, me.id);
     });
     if (res.ok) reset(); // if not, the photo, tag and caption stay with the message
@@ -81,10 +86,10 @@ export default function RechargeWalk() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('back')} onPress={() => router.back()} />
+        <Button icon="back" label={t('back')} onPress={() => router.back()} />
       </Row>
       <H1>{t('walk')}</H1>
-      <Muted>{t('walkIntro')}</Muted>
+      <InfoTip text={t('walkIntro')} />
 
       {mine.length > 0 && (
         <View style={styles.pins}>
@@ -104,7 +109,7 @@ export default function RechargeWalk() {
                 <Text style={{ fontSize: 22 }}>{p.emoji}</Text>
               </Row>
               <Text style={{ color: colors.ink, fontSize: 16 }}>{p.caption}</Text>
-              <Button label={t('remove')} kind="quiet" onPress={() => removePin(p.id)} style={{ alignSelf: 'flex-start' }} />
+              <Button icon="del" label={t('remove')} kind="quiet" onPress={() => removePin(p.id)} style={{ alignSelf: 'flex-start' }} />
             </View>
           ))}
         </View>
@@ -112,7 +117,7 @@ export default function RechargeWalk() {
 
       {!adding && (
         <Row>
-          <Button label={t('addPlace')} kind="primary" large onPress={() => setAdding(true)} />
+          <Button icon="plus" label={t('addPlace')} kind="primary" large onPress={() => setAdding(true)} />
         </Row>
       )}
 
@@ -126,7 +131,7 @@ export default function RechargeWalk() {
             {tagBtn('recharges')}
           </View>
 
-          <Text style={[styles.lbl, { color: colors.ink }]}>{t('pickEmoji')}</Text>
+          <PictoHeading icon="image" label={t('pickEmoji')} />
           <View style={styles.emojis}>
             {EMOJIS.map((e) => {
               const on = emoji === e;
@@ -144,34 +149,19 @@ export default function RechargeWalk() {
             })}
           </View>
 
-          <Text style={[styles.lbl, { color: colors.ink }]}>{t('caption')}</Text>
-          <View style={styles.chips}>
-            {captionChips.map((c) => {
-              const on = caption === c;
-              return (
-                <Pressable
-                  key={c}
-                  accessibilityRole="radio"
-                  accessibilityState={{ checked: on }}
-                  onPress={() => setCaption(c)}
-                  style={[styles.chip, { backgroundColor: on ? colors.accent : colors.surface2 }]}>
-                  <Text style={{ fontWeight: '700', color: on ? colors.accentInk : colors.ink }}>{c}</Text>
-                </Pressable>
-              );
-            })}
-          </View>
-          <TextInput
-            value={caption}
-            onChangeText={setCaption}
-            placeholder={t('typeHere')}
-            placeholderTextColor={colors.ink2}
-            accessibilityLabel={t('caption')}
-            style={[styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.surface }]}
+          <PictoHeading icon="message" label={t('caption') + ' (' + t('optional') + ')'} />
+          <PictoGrid
+            size="sm"
+            single
+            items={captionChips.map((c) => ({ key: c, icon: CHIP_ICON[c] ?? 'message', label: c }))}
+            picked={chip ? [chip] : []}
+            onToggle={(c) => setChip(chip === c ? null : c)}
           />
+          <OptionalWords value={words} onChange={setWords} label={t('caption')} multiline={false} />
 
           <Row>
-            <Button label={t('savePlace')} kind="primary" large disabled={!tag} onPress={save} />
-            {mine.length > 0 && <Button label={t('close')} onPress={reset} />}
+            <Button icon="check" label={t('savePlace')} kind="primary" large disabled={!tag} onPress={save} />
+            {mine.length > 0 && <Button icon="x" label={t('close')} onPress={reset} />}
           </Row>
         </View>
       )}

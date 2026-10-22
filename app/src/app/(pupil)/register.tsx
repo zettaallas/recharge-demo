@@ -1,9 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Button, Checkbox, H1, Muted, Row, Screen } from '@/components/ui';
+import { StyleSheet, TextInput, View } from 'react-native';
+import { PictoGrid, PictoHeading } from '@/components/Pictos';
+import { Button, Checkbox, H1, InfoTip, Muted, Row, Screen } from '@/components/ui';
 import { ZipPicker } from '@/components/ZipPicker';
-import { HELP_CHIPS } from '@/data/vocab';
+import { CHIP_ICON, HELP_CHIPS } from '@/data/vocab';
 import { syncProfile } from '@/domain/profile';
 import { useApp } from '@/state/AppContext';
 import type { Buddy } from '@/types';
@@ -52,7 +53,7 @@ export default function Register() {
       <Muted>{t('regIntro')}</Muted>
 
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.line }]}>
-        <Text style={[styles.lbl, { color: colors.ink }]}>{t('regName')}</Text>
+        <PictoHeading icon="user" label={t('regName')} />
         <TextInput
           value={name}
           onChangeText={setName}
@@ -65,36 +66,22 @@ export default function Register() {
       </View>
 
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.line }]}>
-        <Text style={[styles.lbl, { color: colors.ink }]}>{t('regZip')}</Text>
+        <PictoHeading icon="star" label={t('regZip')} />
         <ZipPicker value={buddy} onChange={(patch) => setBuddy((b) => ({ ...b, ...patch }))} size={110} />
       </View>
 
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.line }]}>
-        <Text style={[styles.lbl, { color: colors.ink }]}>{t('regHelps')}</Text>
-        <Muted small>{t('regHelpsHint')}</Muted>
-        <View style={styles.chips}>
-          {HELP_CHIPS.map((c) => {
-            const on = helps.includes(c);
-            return (
-              <Pressable
-                key={c}
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: on }}
-                onPress={() => toggle(c)}
-                style={[styles.chip, { backgroundColor: on ? colors.accent : colors.surface2 }]}>
-                <Text style={{ fontWeight: '700', color: on ? colors.accentInk : colors.ink }}>{(on ? '✓ ' : '') + c}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
+        <PictoHeading icon="heart" label={t('regHelps')} />
+        <InfoTip text={t('regHelpsHint')} />
+        <PictoGrid size="sm" items={HELP_CHIPS.map((c) => ({ key: c, icon: CHIP_ICON[c] ?? 'bulb', label: c }))} picked={helps} onToggle={toggle} />
       </View>
 
       {/* the device setting applies straight away, like the one on the name screen */}
       <Checkbox label={t('sharedDevice')} hint={t('sharedDeviceHint')} checked={sharedDevice} onChange={setSharedDevice} />
 
       <Row>
-        <Button label={t('regSave')} kind="primary" large onPress={done} />
-        <Button label={t('regSkip')} kind="quiet" onPress={skip} />
+        <Button icon="check" label={t('regSave')} kind="primary" large onPress={done} />
+        <Button icon="next" label={t('regSkip')} kind="quiet" onPress={skip} />
       </Row>
     </Screen>
   );

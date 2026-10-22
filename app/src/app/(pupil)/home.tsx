@@ -1,7 +1,7 @@
 import { Redirect, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { BigButton } from '@/components/BigButton';
-import { H1, Muted, Screen } from '@/components/ui';
+import { H1, InfoTip, Screen } from '@/components/ui';
 import { Zip } from '@/components/Zip';
 import { lastCharge } from '@/domain/checkins';
 import { keyAdultName } from '@/domain/posts';
@@ -28,7 +28,7 @@ export default function Home() {
         <View style={{ flex: 1, minWidth: 180, gap: 6 }}>
           <H1>{t('hello', { name: me.settings.preferredName || me.name.split(' ')[0] })}</H1>
           <Text style={{ color: colors.ink, fontSize: 18 }}>{ch == null ? t('zipEmpty') : t('zipCharge', { p: Math.round(ch * 100) })}</Text>
-          <Muted small>{t('pupilsOnly')}</Muted>
+          <InfoTip text={t('pupilsOnly')} />
         </View>
       </View>
 
@@ -60,7 +60,7 @@ export default function Home() {
         <BigButton
           icon="bell"
           title={t('teacherResponse')}
-          sub={t('teacherResponseSub')}
+          sub={t('teacherResponseSub', { adult })}
           bg={colors.midBg}
           accent={colors.mid}
           onAccent={colors.zipLine}

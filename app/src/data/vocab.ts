@@ -1,4 +1,6 @@
-import type { AvatarColour, Hat, Slot, StaffRole, SymbolKey, ZipColour } from '@/types';
+import type { IconName } from '@/components/icons';
+import type { TextKey } from '@/i18n';
+import type { AvatarColour, Hat, Slot, StaffRole, SymbolKey, TalkTopic, ZipColour } from '@/types';
 
 export const SLOT_DEFS: Slot[] = [
   { id: 'maths', name: 'Maths', place: 'Classroom 8B', icon: 'calc', time: '9:00' },
@@ -11,16 +13,50 @@ export const SLOT_DEFS: Slot[] = [
   { id: 'pe', name: 'PE', place: 'Sports hall', icon: 'run', time: '14:20' },
 ];
 
-export const SYMBOLS: { key: SymbolKey; icon: string }[] = [
-  { key: 'tooLoud', icon: 'ear' },
-  { key: 'tooBright', icon: 'sun' },
-  { key: 'tooCrowded', icon: 'users' },
-  { key: 'needBreakSym', icon: 'coffee' },
-  { key: 'feelsSafe', icon: 'heart' },
-  { key: 'talkAdult', icon: 'message' },
+/** Every symbol's picture. A symbol is always shown as picture + word. */
+export const SYMBOL_ICON: Record<SymbolKey, IconName> = {
+  happy: 'faceHappy', calm: 'faceCalm', feelsSafe: 'heart', sad: 'faceSad', worried: 'faceWorried',
+  angry: 'faceAngry', confused: 'faceConfused', tired: 'faceTired', overwhelmed: 'faceOverwhelmed',
+  hungry: 'utensils', thirsty: 'drink', unwell: 'thermometer', toilet: 'toilet',
+  tooLoud: 'ear', tooBright: 'sun', tooCrowded: 'users', tooHot: 'flame', tooCold: 'snowflake', strongSmell: 'smell',
+  needQuiet: 'headphones', needHelp: 'hand', needMove: 'run', needBreakSym: 'coffee', talkAdult: 'message',
+};
+
+/** The symbol board, in four groups. */
+export const SYMBOL_GROUPS: { key: TextKey; icon: IconName; symbols: SymbolKey[] }[] = [
+  { key: 'grpFeelings', icon: 'faceHappy', symbols: ['happy', 'calm', 'feelsSafe', 'sad', 'worried', 'angry', 'confused', 'tired', 'overwhelmed'] },
+  { key: 'grpBody', icon: 'user', symbols: ['hungry', 'thirsty', 'unwell', 'toilet'] },
+  { key: 'grpAround', icon: 'pin', symbols: ['tooLoud', 'tooBright', 'tooCrowded', 'tooHot', 'tooCold', 'strongSmell'] },
+  { key: 'grpNeeds', icon: 'hand', symbols: ['needQuiet', 'needHelp', 'needMove', 'needBreakSym', 'talkAdult'] },
 ];
 
+/** Check-in "Add more" keeps a shorter set about the place itself. */
+export const PLACE_SYMBOLS: SymbolKey[] = ['tooLoud', 'tooBright', 'tooCrowded', 'tooHot', 'tooCold', 'strongSmell', 'feelsSafe', 'calm', 'worried', 'needBreakSym'];
+
+/** "What about?" on a talk request. All optional. */
+export const TALK_TOPICS: { key: TalkTopic; icon: IconName }[] = [
+  { key: 'topicFriends', icon: 'users' },
+  { key: 'topicWork', icon: 'pencil' },
+  { key: 'topicHome', icon: 'home' },
+  { key: 'topicWorried', icon: 'faceWorried' },
+  { key: 'topicUnwell', icon: 'thermometer' },
+  { key: 'topicHappened', icon: 'alert' },
+  { key: 'topicJustTalk', icon: 'message' },
+];
+
+/** Picture for any symbol or topic key (staff views and the pupil's own posts use this). */
+export const pictoIcon = (k: SymbolKey | TalkTopic): IconName =>
+  (SYMBOL_ICON as Record<string, IconName>)[k] ?? TALK_TOPICS.find((x) => x.key === k)?.icon ?? 'grid';
+
 export const HELP_CHIPS = ['Quieter place', 'Headphones', 'Leave early', 'Break space', 'Adult to talk to', 'Sit somewhere else'];
+
+/** Pictures for the "What would help?" and Walk caption chips. The chip's words are still what gets saved. */
+export const CHIP_ICON: Record<string, IconName> = {
+  'Quieter place': 'speakerOff', Headphones: 'headphones', 'Leave early': 'door', 'Break space': 'coffee',
+  'Adult to talk to': 'message', 'Sit somewhere else': 'chair',
+  "It's quiet": 'speakerOff', "It's loud": 'speaker', 'Too many people': 'users', 'I can be on my own': 'user',
+  'Bright lights': 'sun', 'Soft and cosy': 'sofa', 'It echoes': 'ear', 'Strong smells': 'smell',
+};
 export const EMOJIS = ['📚', '🔊', '🌳', '🛋️', '🎧', '🍽️', '🚪', '🏃', '🎨', '💡', '🧱', '🌈'];
 export const ZIP_COLOURS: ZipColour[] = ['teal', 'lilac', 'sky', 'sun', 'coral'];
 export const HATS: Hat[] = ['none', 'beanie', 'cap', 'crown', 'headphones', 'flower'];

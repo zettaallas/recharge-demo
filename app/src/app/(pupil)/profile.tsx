@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Icon } from '@/components/Icon';
 import type { IconName } from '@/components/icons';
-import { Banner, Button, Checkbox, H1, Muted, Row, Screen } from '@/components/ui';
+import { Banner, Button, Checkbox, H1, Muted, OptionalWords, Row, Screen } from '@/components/ui';
 import { addOwnWords, approveProfile, syncProfile, toggleProfileItem } from '@/domain/profile';
 import { raiseFlag } from '@/domain/safeguarding';
 import type { TextKey } from '@/i18n';
@@ -43,7 +43,7 @@ export default function MyProfile() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button icon="home" label={t('home')} onPress={() => router.back()} />
       </Row>
       <H1>{t('profile')}</H1>
       {approved ? (
@@ -67,6 +67,7 @@ export default function MyProfile() {
               <View key={i.id} style={[styles.item, { borderColor: colors.line, opacity: i.hidden ? 0.5 : 1 }]}>
                 <Text style={[styles.itemText, { color: colors.ink, textDecorationLine: i.hidden ? 'line-through' : 'none' }]}>{i.text}</Text>
                 <Button
+                  icon={i.hidden ? 'eye' : 'eyeOff'}
                   label={i.hidden ? t('show') : t('hide')}
                   accessibilityLabel={(i.hidden ? t('show') : t('hide')) + ': ' + i.text}
                   onPress={() => update((d) => toggleProfileItem(d, me.id, i.id))}
@@ -74,27 +75,18 @@ export default function MyProfile() {
               </View>
             ))}
             {k === 'words' && (
-              <Row>
-                <TextInput
-                  value={extra}
-                  onChangeText={setExtra}
-                  onSubmitEditing={addOwn}
-                  placeholder={t('addOwn')}
-                  placeholderTextColor={colors.ink2}
-                  accessibilityLabel={t('addOwn')}
-                  style={[styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.surface }]}
-                />
-                <Button label={t('add')} disabled={!extra.trim()} onPress={addOwn} />
-              </Row>
+              <View style={{ gap: 8 }}>
+                <OptionalWords value={extra} onChange={setExtra} onSubmit={addOwn} label={t('addOwn')} multiline={false} />
+                {!!extra.trim() && <Button icon="plus" label={t('add')} onPress={addOwn} style={{ alignSelf: 'flex-start' }} />}
+              </View>
             )}
           </View>
         );
       })}
 
       <Row>
-        <Button label={t('approve')} kind="primary" large disabled={approved} onPress={() => update((d) => approveProfile(d, me.id))} />
+        <Button icon="check" label={t('approve')} kind="primary" large disabled={approved} onPress={() => update((d) => approveProfile(d, me.id))} />
       </Row>
-      <Muted small>{t('pdfLater')}</Muted>
 
       <Checkbox
         label={t('shareHome')}

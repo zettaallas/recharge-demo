@@ -1,20 +1,19 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Dropdown } from '@/components/Dropdown';
-import { Icon } from '@/components/Icon';
-import type { IconName } from '@/components/icons';
+import { PictoGrid, PictoHeading } from '@/components/Pictos';
 import { SavedDialog } from '@/components/SavedDialog';
-import { Button, H1, Muted, Row, Screen } from '@/components/ui';
-import { SYMBOLS } from '@/data/vocab';
+import { Button, H1, Muted, OptionalWords, Row, Screen } from '@/components/ui';
+import { SYMBOL_GROUPS, SYMBOL_ICON } from '@/data/vocab';
 import { slotsFor } from '@/domain/checkins';
 import { keyAdultName } from '@/domain/posts';
 import { needsAdult, saveSymbols } from '@/domain/symbols';
 import { useApp } from '@/state/AppContext';
 import type { SlotId, SymbolKey } from '@/types';
 
-// Symbol board: say something without words. Pick one or more symbols; optionally add details and where it was;
-// then Save. A pop-up confirms it, and OK goes back home.
+// Symbol board: say something without words. Pictures in four groups (feelings, body, around me, I need);
+// pick one or more. Words and "where" are both optional. A pop-up confirms it, and OK goes back home.
 export default function SymbolBoard() {
   const { t, colors, db, me, save: saveDb } = useApp();
   const router = useRouter();
@@ -30,7 +29,7 @@ export default function SymbolBoard() {
     ...pins.map((p) => ({ id: p.id, label: p.emoji + ' ' + p.name })),
   ];
 
-  const toggle = (k: SymbolKey) => setPicked((x) => (x.includes(k) ? x.filter((y) => y !== k) : [...x, k]));
+  const toggle = (k: string) => setPicked((x) => (x.includes(k as SymbolKey) ? x.filter((y) => y !== k) : [...x, k as SymbolKey]));
 
   const save = async () => {
     const whereLabel = places.find((p) => p.id === where)?.label;
@@ -41,52 +40,21 @@ export default function SymbolBoard() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('back')} onPress={() => router.back()} />
+        <Button icon="back" label={t('back')} onPress={() => router.back()} />
       </Row>
       <H1>{t('symbols')}</H1>
       <Muted>{t('symbolsPick')}</Muted>
 
-      <View style={styles.grid}>
-        {SYMBOLS.map((s) => {
-          const on = picked.includes(s.key);
-          return (
-            <Pressable
-              key={s.key}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: on }}
-              onPress={() => toggle(s.key)}
-              style={({ pressed }) => [
-                styles.sym,
-                { borderColor: on || pressed ? colors.accent : colors.line, backgroundColor: on ? colors.accentSoft : colors.surface },
-              ]}>
-              {on && (
-                <View style={[styles.tick, { backgroundColor: colors.accent }]}>
-                  <Icon name="check" size={18} color={colors.accentInk} />
-                </View>
-              )}
-              <View style={[styles.ic, { backgroundColor: colors.surface2 }]}>
-                <Icon name={s.icon as IconName} size={36} />
-              </View>
-              <Text style={[styles.label, { color: colors.ink }]}>{t(s.key)}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      {SYMBOL_GROUPS.map((g) => (
+        <View key={g.key} accessibilityLabel={t(g.key)} style={{ gap: 8 }}>
+          <PictoHeading icon={g.icon} label={t(g.key)} />
+          <PictoGrid items={g.symbols.map((k) => ({ key: k, icon: SYMBOL_ICON[k], label: t(k) }))} picked={picked} onToggle={toggle} />
+        </View>
+      ))}
 
       {picked.length > 0 && (
         <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.line }]}>
-          <Text style={[styles.lbl, { color: colors.ink }]}>{t('addDetails')}</Text>
-          <TextInput
-            multiline
-            value={text}
-            onChangeText={setText}
-            placeholder={t('addDetailsHint')}
-            placeholderTextColor={colors.ink2}
-            accessibilityLabel={t('addDetails')}
-            style={[styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.surface }]}
-          />
-
-          <Text style={[styles.lbl, { color: colors.ink }]}>{t('whereOptional')}</Text>
+          <PictoHeading icon="pin" label={t('whereOptional')} />
           <Dropdown
             label={t('whereOptional')}
             placeholder={t('wherePlaceholder')}
@@ -95,11 +63,12 @@ export default function SymbolBoard() {
             value={where}
             onChange={setWhere}
           />
+          <OptionalWords value={text} onChange={setText} label={t('addDetails')} />
         </View>
       )}
 
       <Row>
-        <Button label={t('saveSymbols')} kind="primary" large disabled={picked.length === 0} onPress={save} />
+        <Button icon="check" label={t('saveSymbols')} kind="primary" large disabled={picked.length === 0} onPress={save} />
       </Row>
 
       <SavedDialog
@@ -116,12 +85,5 @@ export default function SymbolBoard() {
 }
 
 const styles = StyleSheet.create({
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  sym: { flexGrow: 1, flexBasis: 150, minHeight: 150, borderRadius: 20, borderWidth: 2, alignItems: 'center', justifyContent: 'center', gap: 10, padding: 12 },
-  tick: { position: 'absolute', top: 10, right: 10, width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
-  ic: { width: 64, height: 64, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  label: { fontSize: 18, fontWeight: '700', textAlign: 'center' },
   card: { borderRadius: 20, borderWidth: 1, padding: 16, gap: 10 },
-  lbl: { fontSize: 17, fontWeight: '700' },
-  input: { minHeight: 96, borderWidth: 1, borderRadius: 14, padding: 12, fontSize: 16, textAlignVertical: 'top' },
 });

@@ -58,8 +58,8 @@ export default function Walkthrough() {
       </View>
 
       <Row>
-        {i > 0 && <Button label={t('back')} onPress={() => setI(i - 1)} />}
-        <Button label={last ? t('wtStart') : t('wtNext')} kind="primary" large onPress={() => (last ? finish() : setI(i + 1))} />
+        {i > 0 && <Button icon="back" label={t('back')} onPress={() => setI(i - 1)} />}
+        <Button icon={last ? 'check' : 'next'} label={last ? t('wtStart') : t('wtNext')} kind="primary" large onPress={() => (last ? finish() : setI(i + 1))} />
       </Row>
     </Screen>
   );

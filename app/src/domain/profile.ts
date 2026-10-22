@@ -8,6 +8,14 @@ const SYM_DRAIN: Partial<Record<SymbolKey, string>> = {
   tooBright: 'Bright lights',
   tooCrowded: 'Crowded places',
   needBreakSym: 'Going a long time without a break',
+  tooHot: 'Places that are too hot',
+  tooCold: 'Places that are too cold',
+  strongSmell: 'Strong smells',
+};
+// Feelings like "worried" never go into the profile on their own: the pupil adds those in their own words if they want.
+const SYM_HELP: Partial<Record<SymbolKey, string>> = {
+  feelsSafe: 'Places that feel safe',
+  calm: 'Places where I feel calm',
 };
 
 type Want = Omit<ProfileItem, 'id' | 'hidden'>;
@@ -34,7 +42,8 @@ export function syncProfile(db: Db, pid: string): void {
   for (const c of cs) for (const n of Object.values(c.notes || {})) for (const s of n.symbols || []) symCount[s] = (symCount[s] || 0) + 1;
   for (const s of Object.keys(symCount) as SymbolKey[]) {
     const drain = SYM_DRAIN[s];
-    if (s === 'feelsSafe') want.push({ section: 'helps', text: 'Places that feel safe', src: 'symbols' });
+    const help = SYM_HELP[s];
+    if (help) want.push({ section: 'helps', text: help, src: 'symbols' });
     else if (drain) want.push({ section: 'drains', text: drain, src: 'symbols' });
   }
   for (const p of db.pins.filter((x) => x.pupilId === pid))

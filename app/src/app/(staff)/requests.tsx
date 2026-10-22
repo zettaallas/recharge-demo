@@ -1,6 +1,7 @@
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useState, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { PictoChips, postPictos } from '@/components/Pictos';
 import { replyTime } from '@/components/postMeta';
 import { Card, Pill, fmtTime } from '@/components/staff/StaffUi';
 import { Avatar, Button, H1, Muted, Row, Screen } from '@/components/ui';
@@ -45,7 +46,7 @@ export default function Requests() {
 }
 
 function RequestCard({ post }: { post: Post }) {
-  const { db, staffMe, update, save, colors } = useApp();
+  const { db, staffMe, update, save, colors, t } = useApp();
   const [text, setText] = useState('');
   const pupil = db.pupils.find((x) => x.id === post.pupilId);
   if (!pupil || !staffMe || !Access.canReply(staffMe, pupil)) return null;
@@ -65,6 +66,8 @@ function RequestCard({ post }: { post: Post }) {
         </View>
         {statusPill}
       </Row>
+      {/* the pictures the pupil picked, as they saw them; the summary below still has the words */}
+      <PictoChips items={postPictos(db, post, t)} />
       <Text style={{ color: colors.ink, fontSize: 17 }}>{post.summary}</Text>
 
       {post.status === 'followUp' && post.followUp ? (

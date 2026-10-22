@@ -32,6 +32,11 @@ yarn-error.*
 
 # local env files
 .env*.local
+# renamed or backup copies of them (they hold the Supabase URL and key)
+env-off.txt
+*.env*
+.env*.bak
+.env*.off
 
 # typescript
 *.tsbuildinfo

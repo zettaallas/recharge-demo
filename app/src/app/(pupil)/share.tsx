@@ -11,7 +11,7 @@ export default function Share() {
   return (
     <Screen belowBar>
       <Row>
-        <Button label={t('home')} onPress={() => router.back()} />
+        <Button icon="home" label={t('home')} onPress={() => router.back()} />
       </Row>
       <H1>{t('shareHow')}</H1>
       <View style={{ gap: 14 }}>

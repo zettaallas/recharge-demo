@@ -72,7 +72,8 @@ const SPECS: Spec[] = [
   {
     table: 'moments', key: ['id'],
     rows: (db) => db.moments.map((m) => ({
-      id: m.id, pupil_id: m.pupilId, kind: m.kind, symbols: m.symbols ?? (m.symbol ? [m.symbol] : []),
+      id: m.id, pupil_id: m.pupilId, kind: m.kind,
+      symbols: m.kind === 'talk' ? m.topics ?? [] : m.symbols ?? (m.symbol ? [m.symbol] : []),
       where_slot: orNull(m.where), text: orNull(m.text), seen: m.seen, created_at: iso(m.at),
     })),
   },

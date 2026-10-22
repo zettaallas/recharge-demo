@@ -1,4 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { PictoChips } from '@/components/Pictos';
+import { pictoIcon } from '@/data/vocab';
 import type { NoteEntry } from '@/domain/checkins';
 import { useApp } from '@/state/AppContext';
 import { fmtDay } from './StaffUi';
@@ -14,7 +16,7 @@ export function NoteView({ item, pupilName }: { item: NoteEntry; pupilName?: str
         {(pupilName ? pupilName + ' · ' : '') + fmtDay(item.date) + ' · ' + item.label + (item.rating ? ' · battery ' + item.rating + '/5' : '')}
       </Text>
       {!!n.text && <Text style={{ color: colors.ink, fontSize: 16 }}>{'"' + n.text + '"'}</Text>}
-      {n.symbols.length > 0 && <Text style={{ color: colors.ink }}>{'Symbols: ' + n.symbols.map((s) => t(s)).join(' · ')}</Text>}
+      <PictoChips items={n.symbols.map((s) => ({ key: s, icon: pictoIcon(s), label: t(s) }))} />
       {help.length > 0 && (
         <Text style={{ color: colors.ink }}>
           <Text style={{ fontWeight: '700' }}>What would help: </Text>

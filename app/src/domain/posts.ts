@@ -5,7 +5,7 @@ import type { CheckIn, Db, Helpful, Post, PostStatus, SymbolKey } from '@/types'
 // They feed the "earlier posts" list and the Sent / Read / Follow-up statuses (Step 8).
 
 /** Symbols that ask an adult to act, so the pupil is told who will see it. Others are simply logged. */
-export const SYMBOLS_FOR_ADULT: SymbolKey[] = ['talkAdult', 'needBreakSym'];
+export const SYMBOLS_FOR_ADULT: SymbolKey[] = ['talkAdult', 'needBreakSym', 'needHelp'];
 
 export function addPost(db: Db, p: Omit<Post, 'id' | 'status' | 'at'> & { at?: number }): Post {
   const post: Post = { id: uid('post'), status: 'sent', at: Date.now(), ...p };

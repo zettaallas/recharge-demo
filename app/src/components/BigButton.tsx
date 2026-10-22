@@ -30,7 +30,7 @@ export function BigButton({ icon, title, sub, bg, accent, onAccent, badge, onPre
         { backgroundColor: bg, borderColor: accent, transform: [{ scale: pressed ? 0.98 : 1 }], opacity: pressed ? 0.92 : 1 },
       ]}>
       <View style={[styles.ic, { backgroundColor: accent }]}>
-        <Icon name={icon} size={34} color={onAccent ?? colors.surface} />
+        <Icon name={icon} size={42} color={onAccent ?? colors.surface} />
       </View>
       <View style={{ flex: 1, gap: 4 }}>
         <Text style={[styles.title, { color: colors.ink }]}>{title}</Text>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  ic: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center' },
+  ic: { width: 76, height: 76, borderRadius: 38, alignItems: 'center', justifyContent: 'center' },
   title: { fontSize: 21, fontWeight: '700' },
   badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 },
   chev: { fontSize: 36, fontWeight: '700', marginTop: -4 },

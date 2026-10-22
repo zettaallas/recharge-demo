@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useApp } from '@/state/AppContext';
 import { ICONS, type IconName } from './icons';
@@ -11,9 +12,13 @@ export function Icon({ name, size = 22, color, label }: { name: IconName; size?:
       xml={xml}
       width={size}
       height={size}
-      accessible={!!label}
-      accessibilityLabel={label}
-      importantForAccessibility={label ? 'yes' : 'no-hide-descendants'}
+      // on the web the native screen-reader props reach the <svg> tag unchanged and React warns about them;
+      // there, aria-label / aria-hidden do the same job
+      {...(Platform.OS === 'web'
+        ? label
+          ? { 'aria-label': label, role: 'img' }
+          : { 'aria-hidden': true }
+        : { accessible: !!label, accessibilityLabel: label, importantForAccessibility: label ? 'yes' : 'no-hide-descendants' })}
     />
   );
 }
