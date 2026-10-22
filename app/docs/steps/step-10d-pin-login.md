@@ -1,6 +1,6 @@
 # Step 10d: Pupil PIN sign-in on the server
 
-**Commit:** not committed yet. **Not deployed.** eko approves deploy and commit separately.
+**Commit:** `4eda023` (committed by eko). Migration applied and all three functions deployed by eko.
 
 ## What changed
 
