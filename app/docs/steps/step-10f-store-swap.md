@@ -245,7 +245,7 @@ Also worth trying:
 
 # Security follow-up: who may change which columns
 
-**Done, not committed, not applied yet.** New file: `supabase/migrations/20261021210000_column_limits.sql`.
+**Commit:** `3b7f70a`. **Not applied yet.** New file: `supabase/migrations/20261021210000_column_limits.sql`.
 
 ## What changes, in plain words
 

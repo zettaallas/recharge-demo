@@ -21,6 +21,8 @@ One file per step of the Recharge → Expo migration (see [../../MIGRATION_PLAN.
 | [10a](step-10a-schema.md) | Supabase schema: tables, keys, checks, RLS on with no policies yet | `9e6a86c` (applied on Supabase) |
 | [10b](step-10b-policies.md) | Supabase access rules (RLS policies), summary functions for class views | `ab3dcfe` (applied on Supabase) |
 | [10c](step-10c-remove-break.md) | Remove the pupil's "I need a break" button and pop-up | `e6937fa` |
-| [10d](step-10d-pin-login.md) | Pupil PIN sign-in on the server (Edge Functions), staff PIN reset, app Supabase client | not committed yet, not deployed |
+| [10d](step-10d-pin-login.md) | Pupil PIN sign-in on the server (Edge Functions), staff PIN reset, app Supabase client | `4eda023` (committed by eko; migration applied, functions deployed) |
+| [10e](step-10e-seed.md) | Fictional demo seed for Supabase (local script, key only in the terminal) | `98d9683` (not run yet) |
+| [10f](step-10f-store-swap.md) | Store swap: shared-database mode, server logins, reading (part 1) and saving (part 2). Column limits follow-up: `3b7f70a` (not applied yet) | `e6fb269` |
 
 All data in the app is fictional.
